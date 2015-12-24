@@ -1,17 +1,20 @@
-﻿@model Help_Desk_2.ViewModels.TicketViewModel
+﻿@model Help_Desk_2.Models.Ticket
 
 @{
     ViewBag.Title = "New Ticket";
 }
 
 <div class="container">
-   
+   @if(ViewBag.newTicket == "1") {
+} else {
     <h2>@ViewBag.Title <span class="summary-top pull-right">@Html.DisplayFor(model=>model.status)</span></h2>
-    <p class="text-muted">@Html.LabelFor(model=>model.originatorFullname) @Html.DisplayFor(model=>model.originatorFullname) on @Html.DisplayFor(model=>model.dateComposed)</p>
+    <p class="text-muted">Created by @Html.DisplayFor(model=>model.UserProfile.displayName) on @Html.DisplayFor(model=>model.dateComposed)</p>
+}
 </div>
    
 <hr class="title"/>
-@using (Html.BeginForm())
+@using (Html.BeginForm("New", "Ticket", FormMethod.Post,
+     new { enctype = "multipart/form-data" }))
 {
 @Html.AntiForgeryToken()
 
@@ -34,6 +37,14 @@
                 <div>
                     @Html.TextAreaFor(model => model.description, new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.description, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.filePath, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.filePath, new { type = "file", @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.filePath, "", new { @class = "text-danger" })
                 </div>
             </div>
 

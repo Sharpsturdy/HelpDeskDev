@@ -45,16 +45,19 @@ namespace Help_Desk_2.Controllers
         public ActionResult New()
         {
             UserData ud = new UserData();
-            UserProfile userProfile = ud.getUserProfile();
+            //UserProfile userProfile = ud.getUserProfile();
 
-            TicketViewModel tvm = new TicketViewModel
+            Ticket ticket = new Ticket
             {
-                originatorFullname = userProfile.displayName,
-                status = "Draft",
+                //UserProfile = ud.getUserProfile(),
+                //User originatorFullname = userProfile.displayName,
+                //originatorID = ud.getUserProfile().userID,
+                //status = Statuses.Draft,
                 dateComposed = DateTime.Now
             };
+            ViewBag.newTicket = "1";
 
-            return View(tvm);
+            return View(ticket);
         }
 
         // POST: Ticket/Create
