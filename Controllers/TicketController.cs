@@ -13,6 +13,7 @@ using System.Security.Principal;
 using System.DirectoryServices.AccountManagement;
 using Help_Desk_2.ViewModels;
 using Help_Desk_2.Utilities;
+using System.IO;
 
 namespace Help_Desk_2.Controllers
 {
@@ -65,30 +66,48 @@ namespace Help_Desk_2.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult New([Bind(Include = "headerText,description")] TicketViewModel tvm)
+        public ActionResult New([Bind(Include = "headerText,description")] Ticket ticket)
         //"ID,originatorUsername,dateComposed,headerText,description,dateSubmitted,adminEmail,dateL1Release,dateL2Release,sanityCheck")] Ticket ticket)
         {
             if (ModelState.IsValid)
             {
                 UserData ud = new UserData();
                 UserProfile userProfile = ud.getUserProfile();
-
-                Ticket ticket = new Ticket();
-                ticket.headerText = tvm.headerText;
-                ticket.description = tvm.description;
+                                
+                //ticket.headerText = tvm.headerText;
+                //ticket.description = tvm.description;
 
                 ticket.dateComposed = DateTime.Now;
                 ticket.originatorID = userProfile.userID;
-                /*ticket.dateL1Release = 
-                ticket.dateL2Release = null;
-                ticket.dateSubmitted = null;
-                */
-                db.Tickets.Add(ticket);
-                db.SaveChanges();
+                ticket = db.Tickets.Add(ticket);
+                //db.SaveChanges();
+                /***** Add File ************/
+                if (Request.Files.Count > 0)
+                {
+                    HttpPostedFileBase file = Request.Files[0];
+                    Attachment attachment = new Attachment();
+                    if (file.ContentLength > 0)
+                    {
+                        var fileName = Path.GetFileName(file.FileName);
+                        attachment.filePath = Path.Combine(Server.MapPath("~/App_Data/Files"), fileName);
+                        attachment.fileName = fileName;
+                        attachment.parentID = ticket.ID;
+                        file.SaveAs(attachment.filePath);
+                    }
+                    
+                    db.Attachments.Add(attachment);
+                    db.SaveChanges();
+                    //return RedirectToAction("Index");
+                }
+
+
+                /****** Add File End ******/
+
+                
                 return RedirectToAction("Index");
             }
 
-            return View(tvm);
+            return View(ticket);
         }
 
         // GET: Ticket/Edit/5

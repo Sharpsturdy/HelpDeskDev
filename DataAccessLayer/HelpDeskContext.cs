@@ -21,6 +21,7 @@ namespace Help_Desk_2.DataAccessLayer
         public DbSet<WordList> WordLists { get; set;  }
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<UserProfile> UserProfiles { get; set; }
+        public DbSet<Attachment> Attachments { get; set; }
 
         public DbSet<WordListViewModel> WordListViewModels { get; set; }
 
