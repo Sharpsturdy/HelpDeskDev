@@ -26,5 +26,17 @@ namespace Help_Desk_2.Controllers
 
             return View();
         }
+
+        public ActionResult FAQs()
+        {
+           
+
+            return View();
+        }
+
+        public ActionResult KnowledgeBase()
+        {
+            return View();
+        }
     }
 }

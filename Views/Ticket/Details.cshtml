@@ -1,0 +1,90 @@
+﻿@model Help_Desk_2.Models.Ticket
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Ticket</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.originatorUsername)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.originatorUsername)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.dateComposed)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.dateComposed)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.headerText)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.headerText)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.dateSubmitted)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.dateSubmitted)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.adminEmail)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.adminEmail)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.dateL1Release)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.dateL1Release)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.dateL2Release)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.dateL2Release)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.sanityCheck)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.sanityCheck)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

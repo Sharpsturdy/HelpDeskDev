@@ -28,6 +28,17 @@ namespace Help_Desk_2.Controllers
                 gsm = new GlobalSettingsEditModel(globalSettings);
             }
 
+            var kwds = from kwd in db.WordLists
+                               where kwd.type == 1
+                               select kwd.text;
+
+            ViewBag.keywords = kwds; // String.Join(", ", kwds);
+
+            var eAreas = from eArea in db.WordLists
+                         where eArea.type == 2
+                         select eArea.text;
+
+            ViewBag.expertareas = eAreas; // String.Join(", ", eAreas);
             return View(gsm);
 
 
@@ -66,33 +77,59 @@ namespace Help_Desk_2.Controllers
             GlobalSettingsEditModel gsm = new GlobalSettingsEditModel(globalSettings);
             return View(gsm);
         }
-        /* GET: GlobalSettings
-        public ActionResult Index()
+
+        /********* Keywords Section ****************/
+        public ActionResult Keywords()
         {
-            return View(db.GlobalSettingss.ToList());
+            var kwds = from kwd in db.WordLists
+                                  where kwd.type == 1
+                                  select kwd;
+
+            return View(kwds.ToList<WordList>());
         }
 
-        // GET: GlobalSettings/Details/5
-        public ActionResult Details(Guid? id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Keywords([Bind(Include = "text")] WordList wordList)
         {
-            if (id == null)
+            if (ModelState.IsValid)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                db.WordLists.Add(wordList);
+                db.SaveChanges();
+                return RedirectToAction("Keywords");
             }
-            GlobalSettings globalSettings = db.GlobalSettingss.Find(id);
-            if (globalSettings == null)
-            {
-                return HttpNotFound();
-            }
-            return View(globalSettings);
+            return RedirectToAction("Keywords");
         }
-        */
+
+        /********* Expert Area Section ****************/
+        public ActionResult ExpertAreas()
+        {
+            var eAreas = from eArea in db.WordLists
+                         where eArea.type == 2
+                         select eArea;
+            return View(eAreas.ToList());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ExpertAreas([Bind(Include = "type,text")] WordList wordList)
+        {
+            //wordList.type = 1; //Since it is a keyword
+            if (ModelState.IsValid)
+            {
+                db.WordLists.Add(wordList);
+                db.SaveChanges();
+                return RedirectToAction("ExpertAreas");
+            }
+            return RedirectToAction("ExpertAreas");
+        }
+        /*
         // GET: GlobalSettings/Create
         public ActionResult Create()
         {
             return View();
         }
-
+        
         // POST: GlobalSettings/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -110,7 +147,7 @@ namespace Help_Desk_2.Controllers
 
             return View(globalSettings);
         }
-
+        
         // GET: GlobalSettings/Edit/5
         public ActionResult Edit(Guid? id)
         {
@@ -167,7 +204,7 @@ namespace Help_Desk_2.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-
+        */
         protected override void Dispose(bool disposing)
         {
             if (disposing)

@@ -11,7 +11,7 @@ namespace Help_Desk_2.Models
         public Guid ID { get; set; }
 
         public string AdminEmail { get; set; }
-        //public Enumerable ResposiblePersons 
+        //public ICollection<ResposiblePerson> ResposiblePersons
 
         public int TicketSeeder { get; set; }
 

@@ -1,0 +1,65 @@
+﻿@model IEnumerable<Help_Desk_2.Models.Ticket>
+
+@{
+    ViewBag.Title = "My Open Tickets";
+}
+
+<h2>Index</h2>
+
+<table class="table">
+    <tr>
+        <th>Created on</th>            
+        <th>Originitor</th>       
+        <th>Brief description</th>
+        <th style="display:none">
+            @Html.DisplayNameFor(model => model.dateSubmitted)
+        </th>
+        <th style="display:none">
+            @Html.DisplayNameFor(model => model.dateL1Release)
+        </th>
+        <th style="display:none">
+            @Html.DisplayNameFor(model => model.dateL2Release)
+        </th>
+        <th style="display:none">
+            @Html.DisplayNameFor(model => model.sanityCheck)
+        </th>
+        <th>Status</th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        
+        <td>@Html.DisplayFor(modelItem => item.dateComposed)</td>
+        <td>@Html.DisplayFor(modelItem => item.UserProfile.displayName)</td>
+        <td>@Html.DisplayFor(modelItem => item.headerText)</td>
+        <td style="display:none">
+            @Html.DisplayFor(modelItem => item.description)
+        </td>
+        <td style="display:none">
+            @Html.DisplayFor(modelItem => item.dateSubmitted)
+        </td>
+        <td style="display:none">
+            @Html.DisplayFor(modelItem => item.adminEmail)
+        </td>
+        <td style="display:none">
+            @Html.DisplayFor(modelItem => item.dateL1Release)
+        </td>
+        <td style="display:none">
+            @Html.DisplayFor(modelItem => item.dateL2Release)
+        </td>
+        <td style="display:none">
+            @Html.DisplayFor(modelItem => item.sanityCheck)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.status)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+        </td>
+    </tr>
+}
+
+</table>

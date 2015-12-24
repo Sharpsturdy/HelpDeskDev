@@ -4,91 +4,109 @@
     ViewBag.Title = "Global Settings";
 }
 
-<h2>Global Settings</h2>
+<h2 class="title">@ViewBag.Title</h2>
+<hr />
+<p>@ViewBag.Msg</p>
 
-<h4>@ViewBag.Msg</h4>
-<p></p>
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
         
-        <hr />
+        
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @if (Model.ID != null)
         {
             @Html.HiddenFor(model => model.ID)
         }
-        <div class="form-group">
-            @Html.LabelFor(model => model.AdminEmail, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+        <div class="form-group odd">
+            @Html.LabelFor(model => model.AdminEmail, htmlAttributes: new { @class = "control-label col-md-6" })
+            @Html.LabelFor(model => model.TicketSeeder, htmlAttributes: new { @class = "control-label col-md-6" })
+           
+        </div>
+
+        <div class="form-group even">
+            <div class="col-md-6">
                 @Html.EditorFor(model => model.AdminEmail, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.AdminEmail, "", new { @class = "text-danger" })
             </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.TicketSeeder, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+           
+            <div class="col-md-6">
                 @Html.EditorFor(model => model.TicketSeeder, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.TicketSeeder, "", new { @class = "text-danger" })
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.FAQApprover, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+        <div class="form-group odd">
+            @Html.LabelFor(model => model.FAQApprover, htmlAttributes: new { @class = "control-label col-md-6" })
+            @Html.LabelFor(model => model.KBApprover, htmlAttributes: new { @class = "control-label col-md-6" })
+
+        </div>
+
+        <div class="form-group even">
+            <div class="col-md-6">
                 @Html.EditorFor(model => model.FAQApprover, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.FAQApprover, "", new { @class = "text-danger" })
             </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.KBApprover, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+           <div class="col-md-6">
+               
                 @Html.EditorFor(model => model.KBApprover, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.KBApprover, "", new { @class = "text-danger" })
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.TicketHeader, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+        <div class="form-group odd">
+            @Html.LabelFor(model => model.TicketHeader, htmlAttributes: new { @class = "control-label col-md-6" })
+            @Html.LabelFor(model => model.TicketExpiry, htmlAttributes: new { @class = "control-label col-md-6" })
+
+
+            
+        </div>
+
+        <div class="form-group even">
+            <div class="col-md-6">
                 @Html.EditorFor(model => model.TicketHeader, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.TicketHeader, "", new { @class = "text-danger" })
             </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Keyowrds, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Keyowrds, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Keyowrds, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ExpertArea, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ExpertArea, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ExpertArea, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.TicketExpiry, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+           <div class="col-md-6">
                 @Html.EditorFor(model => model.TicketExpiry, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.TicketExpiry, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
+            <div class="col-md-12">
                 <input type="submit" value="Save" class="btn btn-default" />
             </div>
         </div>
+
+        <div class="form-group odd">
+            <h3 class="control-label col-md-6">@Html.ActionLink("Keywords","Keywords")</h3>
+            <h3 class="control-label col-md-6">@Html.ActionLink("Expert Area", "ExpertAreas")</h3>            
+        </div>
+
+       
+
+        <div class="form-group">
+            <div class="col-md-6">
+                <table>
+                    @foreach (string kword in ViewBag.keywords){
+                        <tr>
+                            <td>@Html.Display(kword)</td>
+                        </tr>
+                    }
+                </table>
+                
+            </div>
+            <div class="col-md-6">
+                @String.Join("<br/>", ViewBag.expertareas)
+            </div>
+        </div>
+
+        
+
+       
     </div>
 }
 

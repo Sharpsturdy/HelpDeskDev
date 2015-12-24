@@ -1,86 +1,97 @@
-﻿<!DOCTYPE html>
+﻿@using Help_Desk_2.Utilities;
+@using Help_Desk_2.Models;
+@{
+    UserData ud = new UserData();
+    UserProfile userProfile = ud.getUserProfile();
+
+    ViewBag.displayName = userProfile.displayName;
+}
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - Engineering Helpdesk</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-static-top navbar-custom">
         <div class="container top">
-            <div class="row">
-                <div class="col-xs-8" >
-                    <!--<a href="#" class="navbar-brand">Engineering Helpdesk</a>-->
-                    <h2 style="margin:15px 0; padding:0; color: #e4eeff">Engineering Helpdesk
-                       <!--  Html.ActionLink("Engineering Helpdesk", "Index", "Home", new { area = "" }); <! --, new { class = "navbar-brand" })-->
-                    </h2>
-                </div>
-                <div class="col-xs-4 ">
-                    <a class="navbar-brand navbar-right" href="#">
-                        <img src="~/Content/images/rlogo.png" alt="Renold Logo" title="Renold" />
-                    </a>
-                </div>
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <h2 style="margin:15px 0; padding:0; color: #e4eeff">Engineering Helpdesk</h2>
             </div>
+            <a class="navbar-brand navbar-right hidden-xs" href="#">
+
+                <img src="~/Content/images/rlogo.png" alt="Renold Logo" title="Renold" />
+            </a>
         </div>
     </div>
 
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-        </div>
-        <div class="navbar-collapse collapse">
+    <!-- Menu bar -->
+
+    <div class="navbar-collapse collapse">
+        <div class="container">
             <ul class="nav navbar-nav">
                 <li>@Html.ActionLink("Home", "Index", "Home")</li>
                 <li>@Html.ActionLink("FAQs", "FAQs", "Home")</li>
                 <li>@Html.ActionLink("Knowledge base", "KnowledgeBase", "Home")</li>
             </ul>
-            <p class="nav navbar-text navbar-right"> @Html.ActionLink(@User.Identity.Name, "Index", "UserProfile")</p>
+            <p class="nav navbar-text navbar-right">@Html.ActionLink(@userProfile.displayName, "Index", "UserProfile")</p>
         </div>
     </div>
-    <div class="container body-content">
-        <div class="row">
-            <div class="col-sm-3 ">
-                <div class="left-column" style="border:1px solid #ddd; background-color: #D7E7F5">
-                    <ul class="nav nav-pills nav-stacked">
-                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                        <li>@Html.ActionLink("FAQs", "FAQs", "Home")</li>
-                        <li>@Html.ActionLink("Knowledge base", "KnowledgeBase", "Home")</li>
-                        <li>
-                            Raise new ticket
-                        </li>
-                        <li><a href="#">My open tickets</a></li>
-                        <li><a href="#">View all my tickets</a></li>
-                        <li><a href="#">Suggest an FAQ</a></li>
-                        <li><a href="#">Access FAQs</a></li>
-                        <li><a href="#">My subscriptions</a></li>
-                        <li><a href="#">My Profile</a></li>
-                    </ul>
-                    <ul class="nav nav-pills nav-stacked color-purple">
-                        <li>@Html.ActionLink("Global Settings", "", "GlobalSettings")</li>
-                    </ul>
+
+   <!--<div class="container hidden-lg"><p>Globals.errorMsg</p></div>-->
+
+    <div class="container">
+        <div class="row ">
+            <div class="row-height">
+                <div class="col-md-3 col-sm-4 col-sm-height left-column1">
+                    <div class="inside-full-height content">
+                        <ul class="nav nav-pills nav-stacked">
+                            <li>@Html.ActionLink("Raise new ticket", "New", "Ticket")</li>
+                            <li><a href="#">View my open tickets [draft/open?]</a></li>
+                            <li><a href="#">View all my tickets[draft/open/closed?]</a></li>
+                            <li><a href="#">Suggest an FAQ</a></li>
+                            <li><a href="#">My subscriptions</a></li>
+                            <li><a href="#">My Profile</a></li>
+                            <li><hr /></li>
+                            <li><a href="#">Work on my tickets</a></li>
+                            <li><a href="#">FAQ Review</a></li>
+                            <li><hr /></li>
+
+                            <li>@Html.ActionLink("Global Settings", "", "GlobalSettings")</li>
+                        </ul>
+                        <div class="quick-search">
+                            @using (Html.BeginForm("Index", "Search"))
+                            {
+                            @Html.AntiForgeryToken()
+                            @Html.Editor("search", new { htmlAttributes = new { placeholder = "Search FAQs" } })
+                            <input type="submit" value="Search" class="btn btn-default" />
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-9 col-sm-8 col-sm-height">
+                    <div class="inside-full-height content-column">
+                        
+                        @RenderBody()
+                    </div>
                 </div>
             </div>
 
-            <div class="col-sm-9">
-                <div class="content-column" style="border: 1px solid #ddd">
-                    @RenderBody()
-                </div>
-                
-            </div>
         </div>
-
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Renold Engineering Help Desk</p>
-        </footer>
-        
     </div>
-
+    
+    <footer>
+        <p>&copy; @DateTime.Now.Year - Renold Engineering Help Desk</p>
+    </footer>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
