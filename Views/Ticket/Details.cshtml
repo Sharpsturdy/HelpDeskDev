@@ -1,30 +1,18 @@
 ﻿@model Help_Desk_2.Models.Ticket
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Ticket: TMP" + Model.ID;
+    
 }
 
-<h2>Details</h2>
-
+<h2>@ViewBag.Title <span class="summary-top pull-right">@Html.DisplayFor(model => model.status)</span></h2>
+<p class="text-muted">Created by @Html.DisplayFor(model => model.UserProfile.displayName) on @Html.DisplayFor(model => model.dateComposed)</p>
+<hr class="title"/>
 <div>
-    <h4>Ticket</h4>
-    <hr />
+    
+    
     <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.originatorUsername)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.originatorUsername)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.dateComposed)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.dateComposed)
-        </dd>
+        
 
         <dt>
             @Html.DisplayNameFor(model => model.headerText)
@@ -33,6 +21,7 @@
         <dd>
             @Html.DisplayFor(model => model.headerText)
         </dd>
+
 
         <dt>
             @Html.DisplayNameFor(model => model.description)
@@ -83,6 +72,19 @@
         </dd>
 
     </dl>
+    <!--Attachment section-->
+    <div class="form-custom">
+        @Html.Label("Attachments", htmlAttributes: new { @class = "control-label" })
+        @if (Model.Files != null && Model.Files.Count > 0)
+            {
+                foreach (var t in Model.Files)
+                {
+                <div>@t.fileName</div>
+            }
+        }
+        <input type="file" name="file1" class="file" data-show-upload="false" data-show-preview="false" />
+    </div>
+
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |

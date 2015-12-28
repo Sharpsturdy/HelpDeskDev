@@ -1,10 +1,15 @@
 ﻿@using Help_Desk_2.Utilities;
 @using Help_Desk_2.Models;
 @{
-    UserData ud = new UserData();
-    UserProfile userProfile = ud.getUserProfile();
+    UserProfile userProfile;
+    if (ViewBag.displayName == null)
+    {
+        UserData ud = new UserData();
+        userProfile = ud.getUserProfile();
 
-    ViewBag.displayName = userProfile.displayName;
+        ViewBag.displayName = userProfile.displayName;
+    }
+    string displayName = ViewBag.displayName;
 }
 <!DOCTYPE html>
 <html>
@@ -43,7 +48,7 @@
                 <li>@Html.ActionLink("FAQs", "FAQs", "Home")</li>
                 <li>@Html.ActionLink("Knowledge base", "KnowledgeBase", "Home")</li>
             </ul>
-            <p class="nav navbar-text navbar-right">@Html.ActionLink(@userProfile.displayName, "Index", "UserProfile")</p>
+            <p class="nav navbar-text navbar-right">@Html.ActionLink(displayName, "Index", "UserProfile")</p>
         </div>
     </div>
 

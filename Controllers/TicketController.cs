@@ -80,30 +80,11 @@ namespace Help_Desk_2.Controllers
                 ticket.dateComposed = DateTime.Now;
                 ticket.originatorID = userProfile.userID;
                 ticket = db.Tickets.Add(ticket);
-                //db.SaveChanges();
+                db.SaveChanges();
+
                 /***** Add File ************/
-                if (Request.Files.Count > 0)
-                {
-                    HttpPostedFileBase file = Request.Files[0];
-                    Attachment attachment = new Attachment();
-                    if (file.ContentLength > 0)
-                    {
-                        var fileName = Path.GetFileName(file.FileName);
-                        attachment.filePath = Path.Combine(Server.MapPath("~/App_Data/Files"), fileName);
-                        attachment.fileName = fileName;
-                        attachment.parentID = ticket.ID;
-                        file.SaveAs(attachment.filePath);
-                    }
-                    
-                    db.Attachments.Add(attachment);
-                    db.SaveChanges();
-                    //return RedirectToAction("Index");
-                }
+                saveAttachments(ticket.ID);                
 
-
-                /****** Add File End ******/
-
-                
                 return RedirectToAction("Index");
             }
 
@@ -130,15 +111,22 @@ namespace Help_Desk_2.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,originatorUsername,dateComposed,headerText,description,dateSubmitted,adminEmail,dateL1Release,dateL2Release,sanityCheck")] Ticket ticket)
+        public ActionResult Edit([Bind(Include = "ID,headerText,description")] Ticket ticketM)
         {
             if (ModelState.IsValid)
             {
+                Ticket ticket = db.Tickets.Find(ticketM.ID);
                 db.Entry(ticket).State = EntityState.Modified;
+
+                ticket.description = ticketM.description;
+                ticket.headerText = ticketM.headerText;
+                /***** Add File ************/
+                saveAttachments(ticket.ID);
+
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                //return RedirectToAction("Index");
             }
-            return View(ticket);
+            return View(ticketM);
         }
 
         // GET: Ticket/Delete/5
@@ -174,6 +162,30 @@ namespace Help_Desk_2.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        private void saveAttachments(int ID)
+        {
+            if (Request.Files.Count > 0)
+            {
+
+                for (int i = 0; i < Request.Files.Count; i++)
+                {
+                    Attachment attachment = new Attachment();
+                    HttpPostedFileBase file = Request.Files[i];
+                    if (file.ContentLength > 0)
+                    {
+                        var fileName = Path.GetFileName(file.FileName);
+                        attachment.filePath = Path.Combine(Server.MapPath("~/App_Data/Files"), fileName);
+                        attachment.fileName = fileName;
+                        attachment.parentID = ID;
+                        file.SaveAs(attachment.filePath);
+
+                        db.Attachments.Add(attachment);
+                    }
+                }
+                db.SaveChanges();
+            }
         }
 
     }

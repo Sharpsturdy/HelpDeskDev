@@ -1,15 +1,28 @@
-﻿@model Help_Desk_2.Models.Ticket
+﻿@using Help_Desk_2.Utilities
+@using Help_Desk_2.Models
+@model Help_Desk_2.Models.Ticket
 
-@{
+@if (ViewBag.newTicket == "1")
+{
     ViewBag.Title = "New Ticket";
+
+    UserProfile userProfile;
+    if (ViewBag.displayName == null)
+    {
+        UserData ud = new UserData();
+        userProfile = ud.getUserProfile();
+
+        ViewBag.displayName = userProfile.displayName;
+    }
+} else
+{
+    ViewBag.Title = "Ticket: TMP" + Model.ID;
+    ViewBag.displayName = Model.UserProfile.displayName;
 }
 
-<div class="container">
-   @if(ViewBag.newTicket == "1") {
-} else {
-    <h2>@ViewBag.Title <span class="summary-top pull-right">@Html.DisplayFor(model=>model.status)</span></h2>
-    <p class="text-muted">Created by @Html.DisplayFor(model=>model.UserProfile.displayName) on @Html.DisplayFor(model=>model.dateComposed)</p>
-}
+<div class="container">    
+    <h2>@ViewBag.Title <span class="summary-top pull-right">@Html.DisplayFor(model => model.status)</span></h2>
+    <p class="text-muted">Created by @ViewBag.displayName on @Html.DisplayFor(model => model.dateComposed)</p>
 </div>
    
 <hr class="title"/>
@@ -22,31 +35,35 @@
 
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     <div class="container">
-
-            
+                  
+        <div>
+            @Html.LabelFor(model => model.headerText, htmlAttributes: new { @class = "control-label" })
             <div>
-                @Html.LabelFor(model => model.headerText, htmlAttributes: new { @class = "control-label" })
-                <div>
-                    @Html.EditorFor(model => model.headerText, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.headerText, "", new { @class = "text-danger" })
-                </div>
+                @Html.EditorFor(model => model.headerText, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.headerText, "", new { @class = "text-danger" })
             </div>
+        </div>
 
+        <div>
+            @Html.LabelFor(model => model.description, htmlAttributes: new { @class = "control-label" })
             <div>
-                @Html.LabelFor(model => model.description, htmlAttributes: new { @class = "control-label" })
-                <div>
-                    @Html.TextAreaFor(model => model.description, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.description, "", new { @class = "text-danger" })
-                </div>
+                @Html.TextAreaFor(model => model.description, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.description, "", new { @class = "text-danger" })
             </div>
+        </div>
 
-            <div class="form-group">
-                @Html.LabelFor(m => m.filePath, new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(m => m.filePath, new { type = "file", @class = "form-control" })
-                    @Html.ValidationMessageFor(m => m.filePath, "", new { @class = "text-danger" })
-                </div>
-            </div>
+        <!--Attachment section-->
+        <div class="form-custom">
+            @Html.Label("Attachments", htmlAttributes: new { @class = "control-label" })
+            @if (Model.Files != null && Model.Files.Count > 0)
+            {
+                foreach (var t in Model.Files)
+                {
+                    <div>@t.fileName</div>
+                }
+            }
+            <input type="file" name="file1" class="file" data-show-upload="false" data-show-preview="false" />
+        </div>
 
         @if (false) {
         <div class="row">
