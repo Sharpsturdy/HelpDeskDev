@@ -18,7 +18,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Engineering Helpdesk</title>
     @Styles.Render("~/Content/css")
+    @RenderSection("cssCustomTop", required: false)
+
     @Scripts.Render("~/bundles/modernizr")
+    @RenderSection("scriptsCustomTop", required: false)
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-static-top navbar-custom">

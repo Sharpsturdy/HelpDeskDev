@@ -45,7 +45,7 @@ namespace Help_Desk_2.Models
         [DataType(DataType.MultilineText)]
         public string description { get; set; }
 
-        public ICollection<Link> Links { get; set; }
+        //public ICollection<Link> Links { get; set; }
 
         public string links { get; set; }
 

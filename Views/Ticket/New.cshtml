@@ -65,51 +65,7 @@
             <input type="file" name="file1" class="file" data-show-upload="false" data-show-preview="false" />
         </div>
 
-        @if (false) {
-        <div class="row">
-            <div class="col-sm-6">
-                @Html.LabelFor(model => model.dateSubmitted, htmlAttributes: new { @class = "control-label" })
-                <div>
-                    @Html.EditorFor(model => model.dateSubmitted, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.dateSubmitted, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="col-sm-6">
-                @Html.LabelFor(model => model.adminEmail, htmlAttributes: new { @class = "control-label" })
-                <div>
-                    @Html.EditorFor(model => model.adminEmail, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.adminEmail, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-6">
-                @Html.LabelFor(model => model.dateL1Release, htmlAttributes: new { @class = "control-label" })
-                <div>
-                    @Html.EditorFor(model => model.dateL1Release, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.dateL1Release, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="col-sm-6">
-                @Html.LabelFor(model => model.dateL2Release, htmlAttributes: new { @class = "control-label" })
-                <div>
-                    @Html.EditorFor(model => model.dateL2Release, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.dateL2Release, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-6">
-                @Html.LabelFor(model => model.sanityCheck, htmlAttributes: new { @class = "control-label" })
-                <div>
-                    @Html.EditorFor(model => model.sanityCheck, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.sanityCheck, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </div>
-        }
+       
         <div>
             <div class="btn-group btn-group-custom" style="padding-bottom:15px; padding-top:15px">
                 <input type="submit" value="Create" class="btn btn-primary" />

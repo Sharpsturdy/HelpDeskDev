@@ -37,7 +37,8 @@ $("#addLink").click(function () {
         alert("Please enter the link URL");
         return;
     }
-    $(".links").append("<tr class=\"normal danger\"><td><a href=\"" + linkURL + "\" target=\"_blank\">" + linkText + "</a></td></tr>");
+    $("table.links tbody").append("<tr class=\"normal danger\"><td><a href=\"" + linkURL + "\" target=\"_blank\">" + linkText + "</a></td>" +
+        "<td><input type=\"button\" value=\"Cancel\" class=\"btn btn-default btn-custom-cancel\"></tr>");
 
     $("#linkText").val("");
     $("#linkURL").val("");
@@ -48,5 +49,11 @@ $("#addLink").click(function () {
     });
     alert(tmp.join("|"));
     $("#links").val(tmp.join("|"));
+
+});
+
+$(".links .btn-custom-delete").each(function () {
+
+    $(this).closest("tr").toggleClass("normal delete");
 
 });

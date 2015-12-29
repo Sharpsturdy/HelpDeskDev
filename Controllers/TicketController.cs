@@ -45,17 +45,15 @@ namespace Help_Desk_2.Controllers
         // GET: Ticket/Create
         public ActionResult New()
         {
-            UserData ud = new UserData();
+            //UserData ud = new UserData();
             //UserProfile userProfile = ud.getUserProfile();
 
             Ticket ticket = new Ticket
             {
-                //UserProfile = ud.getUserProfile(),
-                //User originatorFullname = userProfile.displayName,
-                //originatorID = ud.getUserProfile().userID,
-                //status = Statuses.Draft,
+                
                 dateComposed = DateTime.Now
             };
+
             ViewBag.newTicket = "1";
 
             return View(ticket);
@@ -80,10 +78,11 @@ namespace Help_Desk_2.Controllers
                 ticket.dateComposed = DateTime.Now;
                 ticket.originatorID = userProfile.userID;
                 ticket = db.Tickets.Add(ticket);
-                db.SaveChanges();
-
+                
                 /***** Add File ************/
-                saveAttachments(ticket.ID);                
+                saveAttachments(ticket.ID);
+
+                db.SaveChanges();
 
                 return RedirectToAction("Index");
             }
@@ -111,7 +110,7 @@ namespace Help_Desk_2.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,headerText,description")] Ticket ticketM)
+        public ActionResult Edit([Bind(Include = "ID,headerText,description,links")] Ticket ticketM)
         {
             if (ModelState.IsValid)
             {
@@ -120,6 +119,7 @@ namespace Help_Desk_2.Controllers
 
                 ticket.description = ticketM.description;
                 ticket.headerText = ticketM.headerText;
+                ticket.links = ticketM.links;
                 /***** Add File ************/
                 saveAttachments(ticket.ID);
 

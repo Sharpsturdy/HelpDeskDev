@@ -81,19 +81,25 @@
             <label>Links</label>
             
             <table class="table table-condensed links">
-
-                <tr class="normal"><td><a href="http://www.lotus.com" target="_blank">Chain Roomed</a></td></tr>
-                @{ 
-                    string tmpLinks = Model.links;
-                    if (!string.IsNullOrEmpty(tmpLinks)) {
-                        var links = tmpLinks.Split(new char[] { '|' });
-                        foreach(string link in links)
+                <tbody>
+                    @{
+                        string tmpLinks = Model.links;
+                        string displayLinks = "";
+                        if (!string.IsNullOrEmpty(tmpLinks))
                         {
-                            var tmp = link.Split(new char[] { '^' });
-                            <tr class="normal"><td><a href="tmp[1]" target="_blank">tmp[0]</a></td></tr>
+                            var links = tmpLinks.Split(new char[] { '|' });
+                            foreach (string link in links)
+                            {
+                                if (!string.IsNullOrEmpty(link))
+                                {
+                                    var tmp = link.Split(new char[] { '^' });
+                                    displayLinks += "<tr class=\"normal\"><td><a href=\"" + tmp[1] + "\" target=\"_blank\">" + tmp[0] + "</a></td></tr>";
+                                }
+                            }
                         }
                     }
-                }
+                </tbody>
+                @Html.Raw(displayLinks);
             </table>
             <div class="add-link">
                 <div class="col-sm-5">
