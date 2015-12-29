@@ -2,6 +2,10 @@
 
 @{ViewBag.Title = "Ticket: TMP" + Model.ID;}
 
+@section scriptsCustom {
+    <script src="~/Scripts/script-custom.js" type="text/javascript"></script>
+}
+
 <div class="container">
     <h2>@ViewBag.Title <span class="summary-top pull-right">@Html.DisplayFor(model => model.status)</span></h2>
     <p class="text-muted">Created by @Html.DisplayFor(model => model.UserProfile.displayName) on @Html.DisplayFor(model => model.dateComposed)</p>
@@ -17,6 +21,7 @@
 
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     @Html.HiddenFor(model => model.ID)
+    
     <div class="container">
                   
         <div>
@@ -40,13 +45,72 @@
             @Html.Label("Attachments", htmlAttributes: new { @class = "control-label" })
             @if (Model.Files != null && Model.Files.Count > 0)
             {
-                foreach (var t in Model.Files)
-                {
-                    <div>@t.fileName</div>
-                }
+                <table class="table table-condensed">
+            
+                    <tr><th>File Name</th><th>Size</th><th></th></tr>
+                    @foreach (var t in Model.Files)
+                    {
+                
+                    <tr>
+                        <td class="fileID hidden">@t.ID</td>
+                        <td>@t.fileName</td>
+                        <td>@t.displaySize / @t.size / @String.Format("{0,6:0.00}", t.size/ 1024))</td>
+
+                        <td>
+                            <div tabindex="500" class="btn btn-primary btn-custom btn-custom-undelete hidden">
+                                <i class="fa fa-undo"></i>
+                                <span class="hidden-xs">Undelete</span>
+                            </div>
+
+                            <div tabindex="500" class="btn btn-primary btn-custom btn-custom-delete">
+                                <i class="glyphicon glyphicon-trash"></i>
+                                <span class="hidden-xs">Delete</span>
+                            </div>
+                        </td>
+
+                    </tr>
+                    }
+                </table>
             }
             <input type="file" name="file1" class="file" data-show-upload="false" data-show-preview="false" />
         </div>
+
+        <!-- Links -->
+        <div>
+            @Html.HiddenFor(model => model.links)
+            <label>Links</label>
+            
+            <table class="table table-condensed links">
+
+                <tr class="normal"><td><a href="http://www.lotus.com" target="_blank">Chain Roomed</a></td></tr>
+                @{ 
+                    string tmpLinks = Model.links;
+                    if (!string.IsNullOrEmpty(tmpLinks)) {
+                        var links = tmpLinks.Split(new char[] { '|' });
+                        foreach(string link in links)
+                        {
+                            var tmp = link.Split(new char[] { '^' });
+                            <tr class="normal"><td><a href="tmp[1]" target="_blank">tmp[0]</a></td></tr>
+                        }
+                    }
+                }
+            </table>
+            <div class="add-link">
+                <div class="col-sm-5">
+                    <input type="text" id="linkText" name="linkText" placeholder="Link Display Text" />
+                </div>
+
+                <div class="col-sm-5">
+                    <input type="text" id="linkURL" name="linkURL" placeholder="Link URL" />
+                </div>
+
+                <div class="col-sm-1">
+                    <input type="button" id="addLink" value="Add Link" class="btn btn-default" />
+                </div>
+
+            </div>
+        </div>
+
 
         @if (false) {
         <div class="row">

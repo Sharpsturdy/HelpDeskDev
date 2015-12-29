@@ -22,22 +22,7 @@ namespace Help_Desk_2.Controllers
             return View(db.WordLists.ToList());
         }
 
-        // GET: WordList/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            WordListViewModel wordListViewModel = db.WordListViewModels.Find(id);
-            if (wordListViewModel == null)
-            {
-                return HttpNotFound();
-            }
-            return View(wordListViewModel);
-        }
-
-        // GET: WordList/Create
+        // GET: WordList CreateKeyword
         public ActionResult CreateKeyword()
         {
             return View();

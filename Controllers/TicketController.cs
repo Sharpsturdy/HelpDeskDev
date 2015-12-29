@@ -125,6 +125,7 @@ namespace Help_Desk_2.Controllers
 
                 db.SaveChanges();
                 //return RedirectToAction("Index");
+                return Redirect(Request.UrlReferrer.ToString());
             }
             return View(ticketM);
         }
@@ -184,7 +185,7 @@ namespace Help_Desk_2.Controllers
                         db.Attachments.Add(attachment);
                     }
                 }
-                db.SaveChanges();
+                //db.SaveChanges();
             }
         }
 

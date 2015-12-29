@@ -47,6 +47,8 @@ namespace Help_Desk_2.Models
 
         public ICollection<Link> Links { get; set; }
 
+        public string links { get; set; }
+
         //read-only faq approverID
         [Column(TypeName = "DateTime")]
         [DataType(DataType.DateTime)]
