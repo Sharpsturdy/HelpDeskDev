@@ -17,9 +17,14 @@ namespace Help_Desk_2.Models
         [ForeignKey("Ticket")]
         public int parentID { get; set; }
 
-        [Required]
+        [NotMapped]
         [Display(Name = "File Name")]
-        public string fileName { get; set; }
+        public string fileName {
+            get
+            {
+                return Path.GetFileName(filePath);
+            }
+        }
 
         [Required]
         [DataType(DataType.Upload)]

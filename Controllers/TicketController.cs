@@ -213,7 +213,6 @@ namespace Help_Desk_2.Controllers
                     {
                         var fileName = Path.GetFileName(file.FileName);
                         attachment.filePath = "~/App_Data/Files/" + fileName;
-                        attachment.fileName = fileName;
                         attachment.parentID = ID;
                         file.SaveAs(Path.Combine(Server.MapPath("~/App_Data/Files"), fileName));
 

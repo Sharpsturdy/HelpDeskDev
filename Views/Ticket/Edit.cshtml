@@ -58,9 +58,8 @@
                 
                     <tr>
                         <td class="fileID hidden">@t.ID</td>
-                        <td>@t.fileName</td>
-                        <td>@t.displaySize / @t.size / @String.Format("{0,6:0.##}", ((double)t.size) / 1024))</td>
-
+                        <td>@Html.ActionLink(t.fileName,"d/" + t.ID, "Files", null, new { target = "_blank" })</td>
+                        <td>@t.displaySize</td>
                         <td>
                             <div tabindex="500" class="btn btn-primary btn-custom btn-custom-undelete hidden">
                                 <i class="fa fa-undo"></i>

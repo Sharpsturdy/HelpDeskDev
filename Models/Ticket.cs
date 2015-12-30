@@ -67,10 +67,8 @@ namespace Help_Desk_2.Models
         [NotMapped]
         [Display(Name = "Status")]
         public Statuses? status {
-            get { if (dateSubmitted == DateTime.MinValue) { return Statuses.Draft ; }; return Statuses.Submitted; }
-            set {
-                status = value;
-            }
+            get { if (dateSubmitted == null) { return Statuses.Draft ; }; return Statuses.Submitted; }
+            
         }
 
         public virtual UserProfile UserProfile { get; set; }
