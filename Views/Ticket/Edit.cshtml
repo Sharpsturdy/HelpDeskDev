@@ -21,7 +21,11 @@
 
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     @Html.HiddenFor(model => model.ID)
-    
+    @Html.HiddenFor(model => model.originatorID)
+    @Html.HiddenFor(model => model.dateComposed)
+    @Html.HiddenFor(model => model.dateL1Release)
+    @Html.HiddenFor(model => model.dateL2Release)
+    @Html.HiddenFor(model => model.dateSubmitted)
     <div class="container">
                   
         <div>
@@ -42,6 +46,7 @@
 
         <!--Attachment section-->
         <div class="form-custom">
+            @Html.HiddenFor(model => model.deleteField)
             @Html.Label("Attachments", htmlAttributes: new { @class = "control-label" })
             @if (Model.Files != null && Model.Files.Count > 0)
             {
@@ -54,7 +59,7 @@
                     <tr>
                         <td class="fileID hidden">@t.ID</td>
                         <td>@t.fileName</td>
-                        <td>@t.displaySize / @t.size / @String.Format("{0,6:0.00}", t.size/ 1024))</td>
+                        <td>@t.displaySize / @t.size / @String.Format("{0,6:0.##}", ((double)t.size) / 1024))</td>
 
                         <td>
                             <div tabindex="500" class="btn btn-primary btn-custom btn-custom-undelete hidden">
@@ -67,7 +72,6 @@
                                 <span class="hidden-xs">Delete</span>
                             </div>
                         </td>
-
                     </tr>
                     }
                 </table>
@@ -78,7 +82,7 @@
         <!-- Links -->
         <div>
             @Html.HiddenFor(model => model.links)
-            <label>Links</label>
+            @Html.Label("Links", htmlAttributes: new { @class = "control-label" })
             
             <table class="table table-condensed links">
                 <tbody>
@@ -93,30 +97,35 @@
                                 if (!string.IsNullOrEmpty(link))
                                 {
                                     var tmp = link.Split(new char[] { '^' });
-                                    displayLinks += "<tr class=\"normal\"><td><a href=\"" + tmp[1] + "\" target=\"_blank\">" + tmp[0] + "</a></td></tr>";
+                                    displayLinks += "<tr class=\"normal\"><td><a href=\"" + tmp[1] + "\" target=\"_blank\">" + tmp[0] + "</a></td>" +
+                                        "<td><input type=\"button\" value=\"Delete\" class=\"btn btn-default btn-custom-action\"></td></tr>";
                                 }
-                            }
+                        }
                         }
                     }
+                    @Html.Raw(displayLinks)
                 </tbody>
-                @Html.Raw(displayLinks);
-            </table>
-            <div class="add-link">
-                <div class="col-sm-5">
-                    <input type="text" id="linkText" name="linkText" placeholder="Link Display Text" />
-                </div>
+                <tfoot>
+                    <tr>
+                        <td colspan="2">
+                            <div class="row add-link">
+                                <div class="col-sm-5">
+                                    <input type="text" id="linkText" name="linkText" placeholder="Link Display Text" />
+                                </div>
 
-                <div class="col-sm-5">
-                    <input type="text" id="linkURL" name="linkURL" placeholder="Link URL" />
-                </div>
+                                <div class="col-sm-5">
+                                    <input type="text" id="linkURL" name="linkURL" placeholder="Link URL" />
+                                </div>
 
-                <div class="col-sm-1">
-                    <input type="button" id="addLink" value="Add Link" class="btn btn-default" />
-                </div>
-
-            </div>
+                                <div class="col-sm-1">
+                                    <input type="button" id="addLink" value="Add Link" class="btn btn-default" />
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>            
         </div>
-
 
         @if (false) {
         <div class="row">

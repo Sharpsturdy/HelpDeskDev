@@ -47,6 +47,7 @@ namespace Help_Desk_2.Models
 
         //public ICollection<Link> Links { get; set; }
 
+        [Display(Name = "Links")]
         public string links { get; set; }
 
         //read-only faq approverID
@@ -80,10 +81,11 @@ namespace Help_Desk_2.Models
 
         [NotMapped]
         [Display(Name = "Choose file")]
-        [StringLength(150, ErrorMessage = "Your brief description exceeds the maximum characters allowed")]
         public string filePath { get; set; }
 
-
+        [NotMapped]
+        //List of files to delete
+        public string deleteField { get; set; }
 
 
         public string sanityCheck { get; set; }

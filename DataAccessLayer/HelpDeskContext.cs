@@ -30,8 +30,7 @@ namespace Help_Desk_2.DataAccessLayer
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
         }
 
-        
-        
+        public System.Data.Entity.DbSet<Help_Desk_2.Models.News> News { get; set; }
     }
 
    

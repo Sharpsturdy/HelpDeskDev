@@ -29,7 +29,7 @@ namespace Help_Desk_2.Models
         public virtual Ticket Ticket { get; set; }
 
         [NotMapped]
-        public long size
+        public double size
         {
             get
             {
@@ -45,7 +45,7 @@ namespace Help_Desk_2.Models
             get
             {
                 long mb = 1024 * 1024;
-                long s = size; //compute size once
+                double s = size; //compute size once
 
                 if(s < mb)
                 {

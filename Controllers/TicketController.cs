@@ -110,6 +110,26 @@ namespace Help_Desk_2.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "ID,headerText,description,dateComposed, originatorID,links,deleteField")] Ticket ticket)
+        {
+            if (ModelState.IsValid)
+            {
+                //Ticket ticket = db.Tickets.Find(ticketM.ID);
+                db.Entry(ticket).State = EntityState.Modified;
+
+                //ticket.description = ticketM.description;
+                //ticket.headerText = ticketM.headerText;
+                //ticket.links = ticketM.links;
+                /***** Add File ************/
+                saveAttachments(ticket.ID, ticket.deleteField);
+
+                db.SaveChanges();
+                //return RedirectToAction("Index");
+                return Redirect(Request.UrlReferrer.ToString());
+            }
+            return View(ticket);
+        }
+        /*
         public ActionResult Edit([Bind(Include = "ID,headerText,description,links")] Ticket ticketM)
         {
             if (ModelState.IsValid)
@@ -120,7 +140,7 @@ namespace Help_Desk_2.Controllers
                 ticket.description = ticketM.description;
                 ticket.headerText = ticketM.headerText;
                 ticket.links = ticketM.links;
-                /***** Add File ************/
+                /***** Add File ************ /
                 saveAttachments(ticket.ID);
 
                 db.SaveChanges();
@@ -129,8 +149,8 @@ namespace Help_Desk_2.Controllers
             }
             return View(ticketM);
         }
-
-        // GET: Ticket/Delete/5
+        */
+                // GET: Ticket/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -165,11 +185,26 @@ namespace Help_Desk_2.Controllers
             base.Dispose(disposing);
         }
 
-        private void saveAttachments(int ID)
+        private void saveAttachments(int ID, string deleteList = null)
         {
             if (Request.Files.Count > 0)
             {
+                //Remove files
+                if (deleteList != null)
+                {
+                    var fileIDs = deleteList.Split(new char[',']);
 
+                    foreach(string strID in fileIDs)
+                    {
+                        if (!string.IsNullOrEmpty(strID))
+                        {
+                            Attachment f = db.Attachments.Find(int.Parse(strID));
+                            db.Attachments.Remove(f);
+                        }
+                    }
+                }
+
+                //Add Files
                 for (int i = 0; i < Request.Files.Count; i++)
                 {
                     Attachment attachment = new Attachment();
@@ -177,10 +212,10 @@ namespace Help_Desk_2.Controllers
                     if (file.ContentLength > 0)
                     {
                         var fileName = Path.GetFileName(file.FileName);
-                        attachment.filePath = Path.Combine(Server.MapPath("~/App_Data/Files"), fileName);
+                        attachment.filePath = "~/App_Data/Files/" + fileName;
                         attachment.fileName = fileName;
                         attachment.parentID = ID;
-                        file.SaveAs(attachment.filePath);
+                        file.SaveAs(Path.Combine(Server.MapPath("~/App_Data/Files"), fileName));
 
                         db.Attachments.Add(attachment);
                     }

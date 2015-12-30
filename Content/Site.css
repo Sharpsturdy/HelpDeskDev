@@ -311,3 +311,11 @@ textarea.form-control {
     padding-top:15px;
     padding-right:15px;
 }
+
+.btn-custom .hidden-xs {
+    margin-left: 3px;
+    display: inline-block !important;
+}
+.delete {
+    text-decoration: line-through;
+}
