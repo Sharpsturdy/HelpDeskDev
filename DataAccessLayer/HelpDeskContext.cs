@@ -6,7 +6,7 @@ using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Configuration;
 using Help_Desk_2.Models;
 using System.Data.Entity.ModelConfiguration.Conventions;
-using Help_Desk_2.ViewModels;
+using Help_Desk_2.ViewModels;on
 
 namespace Help_Desk_2.DataAccessLayer
 {
@@ -14,7 +14,6 @@ namespace Help_Desk_2.DataAccessLayer
     {
         public HelpDeskContext() :base("HelpDeskContext")
         {
-            
         }
 
         public DbSet<GlobalSettings> GlobalSettingss { get; set;  }
@@ -22,6 +21,7 @@ namespace Help_Desk_2.DataAccessLayer
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<UserProfile> UserProfiles { get; set; }
         public DbSet<Attachment> Attachments { get; set; }
+        public DbSet<News> News { get; set; }
 
         public DbSet<WordListViewModel> WordListViewModels { get; set; }
 
@@ -30,7 +30,7 @@ namespace Help_Desk_2.DataAccessLayer
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
         }
 
-        public System.Data.Entity.DbSet<Help_Desk_2.Models.News> News { get; set; }
+        
     }
 
    

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -16,9 +18,15 @@ namespace Help_Desk_2.Models
         public string headerText { get; set; }
 
         [AllowHtml]
+        [DataType(DataType.MultilineText)]
         public string description { get; set; }
+
+        [ForeignKey("UserProfile")]
+        public Guid originatorID { get; set; } //AD Username
         
-        //public virtual Attachments { get; set;  }
+        public virtual UserProfile UserProfile { get; set; }
+
+        public virtual ICollection<Attachment> Files { get; set; }
 
         //public virtual keywords
 

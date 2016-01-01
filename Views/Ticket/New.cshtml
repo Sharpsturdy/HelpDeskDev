@@ -4,26 +4,16 @@
 
 @{
 
-    if (ViewBag.newTicket == "1")
+    ViewBag.Title = "New Ticket";
+
+    UserProfile userProfile;
+    if (ViewBag.displayName == null)
     {
-        ViewBag.Title = "New Ticket";
+        UserData ud = new UserData();
+        userProfile = ud.getUserProfile();
 
-        UserProfile userProfile;
-        if (ViewBag.displayName == null)
-        {
-            UserData ud = new UserData();
-            userProfile = ud.getUserProfile();
-
-            ViewBag.displayName = userProfile.displayName;
-        }
-
-    } else
-    {
-        ViewBag.Title = "Ticket: TMP" + Model.ID;
-        ViewBag.displayName = Model.UserProfile.displayName;
-    }
-
-    
+        ViewBag.displayName = userProfile.displayName;
+    }    
 }
 
 <div class="container">    
@@ -78,11 +68,11 @@
                         <td colspan="2">
                             <div class="row add-link">
                                 <div class="col-sm-5">
-                                    <input type="text" id="linkText" name="linkText" placeholder="Link Display Text" />
+                                    @Html.EditorFor(model => model.linkText, new { htmlAttributes = new { @placeholder = "Link Display Text" } })
                                 </div>
 
                                 <div class="col-sm-5">
-                                    <input type="text" id="linkURL" name="linkURL" placeholder="Link URL" />
+                                    @Html.EditorFor(model => model.linkURL, new { htmlAttributes = new { @placeholder = "Link URL" } })
                                 </div>
 
                                 <div class="col-sm-1">

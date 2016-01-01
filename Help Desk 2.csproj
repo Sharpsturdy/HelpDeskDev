@@ -177,6 +177,7 @@
     <Content Include="Content\site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <None Include="Properties\PublishProfiles\dev web deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2-vsdoc.js" />
     <Content Include="Scripts\fileinput.min.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -385,11 +386,11 @@
     <Content Include="Views\UserProfile\Edit.cshtml" />
     <Content Include="Views\UserProfile\List.cshtml" />
     <Content Include="Views\Ticket\Edit.cshtml" />
-    <Content Include="Views\News1\Create.cshtml" />
-    <Content Include="Views\News1\Delete.cshtml" />
-    <Content Include="Views\News1\Details.cshtml" />
-    <Content Include="Views\News1\Edit.cshtml" />
-    <Content Include="Views\News1\Index.cshtml" />
+    <Content Include="Views\News\New.cshtml" />
+    <Content Include="Views\News\Delete.cshtml" />
+    <Content Include="Views\News\Details.cshtml" />
+    <Content Include="Views\News\Edit.cshtml" />
+    <Content Include="Views\News\Index.cshtml" />
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce.woff" />
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce.ttf" />
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce.json" />
@@ -400,11 +401,11 @@
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce-small.eot" />
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\readme.md" />
     <Content Include="Scripts\tinymce\langs\readme.md" />
-    <Content Include="Views\News\Create.cshtml" />
-    <Content Include="Views\News\Delete.cshtml" />
-    <Content Include="Views\News\Details.cshtml" />
-    <Content Include="Views\News\Edit.cshtml" />
-    <Content Include="Views\News\Index.cshtml" />
+    <Content Include="Views\NewsNew\New.cshtml" />
+    <Content Include="Views\NewsNew\Delete.cshtml" />
+    <Content Include="Views\NewsNew\Details.cshtml" />
+    <Content Include="Views\NewsNew\Edit.cshtml" />
+    <Content Include="Views\NewsNew\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Files\" />

@@ -47,12 +47,18 @@ namespace Help_Desk_2.Models
         [DataType(DataType.MultilineText)]
         public string description { get; set; }
 
-        //public ICollection<Link> Links { get; set; }
-
+        
         [Display(Name = "Links")]
         public string links { get; set; }
 
+        [NotMapped]
+        public string linkText { get; set; }
+
+        [NotMapped]
+        public string linkURL { get; set; }
+
         //read-only faq approverID
+
         [Column(TypeName = "DateTime")]
         [DataType(DataType.DateTime)]
         public DateTime? dateSubmitted { get; set; }
@@ -83,8 +89,7 @@ namespace Help_Desk_2.Models
         [Display(Name = "Choose file")]
         public string filePath { get; set; }
 
-        [NotMapped]
-        //List of files to delete
+        [NotMapped]     //List of files to delete
         public string deleteField { get; set; }
 
 
