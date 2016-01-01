@@ -9,6 +9,7 @@ using System.Web.Security;
 using System.DirectoryServices.AccountManagement;
 using Help_Desk_2.Utilities;
 using Help_Desk_2.DataAccessLayer;
+using System.Web.Mvc;
 
 namespace Help_Desk_2.Models
 {
@@ -41,6 +42,7 @@ namespace Help_Desk_2.Models
         public string headerText { get; set; }
 
         [Required]
+        [AllowHtml]
         [Display(Name = "Detailed description")]
         [DataType(DataType.MultilineText)]
         public string description { get; set; }

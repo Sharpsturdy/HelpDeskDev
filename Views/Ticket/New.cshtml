@@ -2,27 +2,33 @@
 @using Help_Desk_2.Models
 @model Help_Desk_2.Models.Ticket
 
-@if (ViewBag.newTicket == "1")
-{
-    ViewBag.Title = "New Ticket";
+@{
 
-    UserProfile userProfile;
-    if (ViewBag.displayName == null)
+    if (ViewBag.newTicket == "1")
     {
-        UserData ud = new UserData();
-        userProfile = ud.getUserProfile();
+        ViewBag.Title = "New Ticket";
 
-        ViewBag.displayName = userProfile.displayName;
+        UserProfile userProfile;
+        if (ViewBag.displayName == null)
+        {
+            UserData ud = new UserData();
+            userProfile = ud.getUserProfile();
+
+            ViewBag.displayName = userProfile.displayName;
+        }
+
+    } else
+    {
+        ViewBag.Title = "Ticket: TMP" + Model.ID;
+        ViewBag.displayName = Model.UserProfile.displayName;
     }
-} else
-{
-    ViewBag.Title = "Ticket: TMP" + Model.ID;
-    ViewBag.displayName = Model.UserProfile.displayName;
+
+    
 }
 
 <div class="container">    
-    <h2>@ViewBag.Title <span class="summary-top pull-right">@Html.DisplayFor(model => model.status)</span></h2>
-    <p class="text-muted">Created by @ViewBag.displayName on @Html.DisplayFor(model => model.dateComposed)</p>
+    <h2>@ViewBag.Title <span class="summary-top pull-right">Draft</span></h2>
+    <p class="text-muted">Created by @ViewBag.displayName on @String.Format("{0:d}", DateTime.Now)</p>
 </div>
    
 <hr class="title"/>
@@ -47,7 +53,7 @@
         <div>
             @Html.LabelFor(model => model.description, htmlAttributes: new { @class = "control-label" })
             <div>
-                @Html.TextAreaFor(model => model.description, new { @class = "form-control" })
+                @Html.TextAreaFor(model => model.description, new { @class = "form-control richeditor" })
                 @Html.ValidationMessageFor(model => model.description, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -55,16 +61,39 @@
         <!--Attachment section-->
         <div class="form-custom">
             @Html.Label("Attachments", htmlAttributes: new { @class = "control-label" })
-            @if (Model.Files != null && Model.Files.Count > 0)
-            {
-                foreach (var t in Model.Files)
-                {
-                    <div>@t.fileName</div>
-                }
-            }
             <input type="file" name="file1" class="file" data-show-upload="false" data-show-preview="false" />
         </div>
 
+        <!-- Links -->
+        <div>
+            @Html.HiddenFor(model => model.links)
+            @Html.Label("Links", htmlAttributes: new { @class = "control-label" })
+
+            <table class="table table-condensed links">
+                <tbody>
+                   
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="2">
+                            <div class="row add-link">
+                                <div class="col-sm-5">
+                                    <input type="text" id="linkText" name="linkText" placeholder="Link Display Text" />
+                                </div>
+
+                                <div class="col-sm-5">
+                                    <input type="text" id="linkURL" name="linkURL" placeholder="Link URL" />
+                                </div>
+
+                                <div class="col-sm-1">
+                                    <input type="button" id="addLink" value="Add Link" class="btn btn-default" />
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
        
         <div>
             <div class="btn-group btn-group-custom" style="padding-bottom:15px; padding-top:15px">

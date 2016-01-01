@@ -45,18 +45,12 @@ namespace Help_Desk_2.Controllers
         // GET: Ticket/Create
         public ActionResult New()
         {
-            //UserData ud = new UserData();
-            //UserProfile userProfile = ud.getUserProfile();
-
-            Ticket ticket = new Ticket
-            {
-                
-                dateComposed = DateTime.Now
-            };
-
+            
             ViewBag.newTicket = "1";
+            ViewBag.addAttachCode = "1"; //Activate attach code 
+            ViewBag.addTinyMCECode = "1"; //Activate tinymce code
 
-            return View(ticket);
+            return View();
         }
 
         // POST: Ticket/Create
@@ -78,13 +72,14 @@ namespace Help_Desk_2.Controllers
                 ticket.dateComposed = DateTime.Now;
                 ticket.originatorID = userProfile.userID;
                 ticket = db.Tickets.Add(ticket);
-                
-                /***** Add File ************/
-                saveAttachments(ticket.ID);
 
+                /***** Add File ************/
+                //saveAttachments(ticket.ID);
+                AllSorts.saveAttachments(ticket.ID, db);
                 db.SaveChanges();
 
-                return RedirectToAction("Index");
+                //return RedirectToAction("Index");
+                return RedirectToAction("Edit/" + ticket.ID);
             }
 
             return View(ticket);
@@ -102,6 +97,10 @@ namespace Help_Desk_2.Controllers
             {
                 return HttpNotFound();
             }
+
+            ViewBag.addAttachCode = "1"; //Activate attach code 
+            ViewBag.addTinyMCECode = "1"; //Activate tinymce code
+
             return View(ticket);
         }
 
@@ -121,12 +120,17 @@ namespace Help_Desk_2.Controllers
                 //ticket.headerText = ticketM.headerText;
                 //ticket.links = ticketM.links;
                 /***** Add File ************/
-                saveAttachments(ticket.ID, ticket.deleteField);
-
+                //saveAttachments(ticket.ID, ticket.deleteField);
+                AllSorts.saveAttachments(ticket.ID, db, ticket.deleteField);
+                
                 db.SaveChanges();
-                //return RedirectToAction("Index");
+                //return RedirectToAction("Index");                
                 return Redirect(Request.UrlReferrer.ToString());
             }
+
+            ViewBag.addAttachCode = "1"; //Activate attach code 
+            ViewBag.addTinyMCECode = "1"; //Activate tinymce code
+
             return View(ticket);
         }
         /*
@@ -207,19 +211,35 @@ namespace Help_Desk_2.Controllers
                 //Add Files
                 for (int i = 0; i < Request.Files.Count; i++)
                 {
-                    Attachment attachment = new Attachment();
                     HttpPostedFileBase file = Request.Files[i];
                     if (file.ContentLength > 0)
                     {
-                        var fileName = Path.GetFileName(file.FileName);
-                        attachment.filePath = "~/App_Data/Files/" + fileName;
-                        attachment.parentID = ID;
-                        file.SaveAs(Path.Combine(Server.MapPath("~/App_Data/Files"), fileName));
 
+                        //Get physical path to directory
+                        string savePath = Path.Combine(Server.MapPath("~/App_Data/Files"), DateTime.Now.Year.ToString());
+                        if(!Directory.Exists(savePath)) {
+                            Directory.CreateDirectory(savePath);
+                        }
+
+                        //Get unique random name, duplication not very possible
+                        string randomName = ""; 
+                        do {
+                            randomName = Path.GetRandomFileName();
+                        } while (System.IO.File.Exists(Path.Combine(savePath, randomName)));
+
+                        //Save file
+                        //file.SaveAs(savePath + "/" + randomName);
+                        file.SaveAs(Path.Combine(savePath, randomName));
+
+                        //Add file data to database
+                        Attachment attachment = new Attachment();
+                        attachment.fileName = Path.GetFileName(file.FileName);
+                        attachment.filePath = "~/App_Data/Files/" + DateTime.Now.Year + "/" + randomName;
+                        attachment.parentID = ID;     
                         db.Attachments.Add(attachment);
                     }
                 }
-                //db.SaveChanges();
+                
             }
         }
 

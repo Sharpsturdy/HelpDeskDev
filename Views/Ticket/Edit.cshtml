@@ -2,9 +2,7 @@
 
 @{ViewBag.Title = "Ticket: TMP" + Model.ID;}
 
-@section scriptsCustom {
-    <script src="~/Scripts/script-custom.js" type="text/javascript"></script>
-}
+
 
 <div class="container">
     <h2>@ViewBag.Title <span class="summary-top pull-right">@Html.DisplayFor(model => model.status)</span></h2>
@@ -39,7 +37,7 @@
         <div>
             @Html.LabelFor(model => model.description, htmlAttributes: new { @class = "control-label" })
             <div>
-                @Html.TextAreaFor(model => model.description, new { @class = "form-control" })
+                @Html.TextAreaFor(model => model.description, new { @class = "form-control richeditor" })
                 @Html.ValidationMessageFor(model => model.description, "", new { @class = "text-danger" })
             </div>
         </div>

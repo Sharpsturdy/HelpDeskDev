@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace Help_Desk_2.Models
 {
@@ -17,16 +18,17 @@ namespace Help_Desk_2.Models
         public string title { get; set; }
 
         [Display(Name ="Body")]
+        [AllowHtml]
         public string body { get; set; }
 
 
         [Display(Name = "Sticky")]
-        [DefaultValue(0)]
-        public byte sticky { get; set; }
+        [DefaultValue(false)]
+        public bool sticky { get; set; }
 
         [Display(Name = "Published")]
-        [DefaultValue(0)]
-        public byte published { get; set; } 
+        [DefaultValue(false)]
+        public bool published { get; set; } 
 
         [Display(Name = "Published on")]
         public DateTime publishedDate { get; set; }

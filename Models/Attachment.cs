@@ -11,20 +11,29 @@ namespace Help_Desk_2.Models
     public class Attachment
     {
 
+        //[NotMapped]
+        //private string basePath = 
+            //System.IO.Directory.GetCurrentDirectory();
+
         [Key]
         public Int32 ID { get; set; }
 
         [ForeignKey("Ticket")]
         public int parentID { get; set; }
 
-        [NotMapped]
+        /***[NotMapped]
         [Display(Name = "File Name")]
         public string fileName {
             get
             {
                 return Path.GetFileName(filePath);
             }
-        }
+        }**/
+
+        //This is actually needed as file name is randomised
+        [Required]
+        [Display(Name = "File Name")]
+        public string fileName { get; set; }
 
         [Required]
         [DataType(DataType.Upload)]
@@ -38,7 +47,8 @@ namespace Help_Desk_2.Models
         {
             get
             {
-                FileInfo fi = new FileInfo(filePath);
+
+                FileInfo fi = new FileInfo(HttpContext.Current.Server.MapPath(filePath)); //filePath.Replace("~/",basePath));
                 return fi.Length;
             }
         }

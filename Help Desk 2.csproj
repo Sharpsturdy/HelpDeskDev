@@ -131,10 +131,12 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Content\NewsController.cs" />
+    <Compile Include="Controllers\FAQsController.cs" />
+    <Compile Include="Controllers\News1Controller.cs" />
     <Compile Include="Controllers\FilesController.cs" />
     <Compile Include="Controllers\GlobalSettingsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\NewsController.cs" />
     <Compile Include="Controllers\TicketController.cs" />
     <Compile Include="Controllers\UserProfileController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
@@ -145,6 +147,7 @@
     </Compile>
     <Compile Include="Models\Attachment.cs" />
     <Compile Include="Models\News.cs" />
+    <Compile Include="Utilities\AllSorts.cs" />
     <Compile Include="Utilities\Globals - Copy.cs" />
     <Compile Include="Utilities\UserData.cs" />
     <Compile Include="Migrations\201512161337213_InitialCreate.cs" />
@@ -166,6 +169,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\fileinput.css" />
+    <Content Include="Content\fileinput.min.css" />
     <Content Include="Content\images\rlogo.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -381,11 +385,11 @@
     <Content Include="Views\UserProfile\Edit.cshtml" />
     <Content Include="Views\UserProfile\List.cshtml" />
     <Content Include="Views\Ticket\Edit.cshtml" />
-    <Content Include="Views\News\Create.cshtml" />
-    <Content Include="Views\News\Delete.cshtml" />
-    <Content Include="Views\News\Details.cshtml" />
-    <Content Include="Views\News\Edit.cshtml" />
-    <Content Include="Views\News\Index.cshtml" />
+    <Content Include="Views\News1\Create.cshtml" />
+    <Content Include="Views\News1\Delete.cshtml" />
+    <Content Include="Views\News1\Details.cshtml" />
+    <Content Include="Views\News1\Edit.cshtml" />
+    <Content Include="Views\News1\Index.cshtml" />
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce.woff" />
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce.ttf" />
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce.json" />
@@ -396,9 +400,15 @@
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce-small.eot" />
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\readme.md" />
     <Content Include="Scripts\tinymce\langs\readme.md" />
+    <Content Include="Views\News\Create.cshtml" />
+    <Content Include="Views\News\Delete.cshtml" />
+    <Content Include="Views\News\Details.cshtml" />
+    <Content Include="Views\News\Edit.cshtml" />
+    <Content Include="Views\News\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Files\" />
+    <Folder Include="Views\FAQs\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

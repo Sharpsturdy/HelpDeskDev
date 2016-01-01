@@ -11,7 +11,7 @@ using Help_Desk_2.Models;
 
 namespace Help_Desk_2.Content
 {
-    public class NewsController : Controller
+    public class News1Controller : Controller
     {
         private HelpDeskContext db = new HelpDeskContext();
 
