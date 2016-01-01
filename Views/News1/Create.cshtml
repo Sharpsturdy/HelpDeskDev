@@ -1,0 +1,77 @@
+﻿@model Help_Desk_2.Models.News
+
+@{
+    ViewBag.Title = "New News Article";
+    Model.creationDate = DateTime.Now;
+}
+
+<div class="container">
+    <h2>@ViewBag.Title <span class="summary-top pull-right">New</span></h2>
+    <p class="text-muted">Created by @ViewBag.displayName on @Html.DisplayFor(model => model.creationDate)</p>
+</div>
+
+<hr class="title" />
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+       
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div>
+            @Html.LabelFor(model => model.title, htmlAttributes: new { @class = "control-label" })
+            <div>
+                @Html.EditorFor(model => model.title, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.title, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div>
+            @Html.LabelFor(model => model.body, htmlAttributes: new { @class = "control-label" })
+            <div>
+                @Html.EditorFor(model => model.body, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.body, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.publishedDate, htmlAttributes: new { @class = "control-label col-md-2" })            
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.publishedDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.publishedDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        
+        <div class="form-group">
+            @Html.LabelFor(model => model.sticky, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.sticky, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.sticky, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.published, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.published, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.published, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
