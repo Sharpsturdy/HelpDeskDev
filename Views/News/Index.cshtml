@@ -15,7 +15,7 @@
             @Html.DisplayNameFor(model => model.title)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.body)
+            @Html.DisplayNameFor(model => model.UserProfile.displayName)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.sticky)
@@ -38,13 +38,27 @@
             @Html.DisplayFor(modelItem => item.title)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.body)
+            @Html.DisplayFor(modelItem => item.UserProfile.displayName)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.sticky)
+            @if(item.sticky) {
+                @Html.Raw("Yes")
+            } else
+            {
+                @Html.Raw("No")
+            }
+            <!--Html.DisplayFor(modelItem => item.sticky)-->
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.published)
+            @if (item.published)
+            {
+                @Html.Raw("Yes");
+            }
+            else
+            {
+                @Html.Raw("No");
+            }
+            <!--Html.DisplayFor(modelItem => item.published)-->
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.publishedDate)
@@ -53,9 +67,7 @@
             @Html.DisplayFor(modelItem => item.creationDate)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID })
         </td>
     </tr>
 }

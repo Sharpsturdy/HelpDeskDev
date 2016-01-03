@@ -1,0 +1,125 @@
+﻿@using Help_Desk_2.Utilities
+@using Help_Desk_2.Models
+@model Help_Desk_2.Models.News
+
+@if (ViewBag.mode == 0)
+{
+
+    ViewBag.Title = "New News Article";
+    ViewBag.Status = "Unpublished";
+    ViewBag.CreationDate = String.Format("{0:d}", DateTime.Now);
+
+    UserProfile userProfile;
+    if (ViewBag.displayName == null)
+    {
+        UserData ud = new UserData();
+        userProfile = ud.getUserProfile();
+
+        ViewBag.displayName = userProfile.displayName;
+    }
+}
+else
+{
+    ViewBag.Title = "News: " + Model.title;
+    ViewBag.displayName = Model.UserProfile.displayName;
+    ViewBag.Status = Model.status + (Model.sticky ? " / Sticky": "");
+    ViewBag.CreationDate = Html.DisplayFor(model => model.creationDate);
+}
+
+<div class="container">
+    <h2>@ViewBag.Title <span class="summary-top pull-right">@ViewBag.Status</span></h2>
+    <p class="text-muted">Created by @ViewBag.displayName on @ViewBag.CreationDate</p>
+</div>
+
+<hr class="title" />
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+       
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @if (ViewBag.mode == 1)
+        {
+            @Html.HiddenFor(model => model.ID)
+            @Html.HiddenFor(model => model.originatorID)
+            @Html.HiddenFor(model => model.creationDate)
+        }
+        <div class="container">
+            @if (ViewBag.mode < 2)
+            { // Edit only
+            <div>
+                @Html.LabelFor(model => model.title, htmlAttributes: new { @class = "control-label" })
+                
+                <div>
+                    @Html.EditorFor(model => model.title, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.title, "", new { @class = "text-danger" })
+                </div>
+                
+            </div>
+            }       
+            <div>
+                <div>
+                    @if (ViewBag.mode == 2)
+                    {
+                        @Html.Raw(Model.body)
+                    }
+                    else {
+                        @Html.LabelFor(model => model.body, htmlAttributes: new { @class = "control-label" })
+
+                        @Html.TextAreaFor(model => model.body, new { @class = "form-control richeditor" })
+                        @Html.ValidationMessageFor(model => model.body, "", new { @class = "text-danger" })
+
+                    }
+                </div>
+
+            </div>
+            
+            @if (ViewBag.mode == 2)
+            {
+                <div>
+                    <div class="btn-group btn-group-custom" style="padding-bottom:15px; padding-top:15px">
+                        
+                        @Html.ActionLink("Edit", "Edit/" + Model.ID, "News", null, htmlAttributes: new { @title = "Click to modify document", @class = "btn btn-primary" })
+                        @Html.ActionLink("Close", "Index", "News", null, htmlAttributes: new { @title = "Click to return to News home", @class = "btn btn-primary" })
+                    </div>
+                </div>
+            }
+            else {
+            <div class="form-publish-bar">
+                <span>
+                    @Html.EditorFor(model => model.published)
+                    @Html.LabelFor(model => model.published, htmlAttributes: new { @class = "control-label" })
+                </span>
+
+                <span>
+                    
+                    @Html.LabelFor(model => model.publishedDate, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.publishedDate)
+                </span>
+
+                <span>
+                    @Html.EditorFor(model => model.sticky)
+                    @Html.LabelFor(model => model.sticky, htmlAttributes: new { @class = "control-label" })
+                </span>
+            </div>
+
+            <div>
+                <div class="btn-group btn-group-custom" style="padding-bottom:15px; padding-top:15px">
+                    <input type="submit" name="btnSave" value="Save" class="btn btn-primary" />
+                    <input type="submit" name="btnSClose" value="Save & Close" class="btn btn-primary" />
+                    <a href="~/News" name="actionBtn" class="btn btn-primary">Cancel</a>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

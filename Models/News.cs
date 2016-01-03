@@ -42,7 +42,7 @@ namespace Help_Desk_2.Models
 
         public virtual UserProfile UserProfile { get; set; }
 
-        [Display(Name = "Created on")]
+        [Display(Name = "Created on"), DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime creationDate {  get;  set; }
 
         [NotMapped]

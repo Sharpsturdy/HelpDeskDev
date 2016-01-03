@@ -386,9 +386,9 @@
     <Content Include="Views\UserProfile\Edit.cshtml" />
     <Content Include="Views\UserProfile\List.cshtml" />
     <Content Include="Views\Ticket\Edit.cshtml" />
-    <Content Include="Views\News\New.cshtml" />
+    <Content Include="Views\News\NewsNew.cshtml" />
     <Content Include="Views\News\Details.cshtml" />
-    <Content Include="Views\News\Edit.cshtml" />
+    <Content Include="Views\News\NewsEdit.cshtml" />
     <Content Include="Views\News\Index.cshtml" />
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce.woff" />
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce.ttf" />
@@ -405,6 +405,7 @@
     <Content Include="Views\NewsNew\Details.cshtml" />
     <Content Include="Views\NewsNew\Edit.cshtml" />
     <Content Include="Views\NewsNew\Index.cshtml" />
+    <Content Include="Views\News\NewsOne.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Files\" />

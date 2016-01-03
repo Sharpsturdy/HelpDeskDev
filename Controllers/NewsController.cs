@@ -34,21 +34,20 @@ namespace Help_Desk_2.Controllers
             {
                 return HttpNotFound();
             }
-            return View(news);
+            ViewBag.mode = 2;
+            return View("NewsOne",news);
         }
 
-        // GET: News/Create
+        // GET: News/New (aka Create)
         public ActionResult New()
         {
             //ViewBag.addAttachCode = "1"; //Activate attach code 
             ViewBag.addTinyMCECode = "1"; //Activate tinymce code
-
-            return View();
+            ViewBag.mode = 0;
+            return View("NewsOne");
         }
 
-        // POST: News/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: News/New (aka Create)
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult New([Bind(Include = "ID,title,body,sticky,published,publishedDate,creationDate")] News news)
@@ -65,14 +64,14 @@ namespace Help_Desk_2.Controllers
 
                 if(Request.Form.AllKeys.Contains("btnSave"))
                 {
-                    //Do some Stuff for this Button
                     return RedirectToAction("Edit/" + news.ID);
                 }
                 return RedirectToAction("Index");
             }
 
             ViewBag.addTinyMCECode = "1"; //Activate tinymce code
-            return View(news);
+            ViewBag.mode = 0;
+            return View("NewsOne", news);
         }
 
         // GET: News/Edit/5
@@ -90,8 +89,8 @@ namespace Help_Desk_2.Controllers
 
             //ViewBag.addAttachCode = "1"; //Activate attach code 
             ViewBag.addTinyMCECode = "1"; //Activate tinymce code
-
-            return View(news);
+            ViewBag.mode = 1;
+            return View("NewsOne", news);
         }
 
         // POST: News/Edit/5
@@ -117,10 +116,11 @@ namespace Help_Desk_2.Controllers
             
             //ViewBag.addAttachCode = "1"; //Activate attach code 
             ViewBag.addTinyMCECode = "1"; //Activate tinymce code
-
-            return View(news);
+            ViewBag.mode = 1;
+            return View("NewsOne", news);
         }
 
+        /***
         // GET: News/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -148,7 +148,7 @@ namespace Help_Desk_2.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-
+        **/
         protected override void Dispose(bool disposing)
         {
             if (disposing)
