@@ -30,55 +30,49 @@
     <div class="form-horizontal">
        
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div>
-            @Html.LabelFor(model => model.title, htmlAttributes: new { @class = "control-label" })
+
+        <div class="container">
             <div>
-                @Html.EditorFor(model => model.title, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.title, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div>
-            @Html.LabelFor(model => model.body, htmlAttributes: new { @class = "control-label" })
-            <div>
-                @Html.TextAreaFor(model => model.body, new { htmlAttributes = new { @class = "form-control richeditor" } })
-                @Html.ValidationMessageFor(model => model.body, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.publishedDate, htmlAttributes: new { @class = "control-label col-md-2" })            
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.publishedDate, new { htmlAttributes = new { @class = "form-control", @value = DateTime.Now } })
-                @Html.ValidationMessageFor(model => model.publishedDate, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        
-        <div class="form-group">
-            @Html.LabelFor(model => model.sticky, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.sticky)
-                    @Html.ValidationMessageFor(model => model.sticky, "", new { @class = "text-danger" })
+                @Html.LabelFor(model => model.title, htmlAttributes: new { @class = "control-label" })
+                <div>
+                    @Html.EditorFor(model => model.title, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.title, "", new { @class = "text-danger" })
                 </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.published, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
+            <div>
+                @Html.LabelFor(model => model.body, htmlAttributes: new { @class = "control-label" })
+                <div>
+                    @Html.TextAreaFor(model => model.body, new { @class = "form-control richeditor" })
+                    @Html.ValidationMessageFor(model => model.body, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+
+            <div class="form-publish-bar">
+                <span>
                     @Html.EditorFor(model => model.published)
-                    @Html.ValidationMessageFor(model => model.published, "", new { @class = "text-danger" })
-                </div>
+                    @Html.LabelFor(model => model.published, htmlAttributes: new { @class = "control-label" })
+                </span>
+
+                <span>
+                    @Html.LabelFor(model => model.publishedDate, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.publishedDate, new { htmlAttributes = new { @class = "form-control", @value = DateTime.Now } })
+                </span>
+
+                <span>
+                    @Html.EditorFor(model => model.sticky)
+                    @Html.LabelFor(model => model.sticky, htmlAttributes: new { @class = "control-label" })
+                </span>
             </div>
-        </div>
-        
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+
+            <div>
+                <div class="btn-group btn-group-custom" style="padding-bottom:15px; padding-top:15px">
+                    <input type="submit" name="btnSave" value="Save" class="btn btn-primary" />
+                    <input type="submit" name="btnSClose" value="Save & Close" class="btn btn-primary" />
+                    <a href="~/News" name="actionBtn" class="btn btn-primary">Cancel</a>
+                </div>
             </div>
         </div>
     </div>

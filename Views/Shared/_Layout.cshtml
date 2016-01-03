@@ -12,33 +12,6 @@
     string displayName = ViewBag.displayName;
 }
 
-@if (ViewBag.addAttachCode == "1")
-{
-    @section scriptsCustomTop {
-        <!-- For Upload Files -->
-        <script type="text/javascript" src="~/Scripts/tinymce/tinymce.min.js"></script>
-        <script type="text/javascript">
-        tinyMCE.init({
-            // General options
-            mode: "textarea",
-            toolbar:["bold italic underline strikethrough "],
-            menubar: false,
-            statusbar: false,
-            selector: ".richeditor",
-
-            // Example content CSS (should be your site CSS)
-            content_css: "@Href("~/Content/site.css")", //"css/example.css",
-        });
-        </script>
-    }
-
-    @* This script block will go to the botton *@
-    @section scriptsCustom {
-        <script type="text/javascript" src="~/Scripts/fileinput.min.js"></script>
-        <script src="~/Scripts/script-custom.js" type="text/javascript"></script>
-    }
-
-}
 <!DOCTYPE html>
 <html>
 <head>

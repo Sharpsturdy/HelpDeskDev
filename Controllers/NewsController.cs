@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using Help_Desk_2.DataAccessLayer;
 using Help_Desk_2.Models;
+using Help_Desk_2.Utilities;
 
 namespace Help_Desk_2.Controllers
 {
@@ -54,8 +55,19 @@ namespace Help_Desk_2.Controllers
         {
             if (ModelState.IsValid)
             {
+                UserData ud = new UserData();
+                UserProfile userProfile = ud.getUserProfile();
+
+                news.creationDate = DateTime.Now;
+                news.originatorID = userProfile.userID;
                 db.News.Add(news);
                 db.SaveChanges();
+
+                if(Request.Form.AllKeys.Contains("btnSave"))
+                {
+                    //Do some Stuff for this Button
+                    return RedirectToAction("Edit/" + news.ID);
+                }
                 return RedirectToAction("Index");
             }
 
@@ -93,9 +105,16 @@ namespace Help_Desk_2.Controllers
             {
                 db.Entry(news).State = EntityState.Modified;
                 db.SaveChanges();
+
+                if (Request.Form.AllKeys.Contains("btnSave"))
+                {
+                    //Do some Stuff for this Button
+                    return RedirectToAction("Edit/" + news.ID);
+                }
                 return RedirectToAction("Index");
             }
 
+            
             //ViewBag.addAttachCode = "1"; //Activate attach code 
             ViewBag.addTinyMCECode = "1"; //Activate tinymce code
 

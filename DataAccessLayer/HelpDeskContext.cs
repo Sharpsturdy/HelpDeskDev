@@ -6,7 +6,7 @@ using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Configuration;
 using Help_Desk_2.Models;
 using System.Data.Entity.ModelConfiguration.Conventions;
-using Help_Desk_2.ViewModels;on
+using Help_Desk_2.ViewModels;
 
 namespace Help_Desk_2.DataAccessLayer
 {

@@ -33,8 +33,8 @@ namespace Help_Desk_2.Models
         [DefaultValue(false)]
         public bool published { get; set; } 
 
-        [Display(Name = "Published on"), DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:d}")]
-        [DataType(DataType.DateTime)]
+        [Display(Name = "Published on"), DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
+        [DataType(DataType.Date)]
         public DateTime? publishedDate { get; set; }
 
         [ForeignKey("UserProfile")]
@@ -43,16 +43,31 @@ namespace Help_Desk_2.Models
         public virtual UserProfile UserProfile { get; set; }
 
         [Display(Name = "Created on")]
-        public DateTime creationDate {
-            get { return creationDate; }
-            set {
-                if (creationDate == null)
-                {
-                    creationDate = DateTime.Now;
-                }
+        public DateTime creationDate {  get;  set; }
+
+        [NotMapped]
+        public string status
+        {
+            get
+            {
+                if (published)
+                    return "Published";
+                else
+                    return "Unpublished";
             }
         }
 
+        [NotMapped]
+        public string dspSticky
+        {
+            get
+            {
+                if (sticky)
+                    return "Sticky";
+                else
+                    return "";
+            }
+        }
 
     }
 }
