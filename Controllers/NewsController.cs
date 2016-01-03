@@ -99,7 +99,7 @@ namespace Help_Desk_2.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,title,body,sticky,published,publishedDate,creationDate")] News news)
+        public ActionResult Edit([Bind(Include = "ID,originatorID,title,body,sticky,published,publishedDate,creationDate")] News news)
         {
             if (ModelState.IsValid)
             {

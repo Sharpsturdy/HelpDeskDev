@@ -133,27 +133,7 @@ namespace Help_Desk_2.Controllers
 
             return View(ticket);
         }
-        /*
-        public ActionResult Edit([Bind(Include = "ID,headerText,description,links")] Ticket ticketM)
-        {
-            if (ModelState.IsValid)
-            {
-                Ticket ticket = db.Tickets.Find(ticketM.ID);
-                db.Entry(ticket).State = EntityState.Modified;
-
-                ticket.description = ticketM.description;
-                ticket.headerText = ticketM.headerText;
-                ticket.links = ticketM.links;
-                /***** Add File ************ /
-                saveAttachments(ticket.ID);
-
-                db.SaveChanges();
-                //return RedirectToAction("Index");
-                return Redirect(Request.UrlReferrer.ToString());
-            }
-            return View(ticketM);
-        }
-        */
+       
                 // GET: Ticket/Delete/5
         public ActionResult Delete(int? id)
         {

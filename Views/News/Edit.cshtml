@@ -20,7 +20,8 @@
         
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.ID)
-
+        @Html.HiddenFor(model => model.originatorID)
+        @Html.HiddenFor(model => model.creationDate)
         <div class="container">
             <div>
                 @Html.LabelFor(model => model.title, htmlAttributes: new { @class = "control-label" })
