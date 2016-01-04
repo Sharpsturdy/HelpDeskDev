@@ -52,14 +52,14 @@ namespace Help_Desk_2.Utilities
                         } while (System.IO.File.Exists(Path.Combine(savePath, randomName)));
 
                         //Save file
-                        //file.SaveAs(savePath + "/" + randomName);
                         file.SaveAs(Path.Combine(savePath, randomName));
 
                         //Add file data to database
                         Attachment attachment = new Attachment();
                         attachment.fileName = Path.GetFileName(file.FileName);
                         attachment.filePath = "~/App_Data/Files/" + DateTime.Now.Year + "/" + randomName;
-                        attachment.parentID = ID;
+                        attachment.ticketID = ID;
+                        //attachment.attachType = 0;
                         db.Attachments.Add(attachment);
                     }
                 }

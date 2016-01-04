@@ -53,12 +53,10 @@ namespace Help_Desk_2.Controllers
             return View();
         }
 
-        // POST: Ticket/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Ticket/Create        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult New([Bind(Include = "headerText,description")] Ticket ticket)
+        public ActionResult New([Bind(Include = "headerText,description,links")] Ticket ticket)
         //"ID,originatorUsername,dateComposed,headerText,description,dateSubmitted,adminEmail,dateL1Release,dateL2Release,sanityCheck")] Ticket ticket)
         {
             if (ModelState.IsValid)
@@ -82,6 +80,9 @@ namespace Help_Desk_2.Controllers
                 return RedirectToAction("Edit/" + ticket.ID);
             }
 
+            ViewBag.newTicket = "1";
+            ViewBag.addAttachCode = "1"; //Activate attach code 
+            ViewBag.addTinyMCECode = "1"; //Activate tinymce code
             return View(ticket);
         }
 
@@ -100,7 +101,6 @@ namespace Help_Desk_2.Controllers
 
             ViewBag.addAttachCode = "1"; //Activate attach code 
             ViewBag.addTinyMCECode = "1"; //Activate tinymce code
-
             return View(ticket);
         }
 
@@ -169,59 +169,6 @@ namespace Help_Desk_2.Controllers
             base.Dispose(disposing);
         }
 
-        private void saveAttachments(int ID, string deleteList = null)
-        {
-            if (Request.Files.Count > 0)
-            {
-                //Remove files
-                if (deleteList != null)
-                {
-                    var fileIDs = deleteList.Split(new char[',']);
-
-                    foreach(string strID in fileIDs)
-                    {
-                        if (!string.IsNullOrEmpty(strID))
-                        {
-                            Attachment f = db.Attachments.Find(int.Parse(strID));
-                            db.Attachments.Remove(f);
-                        }
-                    }
-                }
-
-                //Add Files
-                for (int i = 0; i < Request.Files.Count; i++)
-                {
-                    HttpPostedFileBase file = Request.Files[i];
-                    if (file.ContentLength > 0)
-                    {
-
-                        //Get physical path to directory
-                        string savePath = Path.Combine(Server.MapPath("~/App_Data/Files"), DateTime.Now.Year.ToString());
-                        if(!Directory.Exists(savePath)) {
-                            Directory.CreateDirectory(savePath);
-                        }
-
-                        //Get unique random name, duplication not very possible
-                        string randomName = ""; 
-                        do {
-                            randomName = Path.GetRandomFileName();
-                        } while (System.IO.File.Exists(Path.Combine(savePath, randomName)));
-
-                        //Save file
-                        //file.SaveAs(savePath + "/" + randomName);
-                        file.SaveAs(Path.Combine(savePath, randomName));
-
-                        //Add file data to database
-                        Attachment attachment = new Attachment();
-                        attachment.fileName = Path.GetFileName(file.FileName);
-                        attachment.filePath = "~/App_Data/Files/" + DateTime.Now.Year + "/" + randomName;
-                        attachment.parentID = ID;     
-                        db.Attachments.Add(attachment);
-                    }
-                }
-                
-            }
-        }
-
+        
     }
 }

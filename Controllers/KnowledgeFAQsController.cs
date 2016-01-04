@@ -1,144 +1,26 @@
-﻿using Help_Desk_2.DataAccessLayer;
-using System.Linq;
-using System.Web.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
-using Help_Desk_2.Models;
-using Help_Desk_2.Utilities;
-using System;
+using System.Linq;
 using System.Net;
+using System.Web;
+using System.Web.Mvc;
+using Help_Desk_2.DataAccessLayer;
+using Help_Desk_2.Models;
 
 namespace Help_Desk_2.Controllers
 {
-    public class FAQsController : Controller
+    public class KnowledgeFAQsController : Controller
     {
         private HelpDeskContext db = new HelpDeskContext();
 
-        // GET: FAQs
+        // GET: KnowledgeFAQs
         public ActionResult Index()
         {
-            //return View();
-            //var FAQs = db.KnowledgeFAQs.Include(k => k.UserProfile);
-            return View(db.KnowledgeFAQs.ToList());
+            var knowledgeFAQs = db.KnowledgeFAQs.Include(k => k.UserProfile);
+            return View(knowledgeFAQs.ToList());
         }
-
-        // GET: FAQs/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: FAQs/New
-        public ActionResult New()
-        {
-            //ViewBag.originatorID = new SelectList(db.UserProfiles, "userID", "loginName");
-            ViewBag.mode = 0;
-            return View("FAQOne");
-        }
-
-        // POST: FAQs/New
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult New([Bind(Include = "type,headerText,description,links")] KnowledgeFAQ faq)
-        {
-            if (ModelState.IsValid)
-            {
-                UserData ud = new UserData();
-                UserProfile userProfile = ud.getUserProfile();
-                
-                faq.dateComposed = DateTime.Now;
-                faq.originatorID = userProfile.userID;
-
-                faq = db.KnowledgeFAQs.Add(faq);
-
-                /***** Add File ************/
-                AllSorts.saveAttachments(faq.ID, db);
-                db.SaveChanges();
-
-                if (Request.Form.AllKeys.Contains("btnSave"))
-                {
-                    return RedirectToAction("Edit/" + faq.ID);
-                }
-                return RedirectToAction("Index");
-            }
-
-            ViewBag.mode = 0;
-            ViewBag.newTicket = "1";
-            ViewBag.addAttachCode = "1"; //Activate attach code 
-            ViewBag.addTinyMCECode = "1"; //Activate tinymce code
-            return View("FAQOne",faq);
-        }
-
-        // GET: FAQs/Suggest
-        public ActionResult Suggest()
-        {
-            return View();
-        }
-
-        // GET: FAQs/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            KnowledgeFAQ faq = db.KnowledgeFAQs.Find(id);
-            if (faq == null)
-            {
-                return HttpNotFound();
-            }
-            
-            ViewBag.mode = 1;
-            return View("FAQOne",faq);
-        }
-
-        // POST: FAQs/Edit/5
-        [HttpPost]
-        public ActionResult Edit([Bind(Include = "ID,originatorID,expiryDate,dateComposed,type,headerText,description,links,deleteField")] KnowledgeFAQ faq)
-        {
-            if (ModelState.IsValid)
-            {
-
-                db.Entry(faq).State = EntityState.Modified;
-
-                /***** Add File ************/
-                AllSorts.saveAttachments(faq.ID, db, faq.deleteField);
-                db.SaveChanges();
-
-                if (Request.Form.AllKeys.Contains("btnSave"))
-                {
-                    return RedirectToAction("Edit/" + faq.ID);
-                }
-                return RedirectToAction("Index");
-            }
-
-            ViewBag.mode = 1;
-            return View("FAQOne", faq);
-        }
-    
-
-        // GET: FAQs/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: FAQs/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-        /************
-        
 
         // GET: KnowledgeFAQs/Details/5
         public ActionResult Details(int? id)
@@ -238,7 +120,6 @@ namespace Help_Desk_2.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-        *******************/
 
         protected override void Dispose(bool disposing)
         {
@@ -248,6 +129,5 @@ namespace Help_Desk_2.Controllers
             }
             base.Dispose(disposing);
         }
-        
     }
 }
