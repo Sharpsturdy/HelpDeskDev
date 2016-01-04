@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Help_Desk_2.Models.KnowledgeFAQ>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.headerText)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UserProfile.displayName)
+        </th>
+        
+        <th>
+            @Html.DisplayNameFor(model => model.dateComposed)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.exiryDate)
+        </th>       
+        
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.headerText)
+        </td>
+        <td>
+            @Html.DisplayNameFor(model => model.UserProfile.displayName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.dateComposed)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.exiryDate)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID })
+        </td>
+    </tr>
+}
+
+</table>
