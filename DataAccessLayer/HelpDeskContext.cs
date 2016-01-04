@@ -28,33 +28,9 @@ namespace Help_Desk_2.DataAccessLayer
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
-            /*
-            modelBuilder.Entity<Ticket>()
-                .HasMany(a => a.Files)
-                .WithOptional(t => t.Ticket)
-                .HasForeignKey(fk => new { fk.ID, fk.parentID });
-            */
-            /*
-            modelBuilder.Entity<Attachment>()
-                .HasKey(k => new { k.ID, k.attachType})
-                .HasRequired(t => t.Ticket)
-                .WithMany(t => t.Files)
-                .HasForeignKey(t => new { t.parentID, t.attachType });
-            */
-            /*
-            modelBuilder.Entity<Ticket>()
-                .HasOptional( t => t)
-            */
-            /*
-            modelBuilder.Entity<Attachment>()
-                .HasRequired(t => t.Ticket)
-                .WithMany(a => a.Files)
-                .Map()
-                //.HasForeignKey(fk => new { fk.parentID, fk.attachType });
-            */    
         }
 
-        public System.Data.Entity.DbSet<Help_Desk_2.Models.KnowledgeFAQ> KnowledgeFAQs { get; set; }
+        
     }
 
    

@@ -20,14 +20,8 @@ namespace Help_Desk_2.Models
     public class Ticket
     {
         [Display(Name = "Temporary ticket No.")]
-
-        [Key]
         public int ID { get; set;  }
-
-        public byte attachType { get { return 0; }
-        set { attachType = 0;  }
-        }
-
+        
         [Display(Name = "Ticket No.")]
         public int ticketID { get; set;  }
 

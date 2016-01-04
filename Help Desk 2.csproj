@@ -132,7 +132,6 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\FAQsController.cs" />
-    <Compile Include="Controllers\KnowledgeFAQsController.cs" />
     <Compile Include="Controllers\News1Controller.cs" />
     <Compile Include="Controllers\FilesController.cs" />
     <Compile Include="Controllers\GlobalSettingsController.cs" />
@@ -178,7 +177,6 @@
     <Content Include="Content\site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="ClassDiagram1.cd" />
     <None Include="Properties\PublishProfiles\dev web deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2-vsdoc.js" />
     <Content Include="Scripts\fileinput.min.js" />
@@ -403,17 +401,15 @@
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\readme.md" />
     <Content Include="Scripts\tinymce\langs\readme.md" />
     <Content Include="Views\NewsNew\New.cshtml" />
+    <Content Include="Views\NewsNew\Delete.cshtml" />
+    <Content Include="Views\NewsNew\Details.cshtml" />
+    <Content Include="Views\NewsNew\Edit.cshtml" />
+    <Content Include="Views\NewsNew\Index.cshtml" />
     <Content Include="Views\News\NewsOne.cshtml" />
-    <Content Include="Views\KnowledgeFAQs\FAQOne.cshtml" />
-    <Content Include="Views\KnowledgeFAQs\Delete.cshtml" />
-    <Content Include="Views\KnowledgeFAQs\Details.cshtml" />
-    <Content Include="Views\KnowledgeFAQs\Edit.cshtml" />
-    <Content Include="Views\KnowledgeFAQs\Index.cshtml" />
-    <Content Include="Views\FAQs\Index.cshtml" />
-    <Content Include="Views\FAQs\FAQOne.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Files\" />
+    <Folder Include="Views\FAQs\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

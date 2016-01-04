@@ -10,16 +10,25 @@ namespace Help_Desk_2.Models
 {
     public class Attachment
     {
-        [Key] 
+
+        //[NotMapped]
+        //private string basePath = 
+            //System.IO.Directory.GetCurrentDirectory();
+
+        [Key]
         public Int32 ID { get; set; }
 
         [ForeignKey("Ticket")]
-        public int? ticketID { get; set; }
+        public int parentID { get; set; }
 
-        [ForeignKey("KnowledgeFAQ")]
-        public int? kbfaqID { get; set; } 
-
-        public byte? attachType { get; set;  }
+        /***[NotMapped]
+        [Display(Name = "File Name")]
+        public string fileName {
+            get
+            {
+                return Path.GetFileName(filePath);
+            }
+        }**/
 
         //This is actually needed as file name is randomised
         [Required]
@@ -32,8 +41,6 @@ namespace Help_Desk_2.Models
         public string filePath { get; set; }
 
         public virtual Ticket Ticket { get; set; }
-                
-        public virtual KnowledgeFAQ KnowledgeFAQ { get; set; }
 
         [NotMapped]
         public double size

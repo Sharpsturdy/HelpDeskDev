@@ -90,7 +90,7 @@ namespace Help_Desk_2.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Keywords([Bind(Include = "type,text")] WordList wordList)
+        public ActionResult Keywords([Bind(Include = "text")] WordList wordList)
         {
             if (ModelState.IsValid)
             {
