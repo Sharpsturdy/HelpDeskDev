@@ -131,6 +131,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\KnowledgeBaseController.cs" />
     <Compile Include="Controllers\FAQsController.cs" />
     <Compile Include="Controllers\News1Controller.cs" />
     <Compile Include="Controllers\FilesController.cs" />
@@ -177,6 +178,8 @@
     <Content Include="Content\site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="KnowledgeBase\KBOne.cshtml" />
+    <Content Include="KnowledgeBase\Index.cshtml" />
     <None Include="Properties\PublishProfiles\dev web deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2-vsdoc.js" />
     <Content Include="Scripts\fileinput.min.js" />
@@ -406,10 +409,11 @@
     <Content Include="Views\NewsNew\Edit.cshtml" />
     <Content Include="Views\NewsNew\Index.cshtml" />
     <Content Include="Views\News\NewsOne.cshtml" />
+    <Content Include="Views\FAQs\FAQOne.cshtml" />
+    <Content Include="Views\FAQs\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Files\" />
-    <Folder Include="Views\FAQs\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

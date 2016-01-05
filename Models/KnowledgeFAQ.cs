@@ -16,7 +16,7 @@ namespace Help_Desk_2.Models
         [DataType(DataType.DateTime)]
         public DateTime dateComposed { get; set; }
 
-        [Display(Name = "Created on:"), DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:d}")]
+        [Display(Name = "Expiries on:"), DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:d}")]
         [DataType(DataType.DateTime)]
         public DateTime? exiryDate { get; set;  }
 
@@ -47,11 +47,23 @@ namespace Help_Desk_2.Models
 
         public virtual ICollection<Attachment> Files { get; set; }
 
-        
+        [NotMapped]     //List of files to delete
+        public string deleteField { get; set; }
+
+        public byte type { get; set; } //type => 1=FAQs, 2=Knowledge Base
+
+        [NotMapped]
+        public string status
+        {
+            get
+            {
+                return "Draft";
+            }
+        }
 
         //public virtual keywords
 
-       
+
 
         //read-only faq approverID
 

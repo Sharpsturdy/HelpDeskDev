@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<Help_Desk_2.Models.KnowledgeFAQ>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "KB/FAQs";
 }
 
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("New FAQ", "New")
 </p>
 <table class="table">
     <tr>
@@ -34,7 +34,7 @@
             @Html.DisplayFor(modelItem => item.headerText)
         </td>
         <td>
-            @Html.DisplayNameFor(model => model.UserProfile.displayName)
+            @Html.DisplayFor(model => item.UserProfile.displayName)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.dateComposed)

@@ -10,7 +10,7 @@ namespace Help_Desk_2.Utilities
 {
     public static class AllSorts
     {
-        public static void saveAttachments(int ID, HelpDeskContext db, string deleteList = null)
+        public static void saveAttachments(int ID, HelpDeskContext db, string deleteList = null, int attachType = 0)
         {
             var rFiles = HttpContext.Current.Request.Files;
             if (rFiles.Count > 0)
@@ -59,7 +59,14 @@ namespace Help_Desk_2.Utilities
                         Attachment attachment = new Attachment();
                         attachment.fileName = Path.GetFileName(file.FileName);
                         attachment.filePath = "~/App_Data/Files/" + DateTime.Now.Year + "/" + randomName;
-                        attachment.parentID = ID;
+                        if (attachType == 1)
+                        {
+                            attachment.commonID = ID;
+                        }
+                        else {
+                            attachment.parentID = ID;
+                        }
+
                         db.Attachments.Add(attachment);
                     }
                 }

@@ -11,125 +11,125 @@ using System.Web.Mvc;
 
 namespace Help_Desk_2.Controllers
 {
-    public class FAQsController : Controller
+    public class KnowledgeBaseController : Controller
     {
         private HelpDeskContext db = new HelpDeskContext();
 
-        // GET: FAQs
+        // GET: KB
         public ActionResult Index()
         {
             return View(db.KnowledgeFAQs.ToList());            
         }
 
-        // GET: FAQs/Details/5
+        // GET: KB/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            KnowledgeFAQ faq = db.KnowledgeFAQs.Find(id);
-            if (faq == null)
+            KnowledgeFAQ kb = db.KnowledgeFAQs.Find(id);
+            if (kb == null)
             {
                 return HttpNotFound();
             }
 
             ViewBag.mode = 2;
-            return View("FAQOne", faq);
+            return View("KBOne", kb);
         }
 
-        // GET: FAQs/New
+        // GET: KB/New
         public ActionResult New()
         {
             //ViewBag.originatorID = new SelectList(db.UserProfiles, "userID", "loginName");
             ViewBag.mode = 0;
-            return View("FAQOne");
+            return View("KBOne");
         }
 
-        // POST: FAQs/New
+        // POST: KB/New
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult New([Bind(Include = "type,headerText,description,links")] KnowledgeFAQ faq)
+        public ActionResult New([Bind(Include = "type,headerText,description,links")] KnowledgeFAQ kb)
         {
             if (ModelState.IsValid)
             {
                 UserData ud = new UserData();
                 UserProfile userProfile = ud.getUserProfile();
 
-                faq.dateComposed = DateTime.Now;
-                faq.originatorID = userProfile.userID;
+                kb.dateComposed = DateTime.Now;
+                kb.originatorID = userProfile.userID;
 
-                faq = db.KnowledgeFAQs.Add(faq);
+                kb = db.KnowledgeFAQs.Add(kb);
 
                 /***** Add File ************/
-                AllSorts.saveAttachments(faq.ID, db, null, 1);
+                AllSorts.saveAttachments(kb.ID, db, null, 1);
                 db.SaveChanges();
 
                 if (Request.Form.AllKeys.Contains("btnSave"))
                 {
-                    return RedirectToAction("Edit/" + faq.ID);
+                    return RedirectToAction("Edit/" + kb.ID);
                 }
                 return RedirectToAction("Index");
             }
 
             ViewBag.mode = 0;
-            return View("FAQOne", faq);
+            return View("KBOne", kb);
         }
         
-        // GET: FAQs/Suggest
+        // GET: KB/Suggest
         public ActionResult Suggest()
         {
             return View();
         }
 
-        // GET: FAQs/Edit/5
+        // GET: KB/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            KnowledgeFAQ faq = db.KnowledgeFAQs.Find(id);
-            if (faq == null)
+            KnowledgeFAQ kb = db.KnowledgeFAQs.Find(id);
+            if (kb == null)
             {
                 return HttpNotFound();
             }
 
             ViewBag.mode = 1;
-            return View("FAQOne", faq);
+            return View("KBOne", kb);
         }
 
-        // POST: FAQs/Edit/5
+        // POST: KB/Edit/5
         [HttpPost]
-        public ActionResult Edit([Bind(Include = "ID,originatorID,expiryDate,dateComposed,type,headerText,description,links,deleteField")] KnowledgeFAQ faq)
+        public ActionResult Edit([Bind(Include = "ID,originatorID,expiryDate,dateComposed,type,headerText,description,links,deleteField")] KnowledgeFAQ kb)
         {
             if (ModelState.IsValid)
             {
 
-                db.Entry(faq).State = EntityState.Modified;
+                db.Entry(kb).State = EntityState.Modified;
 
                 /***** Add File ************/
-                AllSorts.saveAttachments(faq.ID, db, faq.deleteField, 1);
+                AllSorts.saveAttachments(kb.ID, db, kb.deleteField, 1);
                 db.SaveChanges();
 
                 if (Request.Form.AllKeys.Contains("btnSave"))
                 {
-                    return RedirectToAction("Edit/" + faq.ID);
+                    return RedirectToAction("Edit/" + kb.ID);
                 }
                 return RedirectToAction("Index");
             }
 
             ViewBag.mode = 1;
-            return View("FAQOne", faq);
+            return View("KBOne", kb);
         }
 
-        // GET: FAQs/Delete/5
+        // GET: KB/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: FAQs/Delete/5
+        // POST: KB/Delete/5
         [HttpPost]
         public ActionResult Delete(int id, FormCollection collection)
         {
