@@ -18,7 +18,8 @@ namespace Help_Desk_2.Controllers
         // GET: FAQs
         public ActionResult Index()
         {
-            return View(db.KnowledgeFAQs.ToList());            
+            return View(db.KnowledgeFAQs.Where(k => k.type == 1).ToList());
+            //return View(db.KnowledgeFAQs.ToList());            
         }
 
         // GET: FAQs/Details/5

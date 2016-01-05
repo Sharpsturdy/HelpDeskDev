@@ -177,8 +177,8 @@
     <Content Include="Content\site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="KnowledgeBase\KBOne.cshtml" />
-    <Content Include="KnowledgeBase\Index.cshtml" />
+    <Content Include="Views\KnowledgeBase\KBOne.cshtml" />
+    <Content Include="Views\KnowledgeBase\Index.cshtml" />
     <None Include="Properties\PublishProfiles\dev web deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2-vsdoc.js" />
     <Content Include="Scripts\fileinput.min.js" />

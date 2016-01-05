@@ -82,31 +82,32 @@
         </div>
 
         <div class="form-group odd">
-            <h3 class="control-label col-md-6">@Html.ActionLink("Keywords","Keywords")</h3>
-            <h3 class="control-label col-md-6">@Html.ActionLink("Expert Area", "ExpertAreas")</h3>            
+            <h3 class="control-label col-md-6">Keywords&nbsp; @Html.ActionLink("Manage", "Keywords", null, new { @class = "btn btn-default" })</h3>
+            <h3 class="control-label col-md-6">Expert Areas &nbsp; @Html.ActionLink("Manage", "ExpertAreas", null, new { @class = "btn btn-default" })</h3>
         </div>
-
-       
 
         <div class="form-group">
             <div class="col-md-6">
                 <table>
                     @foreach (string kword in ViewBag.keywords){
                         <tr>
-                            <td>@Html.Display(kword)</td>
+                            <td>@kword</td>
                         </tr>
                     }
                 </table>
                 
             </div>
             <div class="col-md-6">
-                @String.Join("<br/>", ViewBag.expertareas)
+                <table>
+                    @foreach (string kword in ViewBag.expertareas)
+                    {
+                        <tr>
+                            <td>@kword</td>
+                        </tr>
+                    }
+                </table>
             </div>
-        </div>
-
-        
-
-       
+        </div>       
     </div>
 }
 

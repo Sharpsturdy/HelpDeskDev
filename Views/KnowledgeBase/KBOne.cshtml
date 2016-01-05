@@ -5,7 +5,7 @@
 @if (ViewBag.mode == 0)
 {
 
-    ViewBag.Title = "New FAQ Articles";
+    ViewBag.Title = "New Knowledge Base Article";
     ViewBag.Status = "Draft";
     ViewBag.CreationDate = String.Format("{0:d}", DateTime.Now);
 
@@ -40,7 +40,7 @@ else
 
 <hr class="title" />
 
-@using (Html.BeginForm(ViewBag.mode ==0? "New": "Edit", "FAQs", FormMethod.Post,
+@using (Html.BeginForm(ViewBag.mode ==0? "New": "Edit", "KnowledgeBase", FormMethod.Post,
                  new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
@@ -48,7 +48,7 @@ else
     <div class="form-horizontal">
        
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.Hidden("type",1) <!-- FAQs always have type == 1 -->
+        @Html.Hidden("type",2) <!-- KB always have type == 2 -->        
         @if (ViewBag.mode == 1)
         {
             @Html.HiddenFor(model => model.ID)
@@ -177,8 +177,8 @@ else
                 <div>
                     <div class="btn-group btn-group-custom" style="padding-bottom:15px; padding-top:15px">
                         
-                        @Html.ActionLink("Edit", "Edit/" + Model.ID, "FAQs", null, htmlAttributes: new { @title = "Click to modify document", @class = "btn btn-primary" })
-                        @Html.ActionLink("Close", "Index", "FAQs", null, htmlAttributes: new { @title = "Click to return to News home", @class = "btn btn-primary" })
+                        @Html.ActionLink("Edit", "Edit/" + Model.ID, "KnowledgeBase", null, htmlAttributes: new { @title = "Click to modify document", @class = "btn btn-primary" })
+                        @Html.ActionLink("Close", "Index", "KnowledgeBase", null, htmlAttributes: new { @title = "Click to return to News home", @class = "btn btn-primary" })
                     </div>
                 </div>
             }
@@ -189,7 +189,7 @@ else
                 <div class="btn-group btn-group-custom" style="padding-bottom:15px; padding-top:15px">
                     <input type="submit" name="btnSave" value="Save" class="btn btn-primary" />
                     <input type="submit" name="btnSClose" value="Save & Close" class="btn btn-primary" />
-                    <a href="~/FAQs" name="actionBtn" class="btn btn-primary">Cancel</a>
+                    <a href="~/KnowledgeBase" name="actionBtn" class="btn btn-primary">Cancel</a>
                 </div>
             </div>
             }

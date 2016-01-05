@@ -21,26 +21,17 @@ namespace Help_Desk_2.Controllers
             
             if (globalSettings == null || globalSettings.ID == null)
             {
-                ViewBag.Msg = "ID is blank. This must be a new record!";
+                ViewBag.Msg = "No previous settings found. Creating new settings!";
                 gsm = new GlobalSettingsEditModel();
             } else
             {
                 gsm = new GlobalSettingsEditModel(globalSettings);
             }
-
-            var kwds = from kwd in db.WordLists
-                               where kwd.type == 1
-                               select kwd.text;
-
-            ViewBag.keywords = kwds; // String.Join(", ", kwds);
-
-            var eAreas = from eArea in db.WordLists
-                         where eArea.type == 2
-                         select eArea.text;
-
-            ViewBag.expertareas = eAreas; // String.Join(", ", eAreas);
+                        
+            ViewBag.keywords = db.WordLists.Where(k => k.type == 1).ToList();
+            
+            ViewBag.expertareas = db.WordLists.Where(k => k.type == 1).ToList();
             return View(gsm);
-
 
         }
 
@@ -49,7 +40,7 @@ namespace Help_Desk_2.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Index([Bind(Include = "ID,AdminEmail,TicketSeeder,FAQApprover,KBApprover,TicketHeader,Keyowrds,ExpertArea,TicketExpiry")] GlobalSettings globalSettings)
+        public ActionResult Index([Bind(Include = "ID,AdminEmail,TicketSeeder,FAQApprover,KBApprover,TicketHeader,TicketExpiry")] GlobalSettings globalSettings)
         {
             
             if (ModelState.IsValid)
@@ -81,22 +72,18 @@ namespace Help_Desk_2.Controllers
         /********* Keywords Section ****************/
         public ActionResult Keywords()
         {
-            var kwds = from kwd in db.WordLists
-                                  where kwd.type == 1
-                                  select kwd;
-
-            return View(kwds.ToList<WordList>());
+            
+            return View(db.WordLists.Where(k => k.type == 1).ToList());
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Keywords([Bind(Include = "text")] WordList wordList)
+        public ActionResult Keywords([Bind(Include = "type,text")] WordList wordList)
         {
             if (ModelState.IsValid)
             {
                 db.WordLists.Add(wordList);
                 db.SaveChanges();
-                return RedirectToAction("Keywords");
             }
             return RedirectToAction("Keywords");
         }
@@ -104,10 +91,8 @@ namespace Help_Desk_2.Controllers
         /********* Expert Area Section ****************/
         public ActionResult ExpertAreas()
         {
-            var eAreas = from eArea in db.WordLists
-                         where eArea.type == 2
-                         select eArea;
-            return View(eAreas.ToList());
+            
+            return View(db.WordLists.Where(k => k.type == 2).ToList());
         }
 
         [HttpPost]
@@ -119,7 +104,6 @@ namespace Help_Desk_2.Controllers
             {
                 db.WordLists.Add(wordList);
                 db.SaveChanges();
-                return RedirectToAction("ExpertAreas");
             }
             return RedirectToAction("ExpertAreas");
         }
