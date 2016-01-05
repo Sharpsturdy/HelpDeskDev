@@ -133,7 +133,6 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\KnowledgeBaseController.cs" />
     <Compile Include="Controllers\FAQsController.cs" />
-    <Compile Include="Controllers\News1Controller.cs" />
     <Compile Include="Controllers\FilesController.cs" />
     <Compile Include="Controllers\GlobalSettingsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
