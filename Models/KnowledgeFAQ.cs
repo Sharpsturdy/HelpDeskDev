@@ -53,6 +53,7 @@ namespace Help_Desk_2.Models
         public byte type { get; set; } //type => 1=FAQs, 2=Knowledge Base
 
         [NotMapped]
+        [Display(Name = "Status")]
         public string status
         {
             get

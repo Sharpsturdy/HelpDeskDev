@@ -225,10 +225,6 @@ textarea {
     margin-left: -15px;
 }
 
-.color-purple li a {
-    color: rebeccapurple
-}
-
 .left-column1 .content {
    
     background-color: #ddd; /*#D7E7F5;*/
@@ -245,15 +241,12 @@ textarea {
     padding: 0 15px;
 }
 
-
 .content-column {
-    border: 1px solid #ddd;
+    /*border: 1px solid #ddd;*/
 }
 
-
-
 .content-column h2.title {
-    padding-left:15px;
+    /*padding-left:15px;*/
 }
 
 .form-group .control-label {
@@ -294,7 +287,8 @@ footer {
     margin: 0;
 }
 
-hr.title {
+hr.title,
+h2.title {
     margin-top: 0;
 }
 
@@ -328,4 +322,13 @@ textarea.form-control {
 
 .form-publish-bar > span {
 	padding-right: 20px;
+}
+
+.table-view thead tr:hover {
+    cursor: pointer;
+}
+
+.table-view tr:hover td {
+    /*background-color: #c5dbfa;
+    cursoor: pointer;*/
 }

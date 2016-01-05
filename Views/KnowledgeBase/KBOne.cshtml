@@ -61,12 +61,10 @@ else
             { // Edit only
             <div>
                 @Html.LabelFor(model => model.headerText, htmlAttributes: new { @class = "control-label" })
-                
                 <div>
                     @Html.EditorFor(model => model.headerText, new { htmlAttributes = new { @class = "form-control" } })
                     @Html.ValidationMessageFor(model => model.headerText, "", new { @class = "text-danger" })
                 </div>
-                
             </div>
             }       
             <div>
@@ -80,7 +78,6 @@ else
 
                         @Html.TextAreaFor(model => model.description, new { @class = "form-control richeditor" })
                         @Html.ValidationMessageFor(model => model.description, "", new { @class = "text-danger" })
-
                     }
                 </div>
 
@@ -104,6 +101,8 @@ else
                                     <td class="fileID hidden">@t.ID</td>
                                     <td>@Html.ActionLink(t.fileName, "d/" + t.ID, "Files", null, new { target = "_blank" })</td>
                                     <td>@t.displaySize</td>
+                                    @if (ViewBag.mode < 2)
+                                    {
                                     <td>
                                         <div tabindex="500" class="btn btn-primary btn-custom btn-custom-undelete hidden">
                                             <i class="fa fa-undo"></i>
@@ -115,12 +114,16 @@ else
                                             <span class="hidden-xs">Delete</span>
                                         </div>
                                     </td>
+                                    }
                                 </tr>
                             }
                         </table>
                     }
                 }
-                <input type="file" name="file1" class="file" data-show-upload="false" data-show-preview="false" />
+                @if (ViewBag.mode < 2)
+                {
+                    <input type="file" name="file1" class="file" data-show-upload="false" data-show-preview="false" />
+                }
             </div>
 
             <!-- Links -->
@@ -142,7 +145,8 @@ else
                                     {
                                         var tmp = link.Split(new char[] { '^' });
                                         displayLinks += "<tr class=\"normal\"><td><a href=\"" + tmp[1] + "\" target=\"_blank\">" + tmp[0] + "</a></td>" +
-                                            "<td><input type=\"button\" value=\"Delete\" class=\"btn btn-default btn-custom-action\"></td></tr>";
+                                            "<td>" + (ViewBag.mode == 2 ? "" : "<input type=\"button\" value=\"Delete\" class=\"btn btn-default btn-custom-action\">") +
+                                            "</td></tr>";
                                     }
                                 }
                             }
@@ -150,6 +154,8 @@ else
                         }
 
                     </tbody>
+                    @if (ViewBag.mode < 2)
+                    {
                     <tfoot>
                         <tr>
                             <td colspan="2">
@@ -169,6 +175,7 @@ else
                             </td>
                         </tr>
                     </tfoot>
+                    }
                 </table>
             </div>
             

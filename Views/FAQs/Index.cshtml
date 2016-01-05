@@ -1,51 +1,35 @@
 ﻿@model IEnumerable<Help_Desk_2.Models.KnowledgeFAQ>
 
 @{
-    ViewBag.Title = "KB/FAQs";
+    ViewBag.Title = "FAQs";
 }
 
-<h2>Index</h2>
+<div class="container1">
+    <h2 class="title">@ViewBag.Title<span class="summary-top pull-right">@Html.ActionLink("New FAQ", "New", null, htmlAttributes: new { @class = "btn btn-primary" })</span></h2>
+</div>
 
-<p>
-    @Html.ActionLink("New FAQ", "New")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.headerText)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UserProfile.displayName)
-        </th>
-        
-        <th>
-            @Html.DisplayNameFor(model => model.dateComposed)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.exiryDate)
-        </th>       
-        
-        <th></th>
-    </tr>
+<div class="container1">
+    <table class="table table-bordered table-hover table-condensed table-view">
+        <thead>
+            <tr>
+                <th>@Html.DisplayName("Question")</th>
+                <th>@Html.DisplayNameFor(model => model.UserProfile.displayName)</th>
+                <th>@Html.DisplayNameFor(model => model.dateComposed)</th>
+                <th>@Html.DisplayNameFor(model => model.exiryDate)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr onclick="$(location).attr('href', '@Url.Action("Details", "FAQs", new { @id = item.ID })')">
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.headerText)
-        </td>
-        <td>
-            @Html.DisplayFor(model => item.UserProfile.displayName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.dateComposed)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.exiryDate)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ID })
-        </td>
-    </tr>
-}
+                    <td>@Html.DisplayFor(modelItem => item.headerText)</td>
+                    <td>@Html.DisplayFor(model => item.UserProfile.displayName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.dateComposed)</td>
+                    <td>@Html.DisplayFor(modelItem => item.exiryDate)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
-</table>

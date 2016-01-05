@@ -38,6 +38,7 @@ namespace Help_Desk_2.Models
         //public int preferedLanguage { get; set;  }
 
         [NotMapped]
+        [Display(Name = "Created by")]
         public string displayName { get { return firstName + " " + surName; } }
     }
 }
