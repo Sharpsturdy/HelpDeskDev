@@ -60,9 +60,14 @@ namespace Help_Desk_2.Controllers
                 kb.originatorID = userProfile.userID;
 
                 kb = db.KnowledgeFAQs.Add(kb);
+                db.SaveChanges(); 
 
-                /***** Add File ************/
+                /***** Add Files ************/
                 AllSorts.saveAttachments(kb.ID, db, null, 1);
+
+                /***** Save keyowrds/expertareas *********/
+                AllSorts.saveWordLists(Request.Form.GetValues("inkeywords"), Request.Form.GetValues("inexpertareas"), db, kb);
+
                 db.SaveChanges();
 
                 if (Request.Form.AllKeys.Contains("btnSave"))
@@ -110,6 +115,10 @@ namespace Help_Desk_2.Controllers
 
                 /***** Add File ************/
                 AllSorts.saveAttachments(kb.ID, db, kb.deleteField, 1);
+
+                /***** Save keyowrds/expertareas *********/
+                AllSorts.saveWordLists(Request.Form.GetValues("inkeywords"), Request.Form.GetValues("inexpertareas"), db, kb);
+
                 db.SaveChanges();
 
                 if (Request.Form.AllKeys.Contains("btnSave"))

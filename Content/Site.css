@@ -287,9 +287,11 @@ footer {
     margin: 0;
 }
 
+.container-custom-top h2,
 hr.title,
 h2.title {
     margin-top: 0;
+    margin-bottom: 0;
 }
 
 .form-control {
@@ -324,7 +326,7 @@ textarea.form-control {
 	padding-right: 20px;
 }
 
-.table-view thead tr:hover {
+.table-view tbody tr:hover {
     cursor: pointer;
 }
 
@@ -332,3 +334,16 @@ textarea.form-control {
     /*background-color: #c5dbfa;
     cursoor: pointer;*/
 }
+
+.panel > .panel-heading {
+    padding: 5px 10px;
+    margin-bottom: 10px;
+}
+
+.panel { border: 0}
+
+.container-view {
+    margin-top: 15px;
+}
+
+

@@ -5,6 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Help_Desk_2.Models;
+using Help_Desk_2.DataAccessLayer;
 
 namespace Help_Desk_2.Models
 {
@@ -62,9 +64,49 @@ namespace Help_Desk_2.Models
             }
         }
 
-        //public virtual keywords
+        public virtual ICollection<WordList> wordList { get; set; }
 
+        [NotMapped]
+        [Display(Name = "Keywords", Prompt = "Select keywords from list")]
+        public IEnumerable<WordList> keywords {
+            get {
+                return wordList.Where(x => x.type == 1);
+            }
+            set { keywords = value; }
+        }
 
+        [NotMapped]
+        [Display(Name = "Expert Areas", Prompt = "Select expert areas from list")]
+        public IEnumerable<WordList> expertAreas
+        {
+            get
+            {
+                return wordList.Where(x => x.type == 2);
+            }
+            set { expertAreas = value; }
+        }
+        
+              
+        /*[NotMapped]
+        [Display(Name = "Keywords", Prompt = "Select keywords from list")]
+        public List<int> keywordIDs {
+            get {
+                return wordList.Where(x => x.type==1).Select(x=>x.ID).ToList();
+            }
+            set { keywordIDs = value; }
+        }
+
+        [NotMapped]
+        [Display(Name = "Expert Areas", Prompt = "Select expert areas from list")]
+        public List<int> expertAreaIDs
+        {
+            get
+            {
+                return wordList.Where(x => x.type == 2).Select(x => x.ID).ToList();
+            }
+            set { expertAreaIDs = value; }
+        }
+        */
 
         //read-only faq approverID
 

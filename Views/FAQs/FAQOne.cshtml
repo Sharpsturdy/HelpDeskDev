@@ -33,12 +33,22 @@ else
     ViewBag.addTinyMCECode = "1"; //Activate tinymce code
 
 }
-<div class="container">
+
+@section cssCustomTop {
+    @Styles.Render("~/Content/Select2/css/select2.min.css")
+    @Styles.Render("~/Content/Select2/css/select2-bootstrap.min.css")
+}
+
+@section scriptsCustom {
+    <script src="~/Content/Select2/js/select2.min.js"></script>
+}
+<div class="container-custom-top">
     <h2>@ViewBag.Title <span class="summary-top pull-right">@ViewBag.Status</span></h2>
     <p class="text-muted">Created by @ViewBag.displayName on @ViewBag.CreationDate</p>
 </div>
 
 <hr class="title" />
+
 
 @using (Html.BeginForm(ViewBag.mode ==0? "New": "Edit", "FAQs", FormMethod.Post,
                  new { enctype = "multipart/form-data" }))
@@ -56,88 +66,133 @@ else
             @Html.HiddenFor(model => model.dateComposed)
             @Html.HiddenFor(model => model.exiryDate)
         }
-        <div class="container">
+        <div class="container1">
             @if (ViewBag.mode < 2)
             { // Edit only
-            <div>
+            <div class="panel panel-info">
                 @*Html.LabelFor(model => model.headerText, htmlAttributes: new { @class = "control-label" })*@
-                @Html.Label("Question", new { @class = "control-label" })
-                <div>
+                <div class="panel-heading">
+                    @Html.DisplayName("Question")
+                </div>
+                <div class="panel-body1">
                     @Html.EditorFor(model => model.headerText, new { htmlAttributes = new { @class = "form-control" } })
                     @Html.ValidationMessageFor(model => model.headerText, "", new { @class = "text-danger" })
                 </div>
-                
+
             </div>
             }       
-            <div>
-                <div>
-                    @Html.Label("Answer", new { @class = "control-label" })
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    @Html.DisplayName("Answer")
+                </div>
+                <div class="panel-body1">                    
                     @if (ViewBag.mode == 2)
                     {
                         @Html.Raw(Model.description)
                     }
                     else {
-                        @*Html.LabelFor(model => model.description, htmlAttributes: new { @class = "control-label" })*@
-                        
                         @Html.TextAreaFor(model => model.description, new { @class = "form-control richeditor" })
                         @Html.ValidationMessageFor(model => model.description, "", new { @class = "text-danger" })
-
                     }
                 </div>
 
             </div>
 
-            <!--Attachment section-->
-            <div class="form-custom">
-                @Html.Label("Attachments", htmlAttributes: new { @class = "control-label" })
-                @if (Model != null)
-                {
-                    @Html.HiddenFor(model => model.deleteField)
-                    if (Model.Files != null && Model.Files.Count > 0)
+            <!--Keywords-->
+            <div class="panel panel-info">
+                <div class="panel-heading">@Html.DisplayNameFor(model=> model.keywords)</div>
+            
+                <div class="panel-body1">                    
+                    @if (ViewBag.mode == 0)
                     {
-                        <table class="table table-condensed">
-
-                            <tr><th>File Name</th><th>Size</th><th></th></tr>
-                            @foreach (var t in Model.Files)
-                            {
-
-                                <tr>
-                                    <td class="fileID hidden">@t.ID</td>
-                                    <td>@Html.ActionLink(t.fileName, "d/" + t.ID, "Files", null, new { target = "_blank" })</td>
-                                    <td>@t.displaySize</td>
-                                    @if (ViewBag.mode < 2)
-                                    {
-                                    <td>
-                                        <div tabindex="500" class="btn btn-primary btn-custom btn-custom-undelete hidden">
-                                            <i class="fa fa-undo"></i>
-                                            <span class="hidden-xs">Undelete</span>
-                                        </div>
-
-                                        <div tabindex="500" class="btn btn-primary btn-custom btn-custom-delete">
-                                            <i class="glyphicon glyphicon-trash"></i>
-                                            <span class="hidden-xs">Delete</span>
-                                        </div>
-                                    </td>
-                                    }
-                                </tr>
-                            }
-                        </table>
+                        @Html.DropDownList("inkeywords", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 1), "ID", "Text"), new { @class = "select2-editor", multiple = "multiple" })
                     }
-                }
-                @if (ViewBag.mode < 2) {
+                    else if (ViewBag.mode == 1)
+                    {
+                        //Help_Desk_2.DataAccessLayer.HelpDeskContext db = new Help_Desk_2.DataAccessLayer.HelpDeskContext();
+
+                        @Html.DropDownList("inkeywords", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 1), "ID", "Text", Model.keywords.Select(x => x.ID)), new { @class = "select2-editor", multiple = "multiple" })
+
+                    } else
+                    {
+                        @String.Join(", ", Model.keywords.Select(x => x.text))
+                    }
+                </div>
+            </div>
+
+            <!--Expert Areas-->
+            <div class="panel panel-info">
+                <div class="panel-heading">@Html.DisplayNameFor(model => model.expertAreas)</div>
+                <div class="panel-body1">
+                    @if (ViewBag.mode == 0)
+                    {
+                       @Html.DropDownList("inexpertareas", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 2), "ID", "Text"), new { @class = "select2-editor", multiple = "multiple" })
+                    }
+                    else if (ViewBag.mode == 1)
+                    {
+
+                        @Html.DropDownList("inexpertareas", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 2), "ID", "Text",Model.expertAreas.Select(x => x.ID)), new { @class = "select2-editor", multiple = "multiple" })
+                    } else
+                    {
+                        @String.Join(", ", Model.expertAreas.Select(x => x.text))
+                    }
+                </div>
+            </div>
+
+
+
+            <!--Attachment section-->
+            <div class="panel panel-info">
+                <div class="panel-heading">@Html.DisplayName("Attachments")</div>
+                <div>
+                    @if (Model != null)
+                {
+                        @Html.HiddenFor(model => model.deleteField)
+                        if (Model.Files != null && Model.Files.Count > 0)
+                        {
+                            <table class="table table-condensed">
+                                <tr><th>File Name</th><th>Size</th><th></th></tr>
+                                @foreach (var t in Model.Files)
+                                {
+                                    <tr>
+                                        <td class="fileID hidden">@t.ID</td>
+                                        <td>@Html.ActionLink(t.fileName, "d/" + t.ID, "Files", null, new { target = "_blank" })</td>
+                                        <td>@t.displaySize</td>
+                                        @if (ViewBag.mode < 2)
+                                        {
+                                            <td>
+                                                <div tabindex="500" class="btn btn-primary btn-custom btn-custom-undelete hidden">
+                                                    <i class="fa fa-undo"></i>
+                                                    <span class="hidden-xs">Undelete</span>
+                                                </div>
+
+                                                <div tabindex="500" class="btn btn-primary btn-custom btn-custom-delete">
+                                                    <i class="glyphicon glyphicon-trash"></i>
+                                                    <span class="hidden-xs">Delete</span>
+                                                </div>
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            </table>
+                        }
+                    }
+                    @if (ViewBag.mode < 2)
+                    {
                         <input type="file" name="file1" class="file" data-show-upload="false" data-show-preview="false" />
-                }
+                    }
+                </div>
             </div>
 
             <!-- Links -->
-            <div>
+            <div class="panel panel-info">
+                <div class="panel-heading">@Html.DisplayName("Links")</div>
                 @Html.HiddenFor(model => model.links)
-                @Html.Label("Links", htmlAttributes: new { @class = "control-label" })
-
+                
                 <table class="table table-condensed links">
                     <tbody>
                         @{
-                            string tmpLinks = Model == null? null : Model.links;
+                            string tmpLinks = Model == null ? null : Model.links;
                             string displayLinks = "";
                             if (!string.IsNullOrEmpty(tmpLinks))
                             {
@@ -148,7 +203,7 @@ else
                                     {
                                         var tmp = link.Split(new char[] { '^' });
                                         displayLinks += "<tr class=\"normal\"><td><a href=\"" + tmp[1] + "\" target=\"_blank\">" + tmp[0] + "</a></td>" +
-                                            "<td>" + (ViewBag.mode == 2 ? "":"<input type=\"button\" value=\"Delete\" class=\"btn btn-default btn-custom-action\">")+
+                                            "<td>" + (ViewBag.mode == 2 ? "" : "<input type=\"button\" value=\"Delete\" class=\"btn btn-default btn-custom-action\">") +
                                             "</td></tr>";
                                     }
                                 }
@@ -159,25 +214,25 @@ else
                     </tbody>
                     @if (ViewBag.mode < 2)
                     {
-                    <tfoot>
-                        <tr>
-                            <td colspan="2">
-                                <div class="row add-link">
-                                    <div class="col-sm-5">
-                                        @Html.EditorFor(model => model.linkText, new { htmlAttributes = new { @placeholder = "Link Display Text" } })
-                                    </div>
+                        <tfoot>
+                            <tr>
+                                <td colspan="2">
+                                    <div class="row add-link">
+                                        <div class="col-sm-5">
+                                            @Html.EditorFor(model => model.linkText, new { htmlAttributes = new { @placeholder = "Link Display Text" } })
+                                        </div>
 
-                                    <div class="col-sm-5">
-                                        @Html.EditorFor(model => model.linkURL, new { htmlAttributes = new { @placeholder = "Link URL" } })
-                                    </div>
+                                        <div class="col-sm-5">
+                                            @Html.EditorFor(model => model.linkURL, new { htmlAttributes = new { @placeholder = "Link URL" } })
+                                        </div>
 
-                                    <div class="col-sm-1">
-                                        <input type="button" id="addLink" value="Add Link" class="btn btn-default" />
+                                        <div class="col-sm-1">
+                                            <input type="button" id="addLink" value="Add Link" class="btn btn-default" />
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
-                    </tfoot>
+                                </td>
+                            </tr>
+                        </tfoot>
                     }
                 </table>
             </div>

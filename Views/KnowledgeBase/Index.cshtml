@@ -4,11 +4,11 @@
     ViewBag.Title = "Knowledge Base";
 }
 
-<div class="container">
+<header>
     <h2 class="title">@ViewBag.Title<span class="summary-top pull-right">@Html.ActionLink("New Article", "New", null, htmlAttributes: new { @class = "btn btn-primary" })</span></h2>
-</div>
+</header>
 
-<div class="container1">
+<div class="container-view">
     <table class="table table-bordered table-hover table-condensed table-view">
         <thead>
             <tr>

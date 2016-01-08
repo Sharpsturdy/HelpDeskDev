@@ -17,7 +17,6 @@ namespace Help_Desk_2
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            Debug.Print("JUST TESTING!!");
         }
 
         

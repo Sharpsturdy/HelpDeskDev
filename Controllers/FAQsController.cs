@@ -61,9 +61,14 @@ namespace Help_Desk_2.Controllers
                 faq.originatorID = userProfile.userID;
 
                 faq = db.KnowledgeFAQs.Add(faq);
+                db.SaveChanges();
 
                 /***** Add File ************/
                 AllSorts.saveAttachments(faq.ID, db, null, 1);
+
+                /***** Save keyowrds/expertareas *********/
+                AllSorts.saveWordLists(Request.Form.GetValues("inkeywords"), Request.Form.GetValues("inexpertareas"), db, faq);
+
                 db.SaveChanges();
 
                 if (Request.Form.AllKeys.Contains("btnSave"))
@@ -90,13 +95,16 @@ namespace Help_Desk_2.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            KnowledgeFAQ faq = db.KnowledgeFAQs.Find(id);
+            KnowledgeFAQ faq = db.KnowledgeFAQs
+                .Include(jkk => jkk.wordList)
+                .Single(x => x.ID == (int)id);
+
             if (faq == null)
             {
                 return HttpNotFound();
             }
 
-            ViewBag.mode = 1;
+            ViewBag.mode = 1;            
             return View("FAQOne", faq);
         }
 
@@ -111,6 +119,10 @@ namespace Help_Desk_2.Controllers
 
                 /***** Add File ************/
                 AllSorts.saveAttachments(faq.ID, db, faq.deleteField, 1);
+
+                /***** Save keyowrds/expertareas *********/
+                AllSorts.saveWordLists(Request.Form.GetValues("inkeywords"), Request.Form.GetValues("inexpertareas"), db, faq);
+                               
                 db.SaveChanges();
 
                 if (Request.Form.AllKeys.Contains("btnSave"))
@@ -118,6 +130,7 @@ namespace Help_Desk_2.Controllers
                     return RedirectToAction("Edit/" + faq.ID);
                 }
                 return RedirectToAction("Index");
+               
             }
 
             ViewBag.mode = 1;

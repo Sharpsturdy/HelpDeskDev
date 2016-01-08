@@ -56,6 +56,16 @@
         refreshLinks();
     });
 
+    //Multi-select fields
+    $(".select2-editor").select2({
+        placeholder: "Select a state", width: "100%",
+        theme: "bootstrap"
+    });
+
+    $(".select2-editor").onchange(function () {
+        alert('Hey'); alert($(this).val());
+    })
+
 });
 
 

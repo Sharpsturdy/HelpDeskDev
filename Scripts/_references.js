@@ -1,4 +1,6 @@
 ﻿/// <autosync enabled="true" />
+/// <reference path="../content/select2/js/select2.full.js" />
+/// <reference path="../content/select2/js/select2.js" />
 /// <reference path="bootstrap.js" />
 /// <reference path="fileinput.min.js" />
 /// <reference path="jquery.validate.js" />

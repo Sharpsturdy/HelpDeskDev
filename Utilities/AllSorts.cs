@@ -73,5 +73,57 @@ namespace Help_Desk_2.Utilities
 
             }
         }
+
+        public static string displayMessage { get ; set; }
+
+        public static IEnumerable<WordList> FullWordList
+        {
+            get { HelpDeskContext db = new HelpDeskContext(); return db.WordLists; }
+        }
+
+        public static void saveWordLists(string[] kwtmp, string[] eatmp, HelpDeskContext db, KnowledgeFAQ kbfaq)
+        {
+            
+            if (kwtmp == null) kwtmp = new string[] { "0" };
+
+            if (eatmp == null) eatmp = new string[] { "0" };
+
+            //displayMessage = "KW=" + string.Join(",", kwtmp) + "<br/>" + "EA=" + string.Join(",", eatmp) + "//Top of Page//";
+
+            //Get exisiting wordlist  (keywords + expertAreas)             
+            db.Entry(kbfaq).Collection(x => x.wordList).Load();
+
+            string[] orgList = kbfaq.wordList.Select(x => "" + x.ID).ToArray<string>();
+
+            string[] kwords = kwtmp.Union(eatmp).ToArray();
+
+            //displayMessage += string.Join(",", orgList) + "//" + string.Join(",", kwords) + "#";
+
+            //New keywords to be added 
+            string[] newKeywords = kwords.Where(x => !orgList.Contains(x)).ToArray();
+
+            string[] delKeywords = orgList.Where(x => !kwords.Contains(x)).ToArray();
+
+            displayMessage += string.Join(",", newKeywords) + "#" + string.Join(",", delKeywords);
+
+            foreach (var w in newKeywords)
+            {
+                WordList wd = db.WordLists.Find(int.Parse(w));
+
+                if (wd != null)
+                    kbfaq.wordList.Add(wd);
+                
+            }
+
+            foreach (var w in delKeywords)
+            {
+                WordList wd = db.WordLists.Find(int.Parse(w));
+
+                if (wd != null)
+                    kbfaq.wordList.Remove(wd);
+            }
+
+        }
+
     }
 }
