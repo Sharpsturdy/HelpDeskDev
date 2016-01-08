@@ -230,7 +230,6 @@
     <Content Include="Content\site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Views\KnowledgeBase\KBOne1.cshtml" />
     <Content Include="Views\KnowledgeBase\Index.cshtml" />
     <None Include="Properties\PublishProfiles\dev web deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2-vsdoc.js" />
@@ -463,12 +462,8 @@
     <Content Include="Views\News\NewsOne.cshtml" />
     <Content Include="Views\FAQs\FAQOne.cshtml" />
     <Content Include="Views\FAQs\Index.cshtml" />
-    <Content Include="Views\KnowledgeFAQsTest\Create.cshtml" />
-    <Content Include="Views\KnowledgeFAQsTest\Delete.cshtml" />
-    <Content Include="Views\KnowledgeFAQsTest\Details.cshtml" />
-    <Content Include="Views\KnowledgeFAQsTest\Edit.cshtml" />
-    <Content Include="Views\KnowledgeFAQsTest\Index.cshtml" />
     <Content Include="Views\KnowledgeBase\KBOne.cshtml" />
+    <Content Include="Views\FAQs\Suggest.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Files\" />

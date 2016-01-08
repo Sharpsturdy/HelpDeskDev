@@ -1,0 +1,122 @@
+﻿@using Help_Desk_2.Utilities
+@using Help_Desk_2.Models
+@model Help_Desk_2.Models.KnowledgeFAQ
+
+@if (ViewBag.mode == 0)
+{
+
+    ViewBag.Title = "New FAQ Suggestion";
+    ViewBag.Status = "Draft";
+    ViewBag.CreationDate = String.Format("{0:d}", DateTime.Now);
+
+    UserProfile userProfile;
+    if (ViewBag.displayName == null)
+    {
+        UserData ud = new UserData();
+        userProfile = ud.getUserProfile();
+
+        ViewBag.displayName = userProfile.displayName;
+    }
+}
+else
+{
+    ViewBag.Title = "FAQ Suggestion: " + Model.headerText;
+    ViewBag.displayName = Model.UserProfile.displayName;
+    ViewBag.Status = Model.status;
+    ViewBag.CreationDate = Html.DisplayFor(model => model.dateComposed);
+}
+
+@if(ViewBag.mode < 2)
+{
+
+    ViewBag.addTinyMCECode = "1"; //Activate tinymce code
+
+}
+
+<header>
+    <h2>@ViewBag.Title <span class="summary-top pull-right">@ViewBag.Status</span></h2>
+    <p class="text-muted">Created by @ViewBag.displayName on @ViewBag.CreationDate</p>
+</header>
+
+<hr class="title" />
+
+
+@using (Html.BeginForm(ViewBag.mode ==0? "Suggest": "Edit", "FAQs", FormMethod.Post,
+                 new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+       
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.Hidden("type",1) <!-- FAQs always have type == 1 -->
+        @Html.Hidden("suggest", true) <!--  Always true for suggestions-->
+        @if (ViewBag.mode == 1)
+        {
+            @Html.HiddenFor(model => model.ID)
+            @Html.HiddenFor(model => model.originatorID)
+            @Html.HiddenFor(model => model.dateComposed)
+            @Html.HiddenFor(model => model.exiryDate)
+        }
+        <div class="container-form">
+            @if (ViewBag.mode < 2)
+            { // Edit only
+            <div class="panel panel-info">
+                @*Html.LabelFor(model => model.headerText, htmlAttributes: new { @class = "control-label" })*@
+                <div class="panel-heading">
+                    @Html.DisplayName("Question")
+                </div>
+                <div class="panel-body-custom">
+                    @Html.EditorFor(model => model.headerText, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.headerText, "", new { @class = "text-danger" })
+                </div>
+
+            </div>
+            }       
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    @Html.DisplayName("Answer")
+                </div>
+                <div class="panel-body-custom">                    
+                    @if (ViewBag.mode == 2)
+                    {
+                        @Html.Raw(Model.description)
+                    }
+                    else {
+                        @Html.TextAreaFor(model => model.description, new { @class = "form-control richeditor" })
+                        @Html.ValidationMessageFor(model => model.description, "", new { @class = "text-danger" })
+                    }
+                </div>
+
+            </div>
+                        
+            @if (ViewBag.mode == 2)
+            {
+                <div>
+                    <div class="btn-group btn-group-custom" style="padding-bottom:15px; padding-top:15px">
+                        
+                        @Html.ActionLink("Edit", "Edit/" + Model.ID, "FAQs", null, htmlAttributes: new { @title = "Click to modify document", @class = "btn btn-primary" })
+                        @Html.ActionLink("Close", "Suggestions", "FAQs", null, htmlAttributes: new { @title = "Click to return to News home", @class = "btn btn-primary" })
+                    </div>
+                </div>
+            }
+            else {
+            
+
+            <div>
+                <div class="btn-group btn-group-custom" style="padding-bottom:15px; padding-top:15px">
+                    <input type="submit" name="btnSave" value="Save" class="btn btn-primary" />
+                    <input type="submit" name="btnSClose" value="Save & Close" class="btn btn-primary" />
+                    <a href="~/FAQs" name="actionBtn" class="btn btn-primary">Cancel</a>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

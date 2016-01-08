@@ -16,8 +16,8 @@ namespace Help_Desk_2
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                /*defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }*/
-                defaults: new { controller = "FAQs", action = "Edit", id = "2" }
+                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                //defaults: new { controller = "FAQs", action = "Edit", id = "2" }
             );
         }
     }

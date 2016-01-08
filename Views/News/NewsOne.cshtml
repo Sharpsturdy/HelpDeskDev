@@ -26,10 +26,10 @@ else
     ViewBag.CreationDate = Html.DisplayFor(model => model.creationDate);
 }
 
-<div class="container">
+<header>
     <h2>@ViewBag.Title <span class="summary-top pull-right">@ViewBag.Status</span></h2>
     <p class="text-muted">Created by @ViewBag.displayName on @ViewBag.CreationDate</p>
-</div>
+</header>
 
 <hr class="title" />
 
@@ -47,11 +47,11 @@ else
             @Html.HiddenFor(model => model.originatorID)
             @Html.HiddenFor(model => model.creationDate)
         }
-        <div class="container">
+        <div class="container-form">
             @if (ViewBag.mode < 2)
             { // Edit only
-            <div>
-                @Html.LabelFor(model => model.title, htmlAttributes: new { @class = "control-label" })
+            <div class="panel panel-info">
+                <div class="panel-heading">@Html.LabelFor(model => model.title)</div>
                 
                 <div>
                     @Html.EditorFor(model => model.title, new { htmlAttributes = new { @class = "form-control" } })
@@ -60,22 +60,21 @@ else
                 
             </div>
             }       
-            <div>
-                <div>
-                    @if (ViewBag.mode == 2)
-                    {
-                        @Html.Raw(Model.body)
-                    }
-                    else {
-                        @Html.LabelFor(model => model.body, htmlAttributes: new { @class = "control-label" })
-
+            <div class="panel panel-info"> 
+                
+                @if (ViewBag.mode == 2)
+                {
+                    <div>@Html.Raw(Model.body)</div>
+                }
+                else
+                {
+                    <div class="panel-heading">@Html.LabelFor(model => model.body)</div>
+                    <div>
                         @Html.TextAreaFor(model => model.body, new { @class = "form-control richeditor" })
                         @Html.ValidationMessageFor(model => model.body, "", new { @class = "text-danger" })
-
-                    }
-                </div>
-
-            </div>
+                    </div>
+                }
+            </div>            
             
             @if (ViewBag.mode == 2)
             {

@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using Help_Desk_2.Models;
 using Help_Desk_2.DataAccessLayer;
+using System.ComponentModel;
 
 namespace Help_Desk_2.Models
 {
@@ -35,6 +36,10 @@ namespace Help_Desk_2.Models
 
         [ForeignKey("UserProfile")]
         public Guid originatorID { get; set; } //AD Username
+
+        [Display(Name = "Suggestion?")]
+        [DefaultValue(false)]
+        public bool suggest { get; set; }
 
         [Display(Name = "Links")]
         public string links { get; set; }

@@ -36,7 +36,8 @@ namespace Help_Desk_2.Controllers
             }
 
             ViewBag.mode = 2;
-            return View("FAQOne", faq);
+            //return View("FAQOne", faq);
+            return View(faq.suggest ? "Suggest" : "FAQOne", faq);
         }
 
         // GET: FAQs/New
@@ -45,6 +46,7 @@ namespace Help_Desk_2.Controllers
             //ViewBag.originatorID = new SelectList(db.UserProfiles, "userID", "loginName");
             ViewBag.mode = 0;
             return View("FAQOne");
+
         }
 
         // POST: FAQs/New
@@ -85,7 +87,36 @@ namespace Help_Desk_2.Controllers
         // GET: FAQs/Suggest
         public ActionResult Suggest()
         {
+            ViewBag.mode = 0;
             return View();
+        }
+
+        // POST: FAQs/Suggest
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Suggest([Bind(Include = "type,headerText,description")] KnowledgeFAQ faq)
+        {
+            if (ModelState.IsValid)
+            {
+                UserData ud = new UserData();
+                UserProfile userProfile = ud.getUserProfile();
+
+                faq.dateComposed = DateTime.Now;
+                faq.originatorID = userProfile.userID;
+                faq.suggest = true;
+
+                faq = db.KnowledgeFAQs.Add(faq);
+                db.SaveChanges();
+
+                if (Request.Form.AllKeys.Contains("btnSave"))
+                {
+                    return RedirectToAction("Edit/" + faq.ID);
+                }
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.mode = 0;
+            return View(faq);
         }
 
         // GET: FAQs/Edit/5
@@ -105,25 +136,28 @@ namespace Help_Desk_2.Controllers
             }
 
             ViewBag.mode = 1;            
-            return View("FAQOne", faq);
+            return View(faq.suggest ? "Suggest":"FAQOne", faq);
         }
 
         // POST: FAQs/Edit/5
         [HttpPost]
-        public ActionResult Edit([Bind(Include = "ID,originatorID,expiryDate,dateComposed,type,headerText,description,links,deleteField")] KnowledgeFAQ faq)
+        public ActionResult Edit([Bind(Include = "ID,originatorID,expiryDate,dateComposed,type,headerText,description,links,deleteField,suggest")] KnowledgeFAQ faq)
         {
             if (ModelState.IsValid)
             {
 
                 db.Entry(faq).State = EntityState.Modified;
 
-                /***** Add File ************/
-                AllSorts.saveAttachments(faq.ID, db, faq.deleteField, 1);
+                if (!faq.suggest)
+                {
+                    /***** Add File ************/
+                    AllSorts.saveAttachments(faq.ID, db, faq.deleteField, 1);
 
-                /***** Save keyowrds/expertareas *********/
-                AllSorts.saveWordLists(Request.Form.GetValues("inkeywords"), Request.Form.GetValues("inexpertareas"), db, faq);
-                               
-                db.SaveChanges();
+                    /***** Save keyowrds/expertareas *********/
+                    AllSorts.saveWordLists(Request.Form.GetValues("inkeywords"), Request.Form.GetValues("inexpertareas"), db, faq);
+
+                    db.SaveChanges();
+                }
 
                 if (Request.Form.AllKeys.Contains("btnSave"))
                 {
@@ -134,7 +168,7 @@ namespace Help_Desk_2.Controllers
             }
 
             ViewBag.mode = 1;
-            return View("FAQOne", faq);
+            return View(faq.suggest ? "Suggest" : "FAQOne", faq);
         }
 
         // GET: FAQs/Delete/5
