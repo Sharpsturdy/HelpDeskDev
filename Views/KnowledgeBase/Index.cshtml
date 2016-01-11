@@ -9,7 +9,7 @@
 </header>
 <div class="container-view">
 
-    <form class="form-inline">
+    <form class="form-inline" action="~/KnowledgeBase/Search">
 
         <div class="form-group">
             <input type="text" class="form-control" id="searchStr" name="searchStr" placeholder="Enter search text" value="@ViewBag.displayMessage">
@@ -24,7 +24,7 @@
                 <th>@Html.DisplayNameFor(model => model.headerText)</th>
                 <th>@Html.DisplayNameFor(model => model.UserProfile.displayName)</th>
                 <th>@Html.DisplayNameFor(model => model.dateComposed)</th>
-                <th>@Html.DisplayNameFor(model => model.exiryDate)</th>
+                <th>@Html.DisplayNameFor(model => model.expiryDate)</th>
             </tr>
         </thead>
         <tbody>
@@ -35,7 +35,7 @@
                     <td>@Html.DisplayFor(modelItem => item.headerText)</td>
                     <td>@Html.DisplayFor(model => item.UserProfile.displayName)</td>
                     <td>@Html.DisplayFor(modelItem => item.dateComposed)</td>
-                    <td>@Html.DisplayFor(modelItem => item.exiryDate)</td>
+                    <td>@Html.DisplayFor(modelItem => item.expiryDate)</td>
                 </tr>
             }
         </tbody>

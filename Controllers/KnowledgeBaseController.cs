@@ -18,13 +18,13 @@ namespace Help_Desk_2.Controllers
         // GET: KB
         public ActionResult Index()
         {
-            return View(db.KnowledgeFAQs.Where(k => k.type == 2).ToList());            
+            return View(db.KnowledgeFAQs.Where(k => k.type == 2 && k.published).ToList());            
         }
 
         public ActionResult Admin(string searchType, string searchStr)
         {
             var faqs = from m in db.KnowledgeFAQs
-                       where (m.type == 1 && !m.suggest)
+                       where (m.type == 2 && !m.suggest)
                        select m;
 
             if (String.IsNullOrEmpty(searchType))
@@ -57,7 +57,7 @@ namespace Help_Desk_2.Controllers
 
             if (!String.IsNullOrEmpty(searchStr))
             {
-                kbs = kbs.Where(s => s.headerText.Contains(searchStr));
+                kbs = kbs.Where(s => s.headerText.Contains(searchStr) || s.description.Contains(searchStr));
             }
 
             ViewBag.displayMessage = searchStr;
@@ -150,12 +150,21 @@ namespace Help_Desk_2.Controllers
 
         // POST: KB/Edit/5
         [HttpPost]
-        public ActionResult Edit([Bind(Include = "ID,originatorID,expiryDate,dateComposed,type,headerText,description,links,deleteField")] KnowledgeFAQ kb)
+        public ActionResult Edit([Bind(Include = "ID,originatorID,expiryDate,dateComposed,type,headerText,description,links,deleteField,published")] KnowledgeFAQ kb)
         {
             if (ModelState.IsValid)
             {
 
                 db.Entry(kb).State = EntityState.Modified;
+
+                if (Request.Form.AllKeys.Contains("btnApprove"))
+                {
+                    kb.published = true;
+                }
+                else if (Request.Form.AllKeys.Contains("btnUnApprove"))
+                {
+                    kb.published = false;
+                }
 
                 /***** Add File ************/
                 AllSorts.saveAttachments(kb.ID, db, kb.deleteField, 1);
@@ -165,7 +174,7 @@ namespace Help_Desk_2.Controllers
 
                 db.SaveChanges();
 
-                if (Request.Form.AllKeys.Contains("btnSave"))
+                if (Request.Form.AllKeys.Contains("btnSave") || Request.Form.AllKeys.Contains("btnApprove") || Request.Form.AllKeys.Contains("btnUnApprove"))
                 {
                     return RedirectToAction("Edit/" + kb.ID);
                 }

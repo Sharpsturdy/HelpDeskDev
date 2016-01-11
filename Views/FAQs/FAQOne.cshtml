@@ -260,7 +260,7 @@ else
                     @if (User.IsInRole("Administrators"))
                     {
                         
-                        if (Model.published)
+                        if (Model != null && Model.published)
                         {
                             <input type="submit" name="btnUnApprove" value="UnApprove" class="btn btn-primary" />
                         }

@@ -2,17 +2,17 @@
 @model IEnumerable<Help_Desk_2.Models.KnowledgeFAQ>
 
 @{
-    ViewBag.Title = "FAQs";
+    ViewBag.Title = "Knowledge Base";
 
 }
 
 <header>
-    <h2 class="title">@ViewBag.Title<span class="summary-top pull-right">@Html.ActionLink("New FAQ", "New", null, htmlAttributes: new { @class = "btn btn-primary" })</span></h2>
+    <h2 class="title">@ViewBag.Title<span class="summary-top pull-right">@Html.ActionLink("New Article", "New", null, htmlAttributes: new { @class = "btn btn-primary" })</span></h2>
 </header>
 
 <div class="container-view">
     
-    <form class="form-inline" action="~/FAQs/Search">
+    <form class="form-inline" action="~/KnowledgeBase/Search">
         <div class="form-group">
             <label for="searchType">Filter by: </label>
             <select class="form-control" id="searchType" name="searchType">
@@ -36,7 +36,7 @@
     <table class="table table-bordered table-hover table-condensed table-view">
         <thead>
             <tr>
-                <th>@Html.DisplayName("Question")</th>
+                <th>@Html.DisplayNameFor(model => model.headerText)</th>
                 <th>@Html.DisplayNameFor(model => model.UserProfile.displayName)</th>
                 <th>@Html.DisplayNameFor(model => model.dateComposed)</th>
                 <th>@Html.DisplayNameFor(model => model.expiryDate)</th>
@@ -45,7 +45,7 @@
         <tbody>
             @foreach (var item in Model)
             {
-                <tr onclick="$(location).attr('href', '@Url.Action("Details", "FAQs", new { @id = item.ID })')">
+                <tr onclick="$(location).attr('href', '@Url.Action("Details", "KnowledgeBase", new { @id = item.ID })')">
 
                     <td>@Html.DisplayFor(modelItem => item.headerText)</td>
                     <td>@Html.DisplayFor(model => item.UserProfile.displayName)</td>
