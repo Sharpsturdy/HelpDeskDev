@@ -2,37 +2,40 @@
 @using Help_Desk_2.Models
 @model Help_Desk_2.Models.KnowledgeFAQ
 
-@if (ViewBag.mode == 0)
-{
-
-    ViewBag.Title = "New FAQ Suggestion";
-    ViewBag.Status = "Draft";
-    ViewBag.CreationDate = String.Format("{0:d}", DateTime.Now);
-
-    UserProfile userProfile;
-    if (ViewBag.displayName == null)
+@{
+    if (ViewBag.mode == 0)
     {
-        UserData ud = new UserData();
-        userProfile = ud.getUserProfile();
 
-        ViewBag.displayName = userProfile.displayName;
+        ViewBag.Title = "New FAQ Suggestion";
+        ViewBag.Status = "Draft";
+        ViewBag.CreationDate = String.Format("{0:d}", DateTime.Now);
+
+        UserProfile userProfile;
+        if (ViewBag.displayName == null)
+        {
+            UserData ud = new UserData();
+            userProfile = ud.getUserProfile();
+
+            ViewBag.displayName = userProfile.displayName;
+        }
     }
+    else
+    {
+        ViewBag.Title = "FAQ Suggestion: " + Model.headerText;
+        ViewBag.displayName = Model.UserProfile.displayName;
+        ViewBag.Status = Model.status;
+        ViewBag.CreationDate = Html.DisplayFor(model => model.dateComposed);
+    }
+
+    if(ViewBag.mode < 2)
+    {
+
+        ViewBag.addTinyMCECode = "1"; //Activate tinymce code
+
+    }
+
+    ViewBag.prevURL = string.IsNullOrEmpty((string)Session["lastView"]) ? Request.UrlReferrer.PathAndQuery : Session["lastView"];
 }
-else
-{
-    ViewBag.Title = "FAQ Suggestion: " + Model.headerText;
-    ViewBag.displayName = Model.UserProfile.displayName;
-    ViewBag.Status = Model.status;
-    ViewBag.CreationDate = Html.DisplayFor(model => model.dateComposed);
-}
-
-@if(ViewBag.mode < 2)
-{
-
-    ViewBag.addTinyMCECode = "1"; //Activate tinymce code
-
-}
-
 <header>
     <h2>@ViewBag.Title <span class="summary-top pull-right">@ViewBag.Status</span></h2>
     <p class="text-muted">Created by @ViewBag.displayName on @ViewBag.CreationDate</p>
@@ -56,7 +59,8 @@ else
             @Html.HiddenFor(model => model.ID)
             @Html.HiddenFor(model => model.originatorID)
             @Html.HiddenFor(model => model.dateComposed)
-            @Html.HiddenFor(model => model.exiryDate)
+            @Html.HiddenFor(model => model.expiryDate)
+            @Html.HiddenFor(model => model.published)
         }
         <div class="container-form">
             @if (ViewBag.mode < 2)
@@ -90,27 +94,23 @@ else
 
             </div>
                         
-            @if (ViewBag.mode == 2)
-            {
-                <div>
-                    <div class="btn-group btn-group-custom" style="padding-bottom:15px; padding-top:15px">
-                        
-                        @Html.ActionLink("Edit", "Edit/" + Model.ID, "FAQs", null, htmlAttributes: new { @title = "Click to modify document", @class = "btn btn-primary" })
-                        @Html.ActionLink("Close", "Suggestions", "FAQs", null, htmlAttributes: new { @title = "Click to return to News home", @class = "btn btn-primary" })
-                    </div>
-                </div>
-            }
-            else {
-            
-
             <div>
                 <div class="btn-group btn-group-custom" style="padding-bottom:15px; padding-top:15px">
-                    <input type="submit" name="btnSave" value="Save" class="btn btn-primary" />
-                    <input type="submit" name="btnSClose" value="Save & Close" class="btn btn-primary" />
-                    <a href="~/FAQs" name="actionBtn" class="btn btn-primary">Cancel</a>
+                    @if (ViewBag.mode == 2)
+                    {
+
+                        @Html.ActionLink("Edit", "Edit/" + Model.ID, null, htmlAttributes: new { @title = "Click to modify document", @class = "btn btn-primary" })
+                        <a href="@Request.UrlReferrer.PathAndQuery" title="Click to return to News home" class="btn btn-primary">Close</a>
+                    }
+                    else {
+
+                        <input type="submit" name="btnSave" value="Save" class="btn btn-primary" />
+                        <input type="submit" name="btnSClose" value="Save & Close" class="btn btn-primary" />
+                        <a href="@ViewBag.prevURL" title="Click to return to News home" class="btn btn-primary">Cancel</a>
+                    }
                 </div>
             </div>
-            }
+
         </div>
     </div>
 }

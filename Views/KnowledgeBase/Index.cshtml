@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Knowledge Base";
+    Session["lastView"] = Request.Url.PathAndQuery;    //Record this as last view
 }
 
 <header>

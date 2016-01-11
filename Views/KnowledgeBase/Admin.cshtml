@@ -3,7 +3,7 @@
 
 @{
     ViewBag.Title = "Knowledge Base";
-
+    Session["lastView"] = Request.Url.PathAndQuery;    //Record this as last view
 }
 
 <header>
@@ -12,7 +12,7 @@
 
 <div class="container-view">
     
-    <form class="form-inline" action="~/KnowledgeBase/Search">
+    <form class="form-inline">
         <div class="form-group">
             <label for="searchType">Filter by: </label>
             <select class="form-control" id="searchType" name="searchType">
