@@ -21,6 +21,50 @@ namespace Help_Desk_2.Controllers
             return View(db.KnowledgeFAQs.Where(k => k.type == 2).ToList());            
         }
 
+        public ActionResult Admin(string searchType, string searchStr)
+        {
+            var faqs = from m in db.KnowledgeFAQs
+                       where (m.type == 1 && !m.suggest)
+                       select m;
+
+            if (String.IsNullOrEmpty(searchType))
+            {
+                faqs = faqs.Where(s => !s.published);
+            }
+            else if (searchType == "1")
+            {
+                faqs = faqs.Where(s => s.expiryDate <= DateTime.Today);
+            }
+            else if (searchType == "2")
+            {
+                faqs = faqs.Where(s => s.published);
+            }
+
+            if (!String.IsNullOrEmpty(searchStr))
+            {
+                faqs = faqs.Where(s => s.headerText.Contains(searchStr) || s.description.Contains(searchStr));
+            }
+
+            ViewBag.selectedOption = "" + searchType;
+            return View("Admin", faqs.ToList()); ;
+        }
+
+        public ActionResult Search(string searchStr)
+        {
+            var kbs = from m in db.KnowledgeFAQs
+                       where (m.type == 2)
+                       select m;
+
+            if (!String.IsNullOrEmpty(searchStr))
+            {
+                kbs = kbs.Where(s => s.headerText.Contains(searchStr));
+            }
+
+            ViewBag.displayMessage = searchStr;
+
+            return View("Index", kbs.ToList());
+        }
+
         // GET: KB/Details/5
         public ActionResult Details(int? id)
         {

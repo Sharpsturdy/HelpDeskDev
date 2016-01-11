@@ -3,6 +3,7 @@
 
 @{
     ViewBag.Title = "FAQs";
+
 }
 
 <header>
@@ -12,11 +13,22 @@
 <div class="container-view">
     
     <form class="form-inline">
-        
         <div class="form-group">
+            <label for="searchType">Filter by: </label>
+            <select class="form-control" id="searchType" name="searchType">
+                
+                <option value="" @if (ViewBag.selectedOption == "") { @Html.Raw(" selected")}>Unpublished</option>
+                <option value="1"  @if (ViewBag.selectedOption == "1") { @Html.Raw(" selected")}>Expired</option>
+                <option value="2"  @if (ViewBag.selectedOption == "2") { @Html.Raw(" selected")}>Published</option>
+                <option value="3"  @if (ViewBag.selectedOption == "3") { @Html.Raw(" selected")}>All</option>
+               
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="searchType">Free text: </label>
             <input type="text" class="form-control" id="searchStr" name="searchStr" placeholder="Enter search text" value="@ViewBag.displayMessage">
         </div>
-        <button type="submit" class="btn btn-default">Search</button>
+        <button type="submit" class="btn btn-default">Filter</button>
     </form>
 </div>
 

@@ -1,75 +1,27 @@
 ﻿@model IEnumerable<Help_Desk_2.Models.News>
 
 @{
-    ViewBag.Title = "Latest News";
+    ViewBag.Title = "Lates News";
 }
 
-<h2>Index</h2>
-
-<p>
-    @Html.ActionLink("Create New", "New")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UserProfile.displayName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.sticky)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.published)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.publishedDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.creationDate)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.UserProfile.displayName)
-        </td>
-        <td>
-            @if(item.sticky) {
-                @Html.Raw("Yes")
-            } else
+<header>
+    <h2 class="title">@ViewBag.Title</h2>
+</header>
+<div class="container-view news">
+    
+        @foreach (var item in Model)
             {
-                @Html.Raw("No")
-            }
-            <!--Html.DisplayFor(modelItem => item.sticky)-->
-        </td>
-        <td>
-            @if (item.published)
-            {
-                @Html.Raw("Yes");
-            }
-            else
-            {
-                @Html.Raw("No");
-            }
-            <!--Html.DisplayFor(modelItem => item.published)-->
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.publishedDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.creationDate)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ID })
-        </td>
-    </tr>
-}
+            <div class="panel panel-default">
+                <a class="article-title" onclick="$(location).attr('href', '@Url.Action("Article", "News", new { @id = item.ID })')">
+                    @Html.DisplayFor(modelItem => item.title)                    
+                </a>
+                <div class="article-body">
+                    @Html.Raw(item.body)
+                </div>
+                <p class="text-muted">@Html.DisplayFor(modelItem => item.publishedDate) / Author: @Html.DisplayFor(modelItem => item.UserProfile.displayName)</p>
 
-</table>
+                
+            </div>
+        }
+
+</div>

@@ -442,7 +442,6 @@
     <Content Include="Views\Ticket\Edit.cshtml" />
     <Content Include="Views\News\NewsNew.cshtml" />
     <Content Include="Views\News\Details.cshtml" />
-    <Content Include="Views\News\NewsEdit.cshtml" />
     <Content Include="Views\News\Index.cshtml" />
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce.woff" />
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce.ttf" />
@@ -464,6 +463,9 @@
     <Content Include="Views\FAQs\Index.cshtml" />
     <Content Include="Views\KnowledgeBase\KBOne.cshtml" />
     <Content Include="Views\FAQs\Suggest.cshtml" />
+    <Content Include="Views\News\Admin.cshtml" />
+    <Content Include="Views\News\Article.cshtml" />
+    <Content Include="Views\FAQs\Admin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Files\" />

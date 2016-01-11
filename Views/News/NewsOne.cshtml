@@ -82,7 +82,7 @@ else
                     <div class="btn-group btn-group-custom" style="padding-bottom:15px; padding-top:15px">
                         
                         @Html.ActionLink("Edit", "Edit/" + Model.ID, "News", null, htmlAttributes: new { @title = "Click to modify document", @class = "btn btn-primary" })
-                        @Html.ActionLink("Close", "Index", "News", null, htmlAttributes: new { @title = "Click to return to News home", @class = "btn btn-primary" })
+                        @Html.ActionLink("Close", "Admin", "News", null, htmlAttributes: new { @title = "Click to return to News home", @class = "btn btn-primary" })
                     </div>
                 </div>
             }
@@ -109,7 +109,7 @@ else
                 <div class="btn-group btn-group-custom" style="padding-bottom:15px; padding-top:15px">
                     <input type="submit" name="btnSave" value="Save" class="btn btn-primary" />
                     <input type="submit" name="btnSClose" value="Save & Close" class="btn btn-primary" />
-                    <a href="~/News" name="actionBtn" class="btn btn-primary">Cancel</a>
+                    <a href="~/News/Admin" name="actionBtn" class="btn btn-primary">Cancel</a>
                 </div>
             </div>
             }

@@ -94,26 +94,12 @@ namespace Help_Desk_2.Controllers
             {
                 db.Entry(userProfile).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("List");
+                return RedirectToAction("Index");
             }
             return View(userProfile);
         }
 
-        // GET: UserProfile/Delete/5
-        public ActionResult Delete(Guid? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            UserProfile userProfile = db.UserProfiles.Find(id);
-            if (userProfile == null)
-            {
-                return HttpNotFound();
-            }
-            return View(userProfile);
-        }
-
+        
         // POST: UserProfile/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

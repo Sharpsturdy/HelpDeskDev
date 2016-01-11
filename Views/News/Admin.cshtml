@@ -1,0 +1,40 @@
+﻿@model IEnumerable<Help_Desk_2.Models.News>
+
+@{
+    ViewBag.Title = "News Admin";
+}
+
+<header>
+    <h2 class="title">@ViewBag.Title<span class="summary-top pull-right">@Html.ActionLink("New Article", "New", null, htmlAttributes: new { @class = "btn btn-primary" })</span></h2>
+</header>
+<div class="container-view">
+    <table class="table table-bordered table-hover table-condensed table-view">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.title)</th>
+                <th>@Html.DisplayNameFor(model => model.creationDate)</th>
+                <th>@Html.DisplayNameFor(model => model.UserProfile.displayName)</th>
+                <th>@Html.DisplayNameFor(model => model.published)</th>
+                <th>@Html.DisplayNameFor(model => model.publishedDate)</th>
+                <th>@Html.DisplayNameFor(model => model.sticky)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr onclick="$(location).attr('href', '@Url.Action("Details", "News", new { @id = item.ID })')">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.title)
+                    </td>
+                    <td>@Html.DisplayFor(modelItem => item.creationDate)</td>
+                    <td>@Html.DisplayFor(modelItem => item.UserProfile.displayName)</td>
+
+                    <td>@Html.DisplayFor(modelItem => item.dspPublished)</td>
+                    <td>@Html.DisplayFor(modelItem => item.publishedDate)</td>
+
+                    <td>@Html.DisplayFor(modelItem => item.dspSticky)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

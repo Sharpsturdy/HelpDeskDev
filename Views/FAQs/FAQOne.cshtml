@@ -60,13 +60,15 @@ else
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.Hidden("type",1) <!-- FAQs always have type == 1 -->
         @Html.HiddenFor(model => model.suggest)
+        @Html.HiddenFor(model => model.published)
         @if (ViewBag.mode == 1)
         {
             @Html.HiddenFor(model => model.ID)
             @Html.HiddenFor(model => model.originatorID)
             @Html.HiddenFor(model => model.dateComposed)
-            @Html.HiddenFor(model => model.exiryDate)
+            @Html.HiddenFor(model => model.expiryDate)
         }
+        
         <div class="container1">
             @if (ViewBag.mode < 2)
             { // Edit only
@@ -255,6 +257,19 @@ else
                 <div class="btn-group btn-group-custom" style="padding-bottom:15px; padding-top:15px">
                     <input type="submit" name="btnSave" value="Save" class="btn btn-primary" />
                     <input type="submit" name="btnSClose" value="Save & Close" class="btn btn-primary" />
+                    @if (User.IsInRole("Administrators"))
+                    {
+                        
+                        if (Model.published)
+                        {
+                            <input type="submit" name="btnUnApprove" value="UnApprove" class="btn btn-primary" />
+                        }
+                        else
+                        {
+                            <input type="submit" name="btnApprove" value="Approve" class="btn btn-primary" />
+                        }
+
+                    }
                     <a href="~/FAQs" name="actionBtn" class="btn btn-primary">Cancel</a>
                 </div>
             </div>

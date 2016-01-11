@@ -62,10 +62,16 @@ namespace Help_Desk_2.Models
         {
             get
             {
-                if (sticky)
-                    return "Sticky";
-                else
-                    return "";
+                 return sticky ? "Yes": "No";
+            }
+        }
+
+        [NotMapped]
+        public string dspPublished
+        {
+            get
+            {
+                return published ? "Yes" : "No";
             }
         }
 

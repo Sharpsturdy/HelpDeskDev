@@ -19,9 +19,31 @@ namespace Help_Desk_2.Controllers
         // GET: News
         public ActionResult Index()
         {
-            return View(db.News.ToList());
+            return View(db.News.Where(x=>x.published)
+                .OrderByDescending(x=> x.sticky)
+                .OrderByDescending(x => x.publishedDate).ToList());
         }
 
+        // GET: News/Article/5
+        public ActionResult Article(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            News news = db.News.Find(id);
+            if (news == null)
+            {
+                return HttpNotFound();
+            }
+            return View(news);
+        }
+
+        // GET: News
+        public ActionResult Admin()
+        {
+            return View(db.News.ToList());
+        }
         // GET: News/Details/5
         public ActionResult Details(int? id)
         {
@@ -66,7 +88,7 @@ namespace Help_Desk_2.Controllers
                 {
                     return RedirectToAction("Edit/" + news.ID);
                 }
-                return RedirectToAction("Index");
+                return RedirectToAction("Admin");
             }
 
             ViewBag.addTinyMCECode = "1"; //Activate tinymce code
@@ -110,7 +132,7 @@ namespace Help_Desk_2.Controllers
                     //Do some Stuff for this Button
                     return RedirectToAction("Edit/" + news.ID);
                 }
-                return RedirectToAction("Index");
+                return RedirectToAction("Admin");
             }
 
             

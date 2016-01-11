@@ -350,4 +350,8 @@ textarea.form-control {
     background-color: #B7B3B3;
 }
 
+.form-inline select,
+.form-inline input[type=text] {
+    width:auto;
+}
 

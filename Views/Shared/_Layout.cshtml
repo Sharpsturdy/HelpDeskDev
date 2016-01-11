@@ -99,16 +99,24 @@
                             <li>@Html.ActionLink("My Profile", "Index", "UserProfile")</li>
                             <li><hr /></li>
                             <li><a href="#">Work on my tickets</a></li>
-                            <li><a href="#">FAQ Review</a></li>
                             <li><hr /></li>
+                            <li>@Html.ActionLink("Manage FAQs", "Admin", "FAQs")</li>
+                            <li>@Html.ActionLink("Manage FAQ Suggestions", "Suggestions", "FAQs")</li>
 
+                            <li><hr /></li>
+                            <li>@Html.ActionLink("Manage News Articles", "Admin", "News")</li>
+
+                            <li><hr /></li>
+                            <li>@Html.ActionLink("Manage Knowledge Base", "Admin", "KnowledgeBase")</li>
+
+                            <li><hr /></li>
                             <li>@Html.ActionLink("Global Settings", "", "GlobalSettings")</li>
                         </ul>
                         <div class="quick-search">
-                            @using (Html.BeginForm("Index", "Search"))
+                            @using (Html.BeginForm("Search", "FAQs", FormMethod.Get))
                             {
-                            @Html.AntiForgeryToken()
-                            @Html.Editor("search", new { htmlAttributes = new { placeholder = "Search FAQs" } })
+                            @*Html.AntiForgeryToken()*@
+                            @Html.Editor("searchStr", new { htmlAttributes = new { placeholder = "Search FAQs" } })
                             <input type="submit" value="Search" class="btn btn-default" />
                             }
                         </div>

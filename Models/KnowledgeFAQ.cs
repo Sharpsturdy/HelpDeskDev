@@ -21,7 +21,7 @@ namespace Help_Desk_2.Models
 
         [Display(Name = "Expiries on:"), DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:d}")]
         [DataType(DataType.DateTime)]
-        public DateTime? exiryDate { get; set;  }
+        public DateTime? expiryDate { get; set;  }
 
         [Required]
         [Display(Name = "Brief description")]
@@ -40,6 +40,10 @@ namespace Help_Desk_2.Models
         [Display(Name = "Suggestion?")]
         [DefaultValue(false)]
         public bool suggest { get; set; }
+
+        [Display(Name = "Published")]
+        [DefaultValue(false)]
+        public bool published { get; set; }
 
         [Display(Name = "Links")]
         public string links { get; set; }
@@ -65,7 +69,7 @@ namespace Help_Desk_2.Models
         {
             get
             {
-                return "Draft";
+                return published? "Published":"Unpublished";
             }
         }
 
@@ -91,27 +95,7 @@ namespace Help_Desk_2.Models
             set { expertAreas = value; }
         }
         
-              
-        /*[NotMapped]
-        [Display(Name = "Keywords", Prompt = "Select keywords from list")]
-        public List<int> keywordIDs {
-            get {
-                return wordList.Where(x => x.type==1).Select(x=>x.ID).ToList();
-            }
-            set { keywordIDs = value; }
-        }
-
-        [NotMapped]
-        [Display(Name = "Expert Areas", Prompt = "Select expert areas from list")]
-        public List<int> expertAreaIDs
-        {
-            get
-            {
-                return wordList.Where(x => x.type == 2).Select(x => x.ID).ToList();
-            }
-            set { expertAreaIDs = value; }
-        }
-        */
+        
 
         //read-only faq approverID
 
