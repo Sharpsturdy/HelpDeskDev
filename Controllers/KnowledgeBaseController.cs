@@ -23,36 +23,36 @@ namespace Help_Desk_2.Controllers
 
         public ActionResult Admin(string searchType, string searchStr)
         {
-            var faqs = from m in db.KnowledgeFAQs
-                       where (m.type == 2 && !m.suggest)
+            var kbs = from m in db.KnowledgeFAQs
+                       where (m.type == 2)
                        select m;
 
             if (String.IsNullOrEmpty(searchType))
             {
-                faqs = faqs.Where(s => !s.published);
+                kbs = kbs.Where(s => !s.published);
             }
             else if (searchType == "1")
             {
-                faqs = faqs.Where(s => s.expiryDate <= DateTime.Today);
+                kbs = kbs.Where(s => s.expiryDate <= DateTime.Today);
             }
             else if (searchType == "2")
             {
-                faqs = faqs.Where(s => s.published);
+                kbs = kbs.Where(s => s.published);
             }
 
             if (!String.IsNullOrEmpty(searchStr))
             {
-                faqs = faqs.Where(s => s.headerText.Contains(searchStr) || s.description.Contains(searchStr));
+                kbs = kbs.Where(s => s.headerText.Contains(searchStr) || s.description.Contains(searchStr));
             }
 
             ViewBag.selectedOption = "" + searchType;
-            return View("Admin", faqs.ToList()); ;
+            return View("Index", kbs.ToList()); ;
         }
 
         public ActionResult Search(string searchStr)
         {
             var kbs = from m in db.KnowledgeFAQs
-                       where (m.type == 2)
+                       where (m.type == 2 && m.published)
                        select m;
 
             if (!String.IsNullOrEmpty(searchStr))
@@ -103,7 +103,16 @@ namespace Help_Desk_2.Controllers
                 kb.dateComposed = DateTime.Now;
                 kb.originatorID = userProfile.userID;
 
+                if (Request.Form.AllKeys.Contains("btnApprove"))
+                {
+                    kb.published = true;
+                }
+                else if (Request.Form.AllKeys.Contains("btnUnApprove"))
+                {
+                    kb.published = false;
+                }
                 kb = db.KnowledgeFAQs.Add(kb);
+
                 db.SaveChanges(); 
 
                 /***** Add Files ************/
@@ -114,10 +123,14 @@ namespace Help_Desk_2.Controllers
 
                 db.SaveChanges();
 
-                if (Request.Form.AllKeys.Contains("btnSave"))
+                if (Request.Form.AllKeys.Contains("btnSave") || Request.Form.AllKeys.Contains("btnApprove") || Request.Form.AllKeys.Contains("btnUnApprove"))
                 {
                     return RedirectToAction("Edit/" + kb.ID);
                 }
+
+                if (!string.IsNullOrEmpty((string)Session["lastView"]))
+                    return Redirect((string)Session["lastView"]);
+
                 return RedirectToAction("Index");
             }
 
@@ -178,6 +191,10 @@ namespace Help_Desk_2.Controllers
                 {
                     return RedirectToAction("Edit/" + kb.ID);
                 }
+
+                if (!string.IsNullOrEmpty((string)Session["lastView"]))
+                    return Redirect((string)Session["lastView"]);
+
                 return RedirectToAction("Index");
             }
 

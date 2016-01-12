@@ -232,6 +232,8 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Views\KnowledgeBase\Index.cshtml" />
     <None Include="Properties\PublishProfiles\dev web deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\hlpdsk02 - Web Deploy %282%29.pubxml" />
+    <None Include="Properties\PublishProfiles\hlpdsk02 - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2-vsdoc.js" />
     <Content Include="Scripts\fileinput.min.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -403,7 +405,9 @@
     <Content Include="Scripts\tinymce\tinymce.js" />
     <Content Include="Scripts\tinymce\tinymce.min.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -465,8 +469,8 @@
     <Content Include="Views\FAQs\Suggest.cshtml" />
     <Content Include="Views\News\Admin.cshtml" />
     <Content Include="Views\News\Article.cshtml" />
-    <Content Include="Views\FAQs\Admin.cshtml" />
-    <Content Include="Views\KnowledgeBase\Admin.cshtml" />
+    <Content Include="Views\FAQs\Admin.bak.cshtml" />
+    <Content Include="Views\KnowledgeBase\Admin.kb.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Files\" />

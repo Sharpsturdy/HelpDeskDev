@@ -3,6 +3,10 @@
 @{
     ViewBag.Title = "Knowledge Base";
     Session["lastView"] = Request.Url.PathAndQuery;    //Record this as last view
+
+    var actionName = ViewContext.RouteData.Values["action"].ToString().ToLower();
+    ViewBag.formAction = actionName == "index" ? "KnowledgeBase/Search" : "";
+    ViewBag.showSelect = actionName == "admin";
 }
 
 <header>
@@ -10,10 +14,23 @@
 </header>
 <div class="container-view">
 
-    <form class="form-inline" action="~/KnowledgeBase/Search">
+    <form class="form-inline" action="@ViewBag.formAction">
+        @if (ViewBag.showSelect)
+        {
+            <div class="form-group">
+                <label for="searchType">Filter by: </label>
+                <select class="form-control" id="searchType" name="searchType">
 
+                    <option value="" @if (ViewBag.selectedOption == "") { @Html.Raw(" selected")  }>Unpublished</option>
+                    <option value="1" @if (ViewBag.selectedOption == "1") { @Html.Raw(" selected")  }>Expired</option>
+                    <option value="2" @if (ViewBag.selectedOption == "2") { @Html.Raw(" selected")  }>Published</option>
+                    <option value="3" @if (ViewBag.selectedOption == "3") { @Html.Raw(" selected")  }>All</option>
+
+                </select>
+            </div>
+        }
         <div class="form-group">
-            <input type="text" class="form-control" id="searchStr" name="searchStr" placeholder="Enter search text" value="@ViewBag.displayMessage">
+            <input type="text" class="form-control" id="searchStr1" name="searchStr" placeholder="Enter search text" value='@Request.QueryString["searchStr"]'>
         </div>
         <button type="submit" class="btn btn-default">Search</button>
     </form>

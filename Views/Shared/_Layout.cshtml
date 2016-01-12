@@ -117,7 +117,8 @@
                             @using (Html.BeginForm("Search", "FAQs", FormMethod.Get))
                             {
                             @*Html.AntiForgeryToken()*@
-                            @Html.Editor("searchStr", new { htmlAttributes = new { placeholder = "Search FAQs" } })
+                            @*Html.Editor("searchStr", new { htmlAttributes = new { placeholder = "Search FAQs" } })*@
+                            <input class="text-box single-line" id="searchStr" name="searchStr" placeholder="Search FAQs" type="text" >
                             <input type="submit" value="Search" class="btn btn-default" />
                             }
                         </div>

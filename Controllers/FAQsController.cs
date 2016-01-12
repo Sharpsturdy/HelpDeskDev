@@ -47,7 +47,7 @@ namespace Help_Desk_2.Controllers
             }
 
             ViewBag.selectedOption = ""+ searchType;
-            return View("Admin", faqs.ToList());;            
+            return View("Index", faqs.ToList());;            
         }
 
         public ActionResult Search(string searchStr)
@@ -107,7 +107,17 @@ namespace Help_Desk_2.Controllers
                 faq.dateComposed = DateTime.Now;
                 faq.originatorID = userProfile.userID;
 
+                if (Request.Form.AllKeys.Contains("btnApprove"))
+                {
+                    faq.published = true;
+                }
+                else if (Request.Form.AllKeys.Contains("btnUnApprove"))
+                {
+                    faq.published = false;
+                }
+
                 faq = db.KnowledgeFAQs.Add(faq);
+
                 db.SaveChanges();
 
                 /***** Add File ************/
@@ -118,10 +128,14 @@ namespace Help_Desk_2.Controllers
 
                 db.SaveChanges();
 
-                if (Request.Form.AllKeys.Contains("btnSave"))
+                if (Request.Form.AllKeys.Contains("btnSave") || Request.Form.AllKeys.Contains("btnApprove") || Request.Form.AllKeys.Contains("btnUnApprove"))
                 {
                     return RedirectToAction("Edit/" + faq.ID);
                 }
+
+                if (!string.IsNullOrEmpty((string)Session["lastView"]))
+                    return Redirect((string)Session["lastView"]);
+
                 return RedirectToAction("Index");
             }
 
@@ -164,9 +178,33 @@ namespace Help_Desk_2.Controllers
             return View(faq);
         }
 
-        public ActionResult Suggestions(string orderBy)
+        public ActionResult Suggestions(string searchType, string searchStr)
         {
-            return View("Index", db.KnowledgeFAQs.Where(k => k.type == 1 && k.suggest).ToList());
+            var faqs = from m in db.KnowledgeFAQs
+                       where (m.type == 1 && m.suggest)
+                       select m;
+
+            if (String.IsNullOrEmpty(searchType))
+            {
+                faqs = faqs.Where(s => !s.published);
+            }
+            else if (searchType == "1")
+            {
+                faqs = faqs.Where(s => s.expiryDate <= DateTime.Today);
+            }
+            else if (searchType == "2")
+            {
+                faqs = faqs.Where(s => s.published);
+            }
+
+            if (!String.IsNullOrEmpty(searchStr))
+            {
+                faqs = faqs.Where(s => s.headerText.Contains(searchStr) || s.description.Contains(searchStr));
+            }
+
+            ViewBag.selectedOption = "" + searchType;
+            return View("Index", faqs.ToList()); ;
+            //return View("Index", db.KnowledgeFAQs.Where(k => k.type == 1 && k.suggest).ToList());
                         
         }
 
@@ -222,7 +260,12 @@ namespace Help_Desk_2.Controllers
                 {
                     return RedirectToAction("Edit/" + faq.ID);
                 }
+
+                if (!string.IsNullOrEmpty((string)Session["lastView"]))
+                    return Redirect((string)Session["lastView"]);
+
                 return RedirectToAction("Index");
+                //return string.IsNullOrEmpty((string) Session["lastView"]) ? Redirect((string) Session["lastView"]): RedirectToAction("Index");
                
             }
 
