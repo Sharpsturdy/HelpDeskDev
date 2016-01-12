@@ -12,7 +12,6 @@ ViewContext.RouteData.Values["id"]*/
     ViewBag.showSelect = actionName == "admin";
 }
 
-#@ViewContext.RouteData.Values["action"].ToString().ToLower()#
 <header>
     <h2 class="title">@ViewBag.Title<span class="summary-top pull-right">@Html.ActionLink("New FAQ", "New", null, htmlAttributes: new { @class = "btn btn-primary" })</span></h2>
 </header>
