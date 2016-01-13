@@ -1,7 +1,11 @@
 ﻿using Help_Desk_2.Models;
+using Help_Desk_2.Utilities;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+
+using System.Linq;
 
 namespace Help_Desk_2.ViewModels
 {
@@ -31,12 +35,28 @@ namespace Help_Desk_2.ViewModels
         [DataType(DataType.MultilineText)]
         public string TicketHeader { get; set; }
 
-        public string Keyowrds { get; set; } //Change to list
+        public List<string> Keywords {
+            get
+            {
+                return AllSorts.FullWordList.Where(x => x.type == 1).OrderBy(x=>x.text).Select(x => x.text).ToList<string>();
+            }
+        } //Change to list
 
         [Display(Name = "Expert Areas")]
-        public string ExpertArea { get; set; } //Change to list
+        public List<string> ExpertAreas {
+            get
+            {
+                return AllSorts.FullWordList.Where(x => x.type == 2).OrderBy(x => x.text).Select(x => x.text).ToList<string>();
+            }
+        }  //Change to list
 
-        public DateTime TicketExpiry { get; set; }
+        [Required]
+        [Display(Name = "Ticket Expiry Days")]
+        public int TicketExpiryDays { get; set; }
+
+        [Required]
+        [Display(Name = "FAQs/Knowledge Base Expiry Days")]
+        public int KBFAQsExpiryDays { get; set; }
 
         //public Enumation LanguageOptions { get; set; }
 
@@ -50,9 +70,8 @@ namespace Help_Desk_2.ViewModels
             this.FAQApprover = gs.FAQApprover;
             this.KBApprover = gs.KBApprover;
             this.TicketHeader = gs.TicketHeader;
-            this.Keyowrds = gs.Keyowrds;
-            this.ExpertArea = gs.ExpertArea;
-            this.TicketExpiry = gs.TicketExpiry;
+            this.TicketExpiryDays = gs.TicketExpiryDays;
+            this.KBFAQsExpiryDays = gs.KBFAQsExpiryDays;
         }
 
         public GlobalSettings getSettings()
@@ -64,9 +83,8 @@ namespace Help_Desk_2.ViewModels
             gs.FAQApprover = this.FAQApprover;
             gs.KBApprover = this.KBApprover;
             gs.TicketHeader = this.TicketHeader;
-            gs.Keyowrds = this.Keyowrds;
-            gs.ExpertArea = this.ExpertArea;
-            gs.TicketExpiry = this.TicketExpiry;
+            gs.TicketExpiryDays = this.TicketExpiryDays;
+            gs.KBFAQsExpiryDays = this.KBFAQsExpiryDays;
 
             return gs;
         }

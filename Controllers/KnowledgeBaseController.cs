@@ -106,13 +106,15 @@ namespace Help_Desk_2.Controllers
                 if (Request.Form.AllKeys.Contains("btnApprove"))
                 {
                     kb.published = true;
+                    kb.expiryDate = kb.dateComposed.AddDays(AllSorts.getExpiryDays(db, true));
+
                 }
                 else if (Request.Form.AllKeys.Contains("btnUnApprove"))
                 {
                     kb.published = false;
                 }
-                kb = db.KnowledgeFAQs.Add(kb);
 
+                kb = db.KnowledgeFAQs.Add(kb);
                 db.SaveChanges(); 
 
                 /***** Add Files ************/
@@ -173,6 +175,8 @@ namespace Help_Desk_2.Controllers
                 if (Request.Form.AllKeys.Contains("btnApprove"))
                 {
                     kb.published = true;
+                    kb.expiryDate = kb.dateComposed.AddDays(AllSorts.getExpiryDays(db, true));
+
                 }
                 else if (Request.Form.AllKeys.Contains("btnUnApprove"))
                 {

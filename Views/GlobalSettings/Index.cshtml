@@ -58,10 +58,10 @@
 
         <div class="form-group odd">
             @Html.LabelFor(model => model.TicketHeader, htmlAttributes: new { @class = "control-label col-md-6" })
-            @Html.LabelFor(model => model.TicketExpiry, htmlAttributes: new { @class = "control-label col-md-6" })
-
-
-            
+            <div class="col-md-6">
+            <div class="col-md-6">@Html.LabelFor(model => model.TicketExpiryDays, htmlAttributes: new { @class = "control-label" })</div>
+            <div class="col-md-6">@Html.LabelFor(model => model.KBFAQsExpiryDays, htmlAttributes: new { @class = "control-label" })</div> 
+            </div>           
         </div>
 
         <div class="form-group even">
@@ -70,8 +70,14 @@
                 @Html.ValidationMessageFor(model => model.TicketHeader, "", new { @class = "text-danger" })
             </div>
            <div class="col-md-6">
-                @Html.EditorFor(model => model.TicketExpiry, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.TicketExpiry, "", new { @class = "text-danger" })
+               <div class="col-md-6">
+                   @Html.EditorFor(model => model.TicketExpiryDays, new { htmlAttributes = new { @class = "form-control" } })
+                   @Html.ValidationMessageFor(model => model.TicketExpiryDays, "", new { @class = "text-danger" })
+               </div>
+               <div class="col-md-6">
+                   @Html.EditorFor(model => model.KBFAQsExpiryDays, new { htmlAttributes = new { @class = "form-control" } })
+                   @Html.ValidationMessageFor(model => model.KBFAQsExpiryDays, "", new { @class = "text-danger" })
+               </div>
             </div>
         </div>
 
@@ -89,7 +95,8 @@
         <div class="form-group">
             <div class="col-md-6">
                 <table>
-                    @foreach (string kword in ViewBag.keywords){
+                    @foreach (string kword in Model.Keywords)
+                    {
                         <tr>
                             <td>@kword</td>
                         </tr>
@@ -99,7 +106,7 @@
             </div>
             <div class="col-md-6">
                 <table>
-                    @foreach (string kword in ViewBag.expertareas)
+                    @foreach (string kword in Model.ExpertAreas)
                     {
                         <tr>
                             <td>@kword</td>

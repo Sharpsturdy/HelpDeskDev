@@ -21,9 +21,12 @@ namespace Help_Desk_2.Models
         public string TicketHeader { get; set; }
 
         public string Keyowrds { get; set; } //Change to list
-        public string ExpertArea { get; set;  } //Change to list
+        public string ExpertArea { get; set; } //Change to list
 
-        public DateTime TicketExpiry { get; set; }
+        public int TicketExpiryDays { get; set; }
+
+        public int KBFAQsExpiryDays { get; set; }
+
 
         //public Enumation LanguageOptions { get; set; }
 

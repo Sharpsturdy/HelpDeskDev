@@ -20,9 +20,22 @@ namespace Help_Desk_2.Controllers
     public class TicketController : Controller
     {
         private HelpDeskContext db = new HelpDeskContext();
-        
-        // GET: Ticket
+
+        //List all my tickets draft/open
         public ActionResult Index()
+        {
+
+            return View(db.Tickets.ToList());
+        }
+
+        //List all my tickets draft/open/closed
+        public ActionResult List()
+        {
+            return View(db.Tickets.ToList());
+        }
+
+        //List all tickets from all users draft/open/closed
+        public ActionResult Admin()
         {
             return View(db.Tickets.ToList());
         }
@@ -45,12 +58,9 @@ namespace Help_Desk_2.Controllers
         // GET: Ticket/Create
         public ActionResult New()
         {
-            
-            ViewBag.newTicket = "1";
-            ViewBag.addAttachCode = "1"; //Activate attach code 
-            ViewBag.addTinyMCECode = "1"; //Activate tinymce code
 
-            return View();
+            ViewBag.mode = 0;
+            return View("TicketOne");
         }
 
         // POST: Ticket/Create
@@ -65,24 +75,36 @@ namespace Help_Desk_2.Controllers
             {
                 UserData ud = new UserData();
                 UserProfile userProfile = ud.getUserProfile();
-                                
-                //ticket.headerText = tvm.headerText;
-                //ticket.description = tvm.description;
-
-                ticket.dateComposed = DateTime.Now;
                 ticket.originatorID = userProfile.userID;
+                ticket.dateComposed = DateTime.Now;
+
+                if (Request.Form.AllKeys.Contains("btnSubmit"))
+                {
+                    ticket.dateSubmitted = DateTime.Now;
+                    ticket.expiryDate = ticket.dateSubmitted.Value.AddDays(AllSorts.getExpiryDays(db, true));
+
+                }
+                
+                ticket.expiryDate = ticket.dateComposed.AddDays(AllSorts.getExpiryDays(db));
                 ticket = db.Tickets.Add(ticket);
 
                 /***** Add File ************/
-                //saveAttachments(ticket.ID);
                 AllSorts.saveAttachments(ticket.ID, db);
                 db.SaveChanges();
 
-                //return RedirectToAction("Index");
-                return RedirectToAction("Edit/" + ticket.ID);
+                if (Request.Form.AllKeys.Contains("btnSave") || Request.Form.AllKeys.Contains("btnSubmit") || Request.Form.AllKeys.Contains("btnUnApprove"))
+                {
+                    return RedirectToAction("Edit/" + ticket.ID);
+                }
+
+                if (!string.IsNullOrEmpty((string)Session["lastView"]))
+                    return Redirect((string)Session["lastView"]);
+
+                return RedirectToAction("Index");
             }
 
-            return View(ticket);
+            ViewBag.mode = 0;
+            return View("TicketOne", ticket);
         }
 
         // GET: Ticket/Edit/5
@@ -98,10 +120,9 @@ namespace Help_Desk_2.Controllers
                 return HttpNotFound();
             }
 
-            ViewBag.addAttachCode = "1"; //Activate attach code 
-            ViewBag.addTinyMCECode = "1"; //Activate tinymce code
-
-            return View(ticket);
+            
+            ViewBag.mode = 1;
+            return View("TicketOne", ticket);
         }
 
         // POST: Ticket/Edit/5
@@ -109,29 +130,30 @@ namespace Help_Desk_2.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,headerText,description,dateComposed, originatorID,links,deleteField")] Ticket ticket)
+        public ActionResult Edit([Bind(Include = "ID,headerText,description,dateComposed,dateSubmitted,dateL1Release,dateL2Release,originatorID,links,deleteField")] Ticket ticket)
         {
             if (ModelState.IsValid)
             {
                 //Ticket ticket = db.Tickets.Find(ticketM.ID);
-                db.Entry(ticket).State = EntityState.Modified;
-
-                //ticket.description = ticketM.description;
-                //ticket.headerText = ticketM.headerText;
-                //ticket.links = ticketM.links;
+                db.Entry(ticket).State = EntityState.Modified;                
+                
                 /***** Add File ************/
-                //saveAttachments(ticket.ID, ticket.deleteField);
                 AllSorts.saveAttachments(ticket.ID, db, ticket.deleteField);
                 
                 db.SaveChanges();
-                //return RedirectToAction("Index");                
-                return Redirect(Request.UrlReferrer.ToString());
+                if (Request.Form.AllKeys.Contains("btnSave") || Request.Form.AllKeys.Contains("btnSubmit") || Request.Form.AllKeys.Contains("btnUnApprove"))
+                {
+                    return RedirectToAction("Edit/" + ticket.ID);
+                }
+
+                if (!string.IsNullOrEmpty((string)Session["lastView"]))
+                    return Redirect((string)Session["lastView"]);
+
+                return RedirectToAction("Index");
             }
 
-            ViewBag.addAttachCode = "1"; //Activate attach code 
-            ViewBag.addTinyMCECode = "1"; //Activate tinymce code
-
-            return View(ticket);
+            ViewBag.mode = 1;
+            return View("TicketOne", ticket);
         }
        
                 // GET: Ticket/Delete/5
@@ -167,60 +189,6 @@ namespace Help_Desk_2.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
-        }
-
-        private void saveAttachments(int ID, string deleteList = null)
-        {
-            if (Request.Files.Count > 0)
-            {
-                //Remove files
-                if (deleteList != null)
-                {
-                    var fileIDs = deleteList.Split(new char[',']);
-
-                    foreach(string strID in fileIDs)
-                    {
-                        if (!string.IsNullOrEmpty(strID))
-                        {
-                            Attachment f = db.Attachments.Find(int.Parse(strID));
-                            db.Attachments.Remove(f);
-                        }
-                    }
-                }
-
-                //Add Files
-                for (int i = 0; i < Request.Files.Count; i++)
-                {
-                    HttpPostedFileBase file = Request.Files[i];
-                    if (file.ContentLength > 0)
-                    {
-
-                        //Get physical path to directory
-                        string savePath = Path.Combine(Server.MapPath("~/App_Data/Files"), DateTime.Now.Year.ToString());
-                        if(!Directory.Exists(savePath)) {
-                            Directory.CreateDirectory(savePath);
-                        }
-
-                        //Get unique random name, duplication not very possible
-                        string randomName = ""; 
-                        do {
-                            randomName = Path.GetRandomFileName();
-                        } while (System.IO.File.Exists(Path.Combine(savePath, randomName)));
-
-                        //Save file
-                        //file.SaveAs(savePath + "/" + randomName);
-                        file.SaveAs(Path.Combine(savePath, randomName));
-
-                        //Add file data to database
-                        Attachment attachment = new Attachment();
-                        attachment.fileName = Path.GetFileName(file.FileName);
-                        attachment.filePath = "~/App_Data/Files/" + DateTime.Now.Year + "/" + randomName;
-                        attachment.parentID = ID;     
-                        db.Attachments.Add(attachment);
-                    }
-                }
-                
-            }
         }
 
     }

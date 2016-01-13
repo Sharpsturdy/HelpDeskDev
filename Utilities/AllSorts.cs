@@ -125,5 +125,19 @@ namespace Help_Desk_2.Utilities
 
         }
 
+        public static int getExpiryDays(HelpDeskContext db, bool kb = false)
+        {
+            GlobalSettings globalSettings = db.GlobalSettingss.FirstOrDefault<GlobalSettings>();
+
+            if (globalSettings == null || globalSettings.ID == null)
+            {
+
+                return 0;
+            } else
+            {
+                return kb ? globalSettings.KBFAQsExpiryDays : globalSettings.TicketExpiryDays;
+            }
+        }
+
     }
 }

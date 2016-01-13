@@ -33,6 +33,11 @@ namespace Help_Desk_2.Models
         [DataType(DataType.DateTime)]
         public DateTime dateComposed { get; set; }
 
+        [Column(TypeName = "DateTime")]
+        [Display(Name = "Expires on:"), DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:d}")]
+        [DataType(DataType.DateTime)]
+        public DateTime? expiryDate { get; set; }
+
         [NotMapped]
         public string message { get; set; }
 

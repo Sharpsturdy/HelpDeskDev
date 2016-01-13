@@ -110,6 +110,8 @@ namespace Help_Desk_2.Controllers
                 if (Request.Form.AllKeys.Contains("btnApprove"))
                 {
                     faq.published = true;
+                    faq.expiryDate = faq.dateComposed.AddDays(AllSorts.getExpiryDays(db, true));
+
                 }
                 else if (Request.Form.AllKeys.Contains("btnUnApprove"))
                 {
@@ -240,6 +242,8 @@ namespace Help_Desk_2.Controllers
                 if (Request.Form.AllKeys.Contains("btnApprove"))
                 {
                     faq.published = true;
+                    faq.expiryDate = faq.dateComposed.AddDays(AllSorts.getExpiryDays(db, true));
+
                 } else if(Request.Form.AllKeys.Contains("btnUnApprove"))
                 {
                     faq.published = false;
