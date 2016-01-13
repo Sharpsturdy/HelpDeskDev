@@ -139,6 +139,7 @@
     <Compile Include="Controllers\KnowledgeFAQsTestController.cs" />
     <Compile Include="Controllers\NewsController.cs" />
     <Compile Include="Controllers\TicketController.cs" />
+    <Compile Include="Controllers\TicketsAutoController.cs" />
     <Compile Include="Controllers\UserProfileController.cs" />
     <Compile Include="DataAccessLayer\HelpDeskContext.cs" />
     <Compile Include="Global.asax.cs">
@@ -468,6 +469,11 @@
     <Content Include="Views\News\Article.cshtml" />
     <Content Include="Views\FAQs\Admin.bak.cshtml" />
     <Content Include="Views\KnowledgeBase\Admin.kb.cshtml" />
+    <Content Include="Views\TicketsAuto\Create.cshtml" />
+    <Content Include="Views\TicketsAuto\Delete.cshtml" />
+    <Content Include="Views\TicketsAuto\Details.cshtml" />
+    <Content Include="Views\TicketsAuto\Edit.cshtml" />
+    <Content Include="Views\TicketsAuto\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Files\" />

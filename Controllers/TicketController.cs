@@ -52,7 +52,9 @@ namespace Help_Desk_2.Controllers
             {
                 return HttpNotFound();
             }
-            return View(ticket);
+
+            ViewBag.mode = 2;
+            return View("TicketOne",ticket);
         }
 
         // GET: Ticket/Create
@@ -81,18 +83,17 @@ namespace Help_Desk_2.Controllers
                 if (Request.Form.AllKeys.Contains("btnSubmit"))
                 {
                     ticket.dateSubmitted = DateTime.Now;
-                    ticket.expiryDate = ticket.dateSubmitted.Value.AddDays(AllSorts.getExpiryDays(db, true));
+                    ticket.expiryDate = ticket.dateSubmitted.Value.AddDays(AllSorts.getExpiryDays(db));
 
                 }
                 
-                ticket.expiryDate = ticket.dateComposed.AddDays(AllSorts.getExpiryDays(db));
                 ticket = db.Tickets.Add(ticket);
 
                 /***** Add File ************/
                 AllSorts.saveAttachments(ticket.ID, db);
                 db.SaveChanges();
 
-                if (Request.Form.AllKeys.Contains("btnSave") || Request.Form.AllKeys.Contains("btnSubmit") || Request.Form.AllKeys.Contains("btnUnApprove"))
+                if (Request.Form.AllKeys.Contains("btnSave")) // || Request.Form.AllKeys.Contains("btnSubmit") || Request.Form.AllKeys.Contains("btnUnApprove"))
                 {
                     return RedirectToAction("Edit/" + ticket.ID);
                 }
@@ -130,18 +131,24 @@ namespace Help_Desk_2.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,headerText,description,dateComposed,dateSubmitted,dateL1Release,dateL2Release,originatorID,links,deleteField")] Ticket ticket)
+        public ActionResult Edit([Bind(Include = "ID,headerText,description,dateComposed,dateSubmitted,dateL1Release,dateL2Release,originatorID,links,deleteField,sanityCheck")] Ticket ticket)
         {
             if (ModelState.IsValid)
             {
                 //Ticket ticket = db.Tickets.Find(ticketM.ID);
-                db.Entry(ticket).State = EntityState.Modified;                
-                
+                db.Entry(ticket).State = EntityState.Modified;
+
+                if (Request.Form.AllKeys.Contains("btnSubmit"))
+                {
+                    ticket.dateSubmitted = DateTime.Now;
+                    ticket.expiryDate = ticket.dateSubmitted.Value.AddDays(AllSorts.getExpiryDays(db));
+
+                }
                 /***** Add File ************/
                 AllSorts.saveAttachments(ticket.ID, db, ticket.deleteField);
                 
                 db.SaveChanges();
-                if (Request.Form.AllKeys.Contains("btnSave") || Request.Form.AllKeys.Contains("btnSubmit") || Request.Form.AllKeys.Contains("btnUnApprove"))
+                if (Request.Form.AllKeys.Contains("btnSave")) //|| Request.Form.AllKeys.Contains("btnSubmit") || Request.Form.AllKeys.Contains("btnUnApprove"))
                 {
                     return RedirectToAction("Edit/" + ticket.ID);
                 }

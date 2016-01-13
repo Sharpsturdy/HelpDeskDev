@@ -62,13 +62,19 @@
         @Html.HiddenFor(model => model.dateL2Release)
         @Html.HiddenFor(model => model.dateSubmitted)
     }
-    <div class="container">
+    <div class="container1">
 
         <div class="panel panel-info">
             <div class="panel-heading"> @Html.DisplayNameFor(model => model.headerText)</div>
             <div>
+                @if (ViewBag.mode == 2)
+                {
+                    @Html.DisplayFor(model => model.headerText)
+                }
+                else {
                 @Html.EditorFor(model => model.headerText, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.headerText, "", new { @class = "text-danger" })
+                }
             </div>
         </div>
 
@@ -76,8 +82,14 @@
             <div class="panel-heading">
                 @Html.DisplayNameFor(model => model.description)</div>
                 <div>
-                    @Html.TextAreaFor(model => model.description, new { @class = "form-control richeditor" })
-                    @Html.ValidationMessageFor(model => model.description, "", new { @class = "text-danger" })
+                    @if (ViewBag.mode == 2)
+                    {
+                        @Html.DisplayFor(model => model.headerText)
+                    }
+                    else {
+                        @Html.TextAreaFor(model => model.description, new { @class = "form-control richeditor" })
+                        @Html.ValidationMessageFor(model => model.description, "", new { @class = "text-danger" })
+                    }
                 </div>
             </div>
 
@@ -177,6 +189,25 @@
                 </table>
             </div>
 
+        @if (Model.status != Statuses.Draft) { 
+        <div class="panel panel-info">
+            <div class="panel-heading">Level 1 Release</div>
+            <div class="row level1-release">
+                <div class="col-md-6">
+                    @Html.LabelFor(model => model.sanityCheck, htmlAttributes: new { @class = "control-label text-left" })
+                    @if (ViewBag.mode == 2)
+                    {
+                        @Html.DisplayFor(model => model.sanityCheck)
+                    }
+                    else {
+                        <div>
+                            @Html.EnumDropDownListFor(model => model.sanityCheck, htmlAttributes: new { @class = "form-control" })
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        }
 
             @if (false)
             {
@@ -214,27 +245,48 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        @Html.LabelFor(model => model.sanityCheck, htmlAttributes: new { @class = "control-label" })
-                        <div>
-                            @Html.EditorFor(model => model.sanityCheck, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.sanityCheck, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                </div>
             }
+
+
             <div>
                 <div class="btn-group btn-group-custom" style="padding-bottom:15px; padding-top:15px">
-                    <input type="submit" name="btnSave" value="Save" class="btn btn-primary" />
-                    <input type="submit" name="btnSClose" value="Save & Close" class="btn btn-primary" />
-                    @if (Model == null || Model.status == Statuses.Draft)
+                    @if (ViewBag.mode == 2)
                     {
-                        <input type="submit" name="btnSubmit" value="Submit" class="btn btn-primary" />
+
+                        @Html.ActionLink("Edit", "Edit/" + Model.ID, null, htmlAttributes: new { @title = "Click to modify document", @class = "btn btn-primary" })
+                        <a href="@ViewBag.prevURL" title="Click to return to News home" class="btn btn-primary">Close</a>
+
+                    }
+                    else {
+
+                        <input type="submit" name="btnSave" value="Save" class="btn btn-primary" />
+                        <input type="submit" name="btnSClose" value="Save & Close" class="btn btn-primary" />
+                        if (Model == null || Model.status == Statuses.Draft)
+                        {
+                            <input type="submit" name="btnSubmit" value="Submit" class="btn btn-primary" />
+                        }
+                        @*if (User.IsInRole("Administrators"))
+                        {
+                            if (Model != null && Model.published)
+                            {
+                                <input type="submit" name="btnUnApprove" value="UnApprove" class="btn btn-primary" />
+                            }
+                            else
+                            {
+                                <input type="submit" name="btnApprove" value="Approve" class="btn btn-primary" />
+                            }
+                        }*@
+                        <a href="@ViewBag.prevURL" title="Click to return to News home" class="btn btn-primary">Cancel</a>
                     }
                 </div>
             </div>
+
+
+
+
+
         </div>
+
     </div>
 
 }

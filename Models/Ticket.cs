@@ -17,6 +17,11 @@ namespace Help_Desk_2.Models
     {
         Draft, Submitted, Assigned, OnHold, Completed
     }
+
+    public enum SanityChecks
+    {
+        Accept, Reject, Junk
+    }
     public class Ticket
     {
         [Display(Name = "Temporary ticket No.")]
@@ -97,9 +102,8 @@ namespace Help_Desk_2.Models
         [NotMapped]     //List of files to delete
         public string deleteField { get; set; }
 
-
-        public string sanityCheck { get; set; }
-
+        [Display(Name = "Sanity Check")]
+        public SanityChecks? sanityCheck { get; set; }
 
     }
 }

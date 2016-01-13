@@ -79,9 +79,7 @@ namespace Help_Desk_2.Controllers
                 return HttpNotFound();
             }
 
-            ViewBag.prevURL = Request.UrlReferrer.ToString();
             ViewBag.mode = 2;
-            //return View("FAQOne", faq);
             return View(faq.suggest ? "Suggest" : "FAQOne", faq);
         }
 
