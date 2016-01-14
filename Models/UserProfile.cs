@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -35,10 +36,16 @@ namespace Help_Desk_2.Models
         [DataType(DataType.PhoneNumber)]
         public string contactNumber { get; set;  }
 
+        [DefaultValue(false)]
+        public bool isResponsible { get; set;  }
+
         //public int preferedLanguage { get; set;  }
 
         [NotMapped]
         [Display(Name = "Created by")]
         public string displayName { get { return firstName + " " + surName; } }
+
+        public virtual ICollection<Ticket> tickets { get; set; }
+
     }
 }

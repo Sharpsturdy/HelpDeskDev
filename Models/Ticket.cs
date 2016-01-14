@@ -33,6 +33,9 @@ namespace Help_Desk_2.Models
         [ForeignKey("UserProfile")]
         public Guid originatorID { get; set; } //AD Username
 
+
+        public Guid? responsibleID { get; set; } //Link to Responsible person
+
         [Column(TypeName = "DateTime")]
         [Display(Name = "Created on:"), DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:d}")]
         [DataType(DataType.DateTime)]
@@ -72,8 +75,7 @@ namespace Help_Desk_2.Models
         [Column(TypeName = "DateTime")]
         [DataType(DataType.DateTime)]
         public DateTime? dateSubmitted { get; set; }
-        public string adminEmail { get; set; }
-
+        
         [Column(TypeName = "DateTime")]
         [DataType(DataType.DateTime)]
         public DateTime? dateL1Release { get; set; }
@@ -89,11 +91,12 @@ namespace Help_Desk_2.Models
             
         }
 
-        public virtual UserProfile UserProfile { get; set; }
+        [Display(Name = "Reason")]
+        public string reason { get; set; }
 
-        public virtual ICollection<Attachment> Files { get; set;  }
-
-        //View model public string message { get; set; }
+        [Display(Name = "Admin Comments")]
+        [DataType(DataType.MultilineText)]
+        public string adminComments { get; set; }
 
         [NotMapped]
         [Display(Name = "Choose file")]
@@ -104,6 +107,46 @@ namespace Help_Desk_2.Models
 
         [Display(Name = "Sanity Check")]
         public SanityChecks? sanityCheck { get; set; }
+
+        [Display(Name = "Summary")]
+        [StringLength(250, ErrorMessage = "Your completion summary exceeds the maximum characters allowed")]
+        public string summary { get; set; }
+
+        [Display(Name = "Report")]
+        [DataType(DataType.MultilineText)]
+        public string report { get; set; }
+
+        
+        [NotMapped]
+        [Display(Name = "Keywords", Prompt = "Select keywords from list")]
+        public IEnumerable<WordList> keywords
+        {
+            get
+            {
+                return wordList.Where(x => x.type == 1);
+            }
+            set { keywords = value; }
+        }
+
+        [NotMapped]
+        [Display(Name = "Expert Areas", Prompt = "Select expert areas from list")]
+        public IEnumerable<WordList> expertAreas
+        {
+            get
+            {
+                return wordList.Where(x => x.type == 2);
+            }
+            set { expertAreas = value; }
+        }
+
+        public virtual ICollection<WordList> wordList { get; set; }
+
+        public virtual UserProfile UserProfile { get; set; }
+
+        [ForeignKey("responsibleID")]
+        public virtual UserProfile Responsible { get; set; }
+
+        public virtual ICollection<Attachment> Files { get; set; }
 
     }
 }

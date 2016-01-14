@@ -245,6 +245,9 @@ namespace Help_Desk_2.Controllers
                 } else if(Request.Form.AllKeys.Contains("btnUnApprove"))
                 {
                     faq.published = false;
+                } else if(Request.Form.AllKeys.Contains("btnConvert"))
+                {
+                    faq.suggest = false;
                 }
 
                 if (!faq.suggest)

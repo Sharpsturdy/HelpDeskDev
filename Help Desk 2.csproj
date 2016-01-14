@@ -139,6 +139,7 @@
     <Compile Include="Controllers\KnowledgeFAQsTestController.cs" />
     <Compile Include="Controllers\NewsController.cs" />
     <Compile Include="Controllers\TicketController.cs" />
+    <Compile Include="Controllers\TicketsAuto1Controller.cs" />
     <Compile Include="Controllers\TicketsAutoController.cs" />
     <Compile Include="Controllers\UserProfileController.cs" />
     <Compile Include="DataAccessLayer\HelpDeskContext.cs" />
@@ -434,9 +435,6 @@
     <Content Include="Views\Home\FAQs.cshtml" />
     <Content Include="Views\Home\KnowledgeBase.cshtml" />
     <Content Include="Views\Ticket\New.cshtml" />
-    <Content Include="Views\Ticket\Delete.cshtml" />
-    <Content Include="Views\Ticket\Details.cshtml" />
-    <Content Include="Views\Ticket\Edit1.cshtml" />
     <Content Include="Views\Ticket\Index.cshtml" />
     <Content Include="Views\UserProfile\Index.cshtml" />
     <Content Include="Views\UserProfile\Details.cshtml" />
@@ -469,11 +467,11 @@
     <Content Include="Views\News\Article.cshtml" />
     <Content Include="Views\FAQs\Admin.bak.cshtml" />
     <Content Include="Views\KnowledgeBase\Admin.kb.cshtml" />
-    <Content Include="Views\TicketsAuto\Create.cshtml" />
-    <Content Include="Views\TicketsAuto\Delete.cshtml" />
-    <Content Include="Views\TicketsAuto\Details.cshtml" />
-    <Content Include="Views\TicketsAuto\Edit.cshtml" />
-    <Content Include="Views\TicketsAuto\Index.cshtml" />
+    <Content Include="Views\TicketsAuto1\Create.cshtml" />
+    <Content Include="Views\TicketsAuto1\Delete.cshtml" />
+    <Content Include="Views\TicketsAuto1\Details.cshtml" />
+    <Content Include="Views\TicketsAuto1\Edit.cshtml" />
+    <Content Include="Views\TicketsAuto1\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Files\" />

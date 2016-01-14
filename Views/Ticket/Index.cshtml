@@ -31,7 +31,7 @@
                     @Html.DisplayNameFor(model => model.sanityCheck)
                 </th>
                 <th>Status</th>
-                <th></th>
+                
             </tr>
 </thead>
         <tbody>
@@ -46,9 +46,7 @@
                     <td style="display:none">
                         @Html.DisplayFor(modelItem => item.dateSubmitted)
                     </td>
-                    <td style="display:none">
-                        @Html.DisplayFor(modelItem => item.adminEmail)
-                    </td>
+                    
                     <td style="display:none">
                         @Html.DisplayFor(modelItem => item.dateL1Release)
                     </td>
@@ -61,11 +59,7 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.status)
                     </td>
-                    <td>
-                        @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
-                        @Html.ActionLink("Details", "Details", new { id = item.ID }) |
-                        @Html.ActionLink("Delete", "Delete", new { id = item.ID })
-                    </td>
+                    
                 </tr>
             }
         </tbody>

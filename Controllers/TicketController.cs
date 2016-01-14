@@ -84,7 +84,6 @@ namespace Help_Desk_2.Controllers
                 {
                     ticket.dateSubmitted = DateTime.Now;
                     ticket.expiryDate = ticket.dateSubmitted.Value.AddDays(AllSorts.getExpiryDays(db));
-
                 }
                 
                 ticket = db.Tickets.Add(ticket);
@@ -105,6 +104,8 @@ namespace Help_Desk_2.Controllers
             }
 
             ViewBag.mode = 0;
+            //ViewBag.responsibleID = new SelectList(db.UserProfiles, "userID", "displayName", ticket.responsibleID);
+            ViewBag.errorMsg = "Model Binding failed";
             return View("TicketOne", ticket);
         }
 
@@ -123,6 +124,7 @@ namespace Help_Desk_2.Controllers
 
             
             ViewBag.mode = 1;
+            ViewBag.responsibleID = new SelectList(db.UserProfiles, "userID", "displayName", ticket.responsibleID);
             return View("TicketOne", ticket);
         }
 
@@ -131,7 +133,7 @@ namespace Help_Desk_2.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,headerText,description,dateComposed,dateSubmitted,dateL1Release,dateL2Release,originatorID,links,deleteField,sanityCheck")] Ticket ticket)
+        public ActionResult Edit([Bind(Include = "ID,headerText,description,dateComposed,dateSubmitted,dateL1Release,dateL2Release,originatorID,links,deleteField,"+ "sanityCheck,ticketID,adminComments,reason,responsibleID")] Ticket ticket)
         {
             if (ModelState.IsValid)
             {
@@ -147,7 +149,19 @@ namespace Help_Desk_2.Controllers
                 /***** Add File ************/
                 AllSorts.saveAttachments(ticket.ID, db, ticket.deleteField);
                 
+                if(ticket.sanityCheck == SanityChecks.Accept && ticket.dateL1Release == null)
+                {
+                    ticket.dateL1Release = DateTime.Now;
+                }
+
+                if(Request.Form.AllKeys.Contains("btnAssign"))
+                {
+                    ticket.dateL2Release = DateTime.Now;
+                    //Send email to assigned
+                }
+
                 db.SaveChanges();
+                
                 if (Request.Form.AllKeys.Contains("btnSave")) //|| Request.Form.AllKeys.Contains("btnSubmit") || Request.Form.AllKeys.Contains("btnUnApprove"))
                 {
                     return RedirectToAction("Edit/" + ticket.ID);
@@ -160,6 +174,7 @@ namespace Help_Desk_2.Controllers
             }
 
             ViewBag.mode = 1;
+            ViewBag.responsibleID = new SelectList(db.UserProfiles, "userID", "displayName", ticket.responsibleID);
             return View("TicketOne", ticket);
         }
        

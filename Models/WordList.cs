@@ -12,5 +12,7 @@ namespace Help_Desk_2.Models
         public int type { get; set; } //type => 1=Keyword, 2=ExpertArea,3= Title,etc
 
         public virtual ICollection<KnowledgeFAQ> knowledgeFAQ { get; set;  }
+
+        public virtual ICollection<KnowledgeFAQ> ticket { get; set; }
     }
 }

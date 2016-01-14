@@ -6,7 +6,7 @@
     if (ViewBag.mode == 0)
     {
         ViewBag.Title = "New Ticket";
-        ViewBag.status = "Draft";
+        ViewBag.status = Statuses.Draft;
         ViewBag.CreationDate = String.Format("{0:d}", DateTime.Now);
 
         UserProfile userProfile;
@@ -38,6 +38,14 @@
 
 }
 
+@section cssCustomTop {
+    @Styles.Render("~/Content/Select2/css/select2.min.css")
+    @Styles.Render("~/Content/Select2/css/select2-bootstrap.min.css")
+}
+
+@section scriptsCustom {
+    <script src="~/Content/Select2/js/select2.min.js"></script>
+}
 <header class="container-custom-top">
     <h2>@ViewBag.Title <span class="summary-top pull-right">@ViewBag.Status</span></h2>
     <p class="text-muted">Created by @ViewBag.displayName on @ViewBag.CreationDate</p>
@@ -48,7 +56,7 @@
 @using (Html.BeginForm(ViewBag.mode == 0 ? "New" : "Edit", "Ticket", FormMethod.Post,
      new { enctype = "multipart/form-data" }))
 {
-@Html.AntiForgeryToken()
+    @Html.AntiForgeryToken()
 
 <div class="form-horizontal">
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -72,200 +80,330 @@
                     @Html.DisplayFor(model => model.headerText)
                 }
                 else {
-                @Html.EditorFor(model => model.headerText, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.headerText, "", new { @class = "text-danger" })
+                    @Html.EditorFor(model => model.headerText, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.headerText, "", new { @class = "text-danger" })
                 }
             </div>
         </div>
 
         <div class="panel panel-info">
             <div class="panel-heading">
-                @Html.DisplayNameFor(model => model.description)</div>
-                <div>
-                    @if (ViewBag.mode == 2)
-                    {
-                        @Html.DisplayFor(model => model.headerText)
-                    }
-                    else {
-                        @Html.TextAreaFor(model => model.description, new { @class = "form-control richeditor" })
-                        @Html.ValidationMessageFor(model => model.description, "", new { @class = "text-danger" })
-                    }
-                </div>
+                @Html.DisplayNameFor(model => model.description)
             </div>
-
-            <!--Attachment section-->
-            <div class="panel panel-info">
-                <div class="panel-heading">@Html.DisplayName("Attachments")</div>
-                <div>
-                    @if (Model != null)
+            <div>
+                @if (ViewBag.mode == 2)
                 {
-                        @Html.HiddenFor(model => model.deleteField)
-                        if (Model.Files != null && Model.Files.Count > 0)
-                        {
-                            <table class="table table-condensed">
-                                <tr><th>File Name</th><th>Size</th><th></th></tr>
-                                @foreach (var t in Model.Files)
-                                {
-                                    <tr>
-                                        <td class="fileID hidden">@t.ID</td>
-                                        <td>@Html.ActionLink(t.fileName, "d/" + t.ID, "Files", null, new { target = "_blank" })</td>
-                                        <td>@t.displaySize</td>
-                                        @if (ViewBag.mode < 2)
-                                        {
-                                            <td>
-                                                <div tabindex="500" class="btn btn-primary btn-custom btn-custom-undelete hidden">
-                                                    <i class="fa fa-undo"></i>
-                                                    <span class="hidden-xs">Undelete</span>
-                                                </div>
-
-                                                <div tabindex="500" class="btn btn-primary btn-custom btn-custom-delete">
-                                                    <i class="glyphicon glyphicon-trash"></i>
-                                                    <span class="hidden-xs">Delete</span>
-                                                </div>
-                                            </td>
-                                        }
-                                    </tr>
-                                }
-                            </table>
-                        }
-                    }
-                    @if (ViewBag.mode < 2)
-                {
-                        <input type="file" name="file1" class="file" data-show-upload="false" data-show-preview="false" />
-                    }
-                </div>
-            </div>
-
-            <!-- Links -->
-            <div class="panel panel-info">
-                <div class="panel-heading">@Html.DisplayName("Links")</div>
-                @Html.HiddenFor(model => model.links)
-
-                <table class="table table-condensed links">
-                    <tbody>
-                        @{
-                            string tmpLinks = Model == null ? null : Model.links;
-                            string displayLinks = "";
-                            if (!string.IsNullOrEmpty(tmpLinks))
-                            {
-                                var links = tmpLinks.Split(new char[] { '|' });
-                                foreach (string link in links)
-                                {
-                                    if (!string.IsNullOrEmpty(link))
-                                    {
-                                        var tmp = link.Split(new char[] { '^' });
-                                        displayLinks += "<tr class=\"normal\"><td><a href=\"" + tmp[1] + "\" target=\"_blank\">" + tmp[0] + "</a></td>" +
-                                            "<td>" + (ViewBag.mode == 2 ? "" : "<input type=\"button\" value=\"Delete\" class=\"btn btn-default btn-custom-action\">") +
-                                            "</td></tr>";
-                                    }
-                                }
-                            }
-                            @Html.Raw(displayLinks)
-                        }
-
-                    </tbody>
-                    @if (ViewBag.mode < 2)
-                {
-                        <tfoot>
-                            <tr>
-                                <td colspan="2">
-                                    <div class="row add-link">
-                                        <div class="col-sm-5">
-                                            @Html.EditorFor(model => model.linkText, new { htmlAttributes = new { @placeholder = "Link Display Text" } })
-                                        </div>
-
-                                        <div class="col-sm-5">
-                                            @Html.EditorFor(model => model.linkURL, new { htmlAttributes = new { @placeholder = "Link URL" } })
-                                        </div>
-
-                                        <div class="col-sm-1">
-                                            <input type="button" id="addLink" value="Add Link" class="btn btn-default" />
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tfoot>
-                    }
-                </table>
-            </div>
-
-        @if (Model.status != Statuses.Draft) { 
-        <div class="panel panel-info">
-            <div class="panel-heading">Level 1 Release</div>
-            <div class="row level1-release">
-                <div class="col-md-6">
-                    @Html.LabelFor(model => model.sanityCheck, htmlAttributes: new { @class = "control-label text-left" })
-                    @if (ViewBag.mode == 2)
-                    {
-                        @Html.DisplayFor(model => model.sanityCheck)
-                    }
-                    else {
-                        <div>
-                            @Html.EnumDropDownListFor(model => model.sanityCheck, htmlAttributes: new { @class = "form-control" })
-                        </div>
-                    }
-                </div>
+                    @Html.DisplayFor(model => model.description)
+                }
+                else {
+                    @Html.TextAreaFor(model => model.description, new { @class = "form-control richeditor" })
+                    @Html.ValidationMessageFor(model => model.description, "", new { @class = "text-danger" })
+                }
             </div>
         </div>
+
+        <!--Attachment section-->
+        <div class="panel panel-info">
+            <div class="panel-heading">@Html.DisplayName("Attachments")</div>
+            <div>
+                @if (Model != null)
+                {
+                    @Html.HiddenFor(model => model.deleteField)
+                    if (Model.Files != null && Model.Files.Count > 0)
+                    {
+                    <table class="table table-condensed">
+                        <tr><th>File Name</th><th>Size</th><th></th></tr>
+                        @foreach (var t in Model.Files)
+                        {
+                                <tr>
+                                    <td class="fileID hidden">@t.ID</td>
+                                    <td>@Html.ActionLink(t.fileName, "d/" + t.ID, "Files", null, new { target = "_blank" })</td>
+                                    <td>@t.displaySize</td>
+                                    @if (ViewBag.mode < 2)
+                                    {
+                                        <td>
+                                            <div tabindex="500" class="btn btn-primary btn-custom btn-custom-undelete hidden">
+                                                <i class="fa fa-undo"></i>
+                                                <span class="hidden-xs">Undelete</span>
+                                            </div>
+
+                                            <div tabindex="500" class="btn btn-primary btn-custom btn-custom-delete">
+                                                <i class="glyphicon glyphicon-trash"></i>
+                                                <span class="hidden-xs">Delete</span>
+                                            </div>
+                                        </td>
+                                    }
+                                </tr>
+                        }
+                    </table>
+                    }
+                }
+                @if (ViewBag.mode < 2)
+                {
+                    <input type="file" name="file1" class="file" data-show-upload="false" data-show-preview="false" />
+                }
+            </div>
+        </div>
+
+        <!-- Links -->
+        <div class="panel panel-info">
+            <div class="panel-heading">@Html.DisplayName("Links")</div>
+            @Html.HiddenFor(model => model.links)
+
+            <table class="table table-condensed links">
+                <tbody>
+                    @{
+                        string tmpLinks = Model == null ? null : Model.links;
+                        string displayLinks = "";
+                        if (!string.IsNullOrEmpty(tmpLinks))
+                        {
+                            var links = tmpLinks.Split(new char[] { '|' });
+                            foreach (string link in links)
+                            {
+                                if (!string.IsNullOrEmpty(link))
+                                {
+                                    var tmp = link.Split(new char[] { '^' });
+                                    displayLinks += "<tr class=\"normal\"><td><a href=\"" + tmp[1] + "\" target=\"_blank\">" + tmp[0] + "</a></td>" +
+                                        "<td>" + (ViewBag.mode == 2 ? "" : "<input type=\"button\" value=\"Delete\" class=\"btn btn-default btn-custom-action\">") +
+                                        "</td></tr>";
+                                }
+                            }
+                        }
+                        @Html.Raw(displayLinks)
+                    }
+
+                </tbody>
+                @if (ViewBag.mode < 2)
+                {
+                    <tfoot>
+                        <tr>
+                            <td colspan="2">
+                                <div class="row add-link">
+                                    <div class="col-sm-5">
+                                        @Html.EditorFor(model => model.linkText, new { htmlAttributes = new { @placeholder = "Link Display Text" } })
+                                    </div>
+
+                                    <div class="col-sm-5">
+                                        @Html.EditorFor(model => model.linkURL, new { htmlAttributes = new { @placeholder = "Link URL" } })
+                                    </div>
+
+                                    <div class="col-sm-1">
+                                        <input type="button" id="addLink" value="Add Link" class="btn btn-default" />
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                }
+            </table>
+        </div>
+
+        <!-- Level 1 Release -->
+        @if (ViewBag.status != Statuses.Draft)
+        {
+            <div class="panel panel-info">
+                <div class="panel-heading">Level 1 Release</div>
+                <div class="row level1-release">
+                    <div class="col-md-6">
+                        @Html.LabelFor(model => model.sanityCheck, htmlAttributes: new { @class = "control-label text-left" })
+                        @if (ViewBag.mode == 2)
+                        {
+                            @Html.DisplayFor(model => model.sanityCheck)
+                        }
+                        else {
+                            <div>
+                                @Html.EnumDropDownListFor(model => model.sanityCheck, htmlAttributes: new { @class = "form-control" })
+                            </div>
+                        }
+                    </div>
+                    <div class="col-md-6 sanity-check-reason">
+                        @Html.LabelFor(model => model.dateL1Release, htmlAttributes: new { @class = "control-label text-left" })
+                        @Html.DisplayFor(model => model.dateL1Release)
+                    </div>
+                    <div class="sanity-check-reason">
+                        @Html.LabelFor(model => model.reason, htmlAttributes: new { @class = "control-label text-left" })
+                        @if (ViewBag.mode == 2)
+                        {
+                            @Html.DisplayFor(model => model.reason)
+                        }
+                        else {
+                            <div>
+                                @Html.TextAreaFor(model => model.reason, new { @class = "form-control" })
+                            </div>
+                        }
+                    </div>
+
+                </div>
+            </div>
+        }
+        else
+        {
+            @Html.HiddenFor(model => model.reason)
         }
 
-            @if (false)
-            {
-                <div class="row">
-                    <div class="col-sm-6">
-                        @Html.LabelFor(model => model.dateSubmitted, htmlAttributes: new { @class = "control-label" })
+        <!-- Level 2 Release -->
+        @if (Model != null && Model.sanityCheck == SanityChecks.Accept)
+        {
+            <div class="panel panel-info">
+                <div class="panel-heading">Level 2 Release</div>
+                <div class="row level2-release">
+                    <div class="col-md-6">
                         <div>
-                            @Html.EditorFor(model => model.dateSubmitted, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.dateSubmitted, "", new { @class = "text-danger" })
+                            @Html.Label("Assignee", htmlAttributes: new { @class = "control-label text-left" })
+                            @if (ViewBag.mode == 2)
+                            {
+                                @Html.DisplayFor(model => model.Responsible.displayName)
+                            }
+                            else {
+                                <div>
+                                    @* Html.EnumDropDownListFor(model => model.sanityCheck, htmlAttributes: new { @ class = "form-control" })
+    <span>Responsible Field</span>*@
+                                    @Html.DropDownList("responsibleID", null, htmlAttributes: new { @class = "form-control" })
+                                </div>
+                            }
+                        </div>
+                        <div>
+                            @Html.LabelFor(model => model.ticketID, htmlAttributes: new { @class = "control-label text-left" })
+                            @Html.DisplayFor(model => model.ticketID)
                         </div>
                     </div>
-
-                    <div class="col-sm-6">
-                        @Html.LabelFor(model => model.adminEmail, htmlAttributes: new { @class = "control-label" })
-                        <div>
-                            @Html.EditorFor(model => model.adminEmail, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.adminEmail, "", new { @class = "text-danger" })
-                        </div>
+                    <div class="col-md-6">
+                        @Html.LabelFor(model => model.adminComments, htmlAttributes: new { @class = "control-label text-left" })
+                        @if (ViewBag.mode == 2)
+                        {
+                            @Html.DisplayFor(model => model.adminComments)
+                        }
+                        else {
+                            <div>
+                                @Html.EditorFor(model => model.adminComments, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.adminComments, "", new { @class = "text-danger" })
+                            </div>
+                        }
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        @Html.LabelFor(model => model.dateL1Release, htmlAttributes: new { @class = "control-label" })
-                        <div>
-                            @Html.EditorFor(model => model.dateL1Release, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.dateL1Release, "", new { @class = "text-danger" })
-                        </div>
+            </div>
+        }
+
+        else
+        {
+            @Html.HiddenFor(model => model.ticketID)
+            @Html.HiddenFor(model => model.adminComments)
+            @Html.HiddenFor(model => model.responsibleID)
+        }
+
+
+        <!-- Completion -->
+        @if (Model != null && Model.dateL2Release != null)
+        {
+            <div class="panel panel-info">
+                <div class="panel-heading">Completion</div>
+                <!-- Summary -->
+                <div class="row1 completion">
+                    <div>
+                        @Html.LabelFor(model => model.summary, htmlAttributes: new { @class = "control-label text-left" })
+                        @if (ViewBag.mode == 2)
+                        {
+                            @Html.DisplayFor(model => model.summary)
+                        }
+                        else {
+                            <div>
+                                @Html.EditorFor(model => model.summary, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.summary, "", new { @class = "text-danger" })
+                            </div>
+                        }
+
                     </div>
 
-                    <div class="col-sm-6">
-                        @Html.LabelFor(model => model.dateL2Release, htmlAttributes: new { @class = "control-label" })
-                        <div>
-                            @Html.EditorFor(model => model.dateL2Release, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.dateL2Release, "", new { @class = "text-danger" })
-                        </div>
+                    <!-- Report -->
+                    <div>
+                        @Html.LabelFor(model => model.report, htmlAttributes: new { @class = "control-label text-left" })
+                        @if (ViewBag.mode == 2)
+                        {
+                            @Html.DisplayFor(model => model.report)
+                        }
+                        else {
+                            <div>
+                                @Html.TextAreaFor(model => model.report, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.report, "", new { @class = "text-danger" })
+                            </div>
+                        }
                     </div>
+
+                    <!-- Resources -->
                 </div>
-            }
+            </div>
 
+            <!--Keywords-->
+            <div class="panel panel-info">
+                <div class="panel-heading">@Html.DisplayNameFor(model => model.keywords)</div>
 
-            <div>
-                <div class="btn-group btn-group-custom" style="padding-bottom:15px; padding-top:15px">
-                    @if (ViewBag.mode == 2)
+                <div class="panel-body1">
+                    @if (ViewBag.mode == 0)
                     {
+                        @Html.DropDownList("inkeywords", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 1), "ID", "Text"), new { @class = "select2-editor", multiple = "multiple" })
+                    }
+                    else if (ViewBag.mode == 1)
+                    {
+                        //Help_Desk_2.DataAccessLayer.HelpDeskContext db = new Help_Desk_2.DataAccessLayer.HelpDeskContext();
 
-                        @Html.ActionLink("Edit", "Edit/" + Model.ID, null, htmlAttributes: new { @title = "Click to modify document", @class = "btn btn-primary" })
-                        <a href="@ViewBag.prevURL" title="Click to return to News home" class="btn btn-primary">Close</a>
+                        @Html.DropDownList("inkeywords", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 1), "ID", "Text", Model.keywords.Select(x => x.ID)), new { @class = "select2-editor", multiple = "multiple" })
 
                     }
-                    else {
+                    else
+                    {
+                        @String.Join(", ", Model.keywords.Select(x => x.text))
+                    }
+                </div>
+            </div>
 
-                        <input type="submit" name="btnSave" value="Save" class="btn btn-primary" />
-                        <input type="submit" name="btnSClose" value="Save & Close" class="btn btn-primary" />
-                        if (Model == null || Model.status == Statuses.Draft)
-                        {
-                            <input type="submit" name="btnSubmit" value="Submit" class="btn btn-primary" />
-                        }
-                        @*if (User.IsInRole("Administrators"))
+            <!--Expert Areas-->
+            <div class="panel panel-info">
+                <div class="panel-heading">@Html.DisplayNameFor(model => model.expertAreas)</div>
+                <div class="panel-body1">
+                    @if (ViewBag.mode == 0)
+                    {
+                        @Html.DropDownList("inexpertareas", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 2), "ID", "Text"), new { @class = "select2-editor", multiple = "multiple" })
+                    }
+                    else if (ViewBag.mode == 1)
+                    {
+
+                        @Html.DropDownList("inexpertareas", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 2), "ID", "Text", Model.expertAreas.Select(x => x.ID)), new { @class = "select2-editor", multiple = "multiple" })
+                    }
+                    else
+                    {
+                        @String.Join(", ", Model.expertAreas.Select(x => x.text))
+                    }
+                </div>
+            </div>
+        } else
+        {
+            @Html.HiddenFor(model => model.summary)
+            @Html.HiddenFor(model => model.report)
+        }
+
+        <div>
+            <div class="btn-group btn-group-custom" style="padding-bottom:15px; padding-top:15px">
+                @if (ViewBag.mode == 2)
+                {
+
+                    @Html.ActionLink("Edit", "Edit/" + Model.ID, null, htmlAttributes: new { @title = "Click to modify document", @class = "btn btn-primary" })
+                    <a href="@ViewBag.prevURL" title="Click to return to News home" class="btn btn-primary">Close</a>
+
+                }
+                else
+                {
+
+                    <input type="submit" name="btnSave" value="Save" class="btn btn-primary" />
+                    <input type="submit" name="btnSClose" value="Save & Close" class="btn btn-primary" />
+                    if (Model == null || Model.status == Statuses.Draft)
+                    {
+                        <input type="submit" name="btnSubmit" value="Submit" class="btn btn-primary" />
+                    }
+                    else if (Model != null && Model.dateL1Release != null)
+                    {
+                        <input type="submit" name="btnAssign" value="Assign Ticket" class="btn btn-primary" title="Marks ticket as assigned and notifies the assignee"/>
+                    }
+                    @*if (User.IsInRole("Administrators"))
                         {
                             if (Model != null && Model.published)
                             {
@@ -276,21 +414,13 @@
                                 <input type="submit" name="btnApprove" value="Approve" class="btn btn-primary" />
                             }
                         }*@
-                        <a href="@ViewBag.prevURL" title="Click to return to News home" class="btn btn-primary">Cancel</a>
-                    }
-                </div>
+                    <a href="@ViewBag.prevURL" title="Click to return to News home" class="btn btn-primary">Cancel</a>
+                }
             </div>
-
-
-
-
-
         </div>
-
     </div>
-
+</div>
 }
-
 @section Scripts {
-@Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jqueryval")
 }
