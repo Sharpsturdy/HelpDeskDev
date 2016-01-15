@@ -1,4 +1,5 @@
-﻿@model IPagedList<Help_Desk_2.Models.Ticket>
+﻿@using Help_Desk_2.Models
+@model IPagedList<Ticket>
 
 @{
     ViewBag.Title = "My Open Tickets";
@@ -17,19 +18,7 @@
             <tr>
                 <th>Created on</th>
                 <th>Originitor</th>
-                <th>Brief description</th>
-                <th style="display:none">
-                    @Html.DisplayNameFor(model => model.dateSubmitted)
-                </th>
-                <th style="display:none">
-                    @Html.DisplayNameFor(model => model.dateL1Release)
-                </th>
-                <th style="display:none">
-                    @Html.DisplayNameFor(model => model.dateL2Release)
-                </th>
-                <th style="display:none">
-                    @Html.DisplayNameFor(model => model.sanityCheck)
-                </th>
+                <th>Brief description</th>                
                 <th>Status</th>
                 
             </tr>
@@ -41,21 +30,8 @@
 
                     <td>@Html.DisplayFor(modelItem => item.dateComposed)</td>
                     <td>@Html.DisplayFor(modelItem => item.UserProfile.displayName)</td>
-                    <td>@Html.DisplayFor(modelItem => item.headerText)</td>
+                    <td>@Html.DisplayFor(modelItem => item.headerText)</td>       
                     
-                    <td style="display:none">
-                        @Html.DisplayFor(modelItem => item.dateSubmitted)
-                    </td>
-                    
-                    <td style="display:none">
-                        @Html.DisplayFor(modelItem => item.dateL1Release)
-                    </td>
-                    <td style="display:none">
-                        @Html.DisplayFor(modelItem => item.dateL2Release)
-                    </td>
-                    <td style="display:none">
-                        @Html.DisplayFor(modelItem => item.sanityCheck)
-                    </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.status)
                     </td>
