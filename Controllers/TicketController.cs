@@ -14,6 +14,7 @@ using System.DirectoryServices.AccountManagement;
 using Help_Desk_2.ViewModels;
 using Help_Desk_2.Utilities;
 using System.IO;
+using MvcPaging;
 
 namespace Help_Desk_2.Controllers
 {
@@ -22,10 +23,14 @@ namespace Help_Desk_2.Controllers
         private HelpDeskContext db = new HelpDeskContext();
 
         //List all my tickets draft/open
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
 
-            return View(db.Tickets.ToList());
+            int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
+            //return View(this.allProducts.ToPagedList(currentPageIndex, DefaultPageSize));
+            //return View(db.Tickets.ToList());
+
+            return View(db.Tickets.ToPagedList(currentPageIndex,5));
         }
 
         //List all my tickets draft/open/closed

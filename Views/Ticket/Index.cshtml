@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Help_Desk_2.Models.Ticket>
+﻿@model IPagedList<Help_Desk_2.Models.Ticket>
 
 @{
     ViewBag.Title = "My Open Tickets";
@@ -63,5 +63,9 @@
                 </tr>
             }
         </tbody>
-        </table>
+    </table>
+    <div class="pager">
+        @Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount)
+        
+    </div>
     </div>
