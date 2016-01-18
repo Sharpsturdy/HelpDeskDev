@@ -8,6 +8,8 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using MvcPaging;
+using System.Collections.ObjectModel;
 
 namespace Help_Desk_2.Controllers
 {
@@ -16,13 +18,18 @@ namespace Help_Desk_2.Controllers
         private HelpDeskContext db = new HelpDeskContext();
 
         // GET: FAQs
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
-            return View(db.KnowledgeFAQs.Where(k => k.type == 1 && !k.suggest && k.published).ToList());
-            //return View(db.KnowledgeFAQs.ToList());            
+            int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
+            
+            return View(db.KnowledgeFAQs.Where(k => k.type == 1 && !k.suggest && k.published)
+                    .OrderByDescending(k => k.dateComposed)
+                    .ToPagedList(currentPageIndex, AllSorts.pageSize));
+            //return View(db.KnowledgeFAQs.ToList()); 
+                   
         }
 
-        public ActionResult Admin(string searchType, string searchStr)
+        public ActionResult Admin(string searchType, string searchStr, int? page)
         {
             var faqs = from m in db.KnowledgeFAQs
                        where (m.type == 1 && !m.suggest)
@@ -46,11 +53,14 @@ namespace Help_Desk_2.Controllers
                 faqs = faqs.Where(s => s.headerText.Contains(searchStr) || s.description.Contains(searchStr));
             }
 
-            ViewBag.selectedOption = ""+ searchType;
-            return View("Index", faqs.ToList());;            
+            
+            int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
+
+            //ViewBag.selectedOption = ""+ searchType;
+            return View("Index", faqs.OrderByDescending(m=>m.dateComposed).ToPagedList(currentPageIndex, AllSorts.pageSize));;            
         }
 
-        public ActionResult Search(string searchStr)
+        public ActionResult Search(string searchStr, int? page)
         {
             var faqs = from m in db.KnowledgeFAQs
                        where(m.type == 1 && !m.suggest && m.published)
@@ -61,9 +71,8 @@ namespace Help_Desk_2.Controllers
                 faqs = faqs.Where(s => s.headerText.Contains(searchStr) || s.description.Contains(searchStr));
             }
 
-            ViewBag.displayMessage = searchStr;
-
-            return View("Index",faqs.ToList());
+            int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
+            return View("Index",faqs.OrderByDescending(m => m.dateComposed).ToPagedList(currentPageIndex, AllSorts.pageSize));
         }
 
         // GET: FAQs/Details/5
@@ -178,7 +187,7 @@ namespace Help_Desk_2.Controllers
             return View(faq);
         }
 
-        public ActionResult Suggestions(string searchType, string searchStr)
+        public ActionResult Suggestions(string searchType, string searchStr, int? page)
         {
             var faqs = from m in db.KnowledgeFAQs
                        where (m.type == 1 && m.suggest)
@@ -202,10 +211,11 @@ namespace Help_Desk_2.Controllers
                 faqs = faqs.Where(s => s.headerText.Contains(searchStr) || s.description.Contains(searchStr));
             }
 
-            ViewBag.selectedOption = "" + searchType;
-            return View("Index", faqs.ToList()); ;
-            //return View("Index", db.KnowledgeFAQs.Where(k => k.type == 1 && k.suggest).ToList());
-                        
+            //ViewBag.selectedOption = "" + searchType;
+
+            int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
+            return View("Index", faqs.OrderByDescending(m => m.dateComposed).ToPagedList(currentPageIndex, AllSorts.pageSize));
+
         }
 
         // GET: FAQs/Edit/5

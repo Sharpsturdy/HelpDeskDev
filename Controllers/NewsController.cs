@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using Help_Desk_2.DataAccessLayer;
 using Help_Desk_2.Models;
 using Help_Desk_2.Utilities;
+using MvcPaging;
 
 namespace Help_Desk_2.Controllers
 {
@@ -17,11 +18,17 @@ namespace Help_Desk_2.Controllers
         private HelpDeskContext db = new HelpDeskContext();
 
         // GET: News
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
-            return View(db.News.Where(x=>x.published)
-                .OrderByDescending(x=> x.sticky)
-                .OrderByDescending(x => x.publishedDate).ToList());
+            var news = from row in db.News
+                       where row.published
+                       orderby row.sticky descending, row.publishedDate descending
+                       select row;
+            
+            int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
+
+            return View(news.ToPagedList(currentPageIndex, 5));
+
         }
 
         // GET: News/Article/5
@@ -40,10 +47,14 @@ namespace Help_Desk_2.Controllers
         }
 
         // GET: News
-        public ActionResult Admin()
+        public ActionResult Admin(int? page)
         {
-            return View(db.News.ToList());
+            int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
+
+            return View(db.News.ToPagedList(currentPageIndex, 5));
+            
         }
+
         // GET: News/Details/5
         public ActionResult Details(int? id)
         {
@@ -63,8 +74,7 @@ namespace Help_Desk_2.Controllers
         // GET: News/New (aka Create)
         public ActionResult New()
         {
-            //ViewBag.addAttachCode = "1"; //Activate attach code 
-            ViewBag.addTinyMCECode = "1"; //Activate tinymce code
+            
             ViewBag.mode = 0;
             return View("NewsOne");
         }
@@ -81,6 +91,11 @@ namespace Help_Desk_2.Controllers
 
                 news.creationDate = DateTime.Now;
                 news.originatorID = userProfile.userID;
+
+                if (news.published && news.publishedDate == null)
+                {
+                    news.publishedDate = DateTime.Now;
+                }
                 db.News.Add(news);
                 db.SaveChanges();
 
@@ -91,7 +106,6 @@ namespace Help_Desk_2.Controllers
                 return RedirectToAction("Admin");
             }
 
-            ViewBag.addTinyMCECode = "1"; //Activate tinymce code
             ViewBag.mode = 0;
             return View("NewsOne", news);
         }
@@ -109,8 +123,6 @@ namespace Help_Desk_2.Controllers
                 return HttpNotFound();
             }
 
-            //ViewBag.addAttachCode = "1"; //Activate attach code 
-            ViewBag.addTinyMCECode = "1"; //Activate tinymce code
             ViewBag.mode = 1;
             return View("NewsOne", news);
         }
@@ -125,19 +137,21 @@ namespace Help_Desk_2.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(news).State = EntityState.Modified;
-                db.SaveChanges();
-
+                
+                if (news.published && news.publishedDate == null) {
+                    news.publishedDate = DateTime.Now;
+                }
                 if (Request.Form.AllKeys.Contains("btnSave"))
                 {
                     //Do some Stuff for this Button
                     return RedirectToAction("Edit/" + news.ID);
                 }
+
+                db.SaveChanges();
+
                 return RedirectToAction("Admin");
             }
-
             
-            //ViewBag.addAttachCode = "1"; //Activate attach code 
-            ViewBag.addTinyMCECode = "1"; //Activate tinymce code
             ViewBag.mode = 1;
             return View("NewsOne", news);
         }

@@ -139,5 +139,6 @@ namespace Help_Desk_2.Utilities
             }
         }
 
+        public static int pageSize {  get { return 5; } }
     }
 }

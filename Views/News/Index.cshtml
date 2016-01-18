@@ -1,7 +1,8 @@
-﻿@model IEnumerable<Help_Desk_2.Models.News>
+﻿@using Help_Desk_2.Models
+@model IPagedList<News>
 
 @{
-    ViewBag.Title = "Lates News";
+    ViewBag.Title = "Latest News";
 }
 
 <header>
@@ -9,19 +10,24 @@
 </header>
 <div class="container-view news">
     
-        @foreach (var item in Model)
-            {
-            <div class="panel panel-default">
-                <a class="article-title" onclick="$(location).attr('href', '@Url.Action("Article", "News", new { @id = item.ID })')">
-                    @Html.DisplayFor(modelItem => item.title)                    
-                </a>
-                <div class="article-body">
-                    @Html.Raw(item.body)
-                </div>
-                <p class="text-muted">@Html.DisplayFor(modelItem => item.publishedDate) / Author: @Html.DisplayFor(modelItem => item.UserProfile.displayName)</p>
+    @foreach (var item in Model)
+        {
+        <div class="panel panel-default">
+            <a class="article-title" onclick="$(location).attr('href', '@Url.Action("Article", "News", new { @id = item.ID })')">
+                @Html.DisplayFor(modelItem => item.title)                    
+            </a>
+            @*<div class="article-body">
+    @Html.Raw(item.body)
+</div>*@
+            <p class="text-muted">@Html.DisplayFor(modelItem => item.publishedDate) / Author: @Html.DisplayFor(modelItem => item.UserProfile.displayName)</p>
 
                 
-            </div>
-        }
+        </div>
+    }
+
+    <div class="pager">
+        @Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount)
+
+    </div>
 
 </div>
