@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using MvcPaging;
 
 namespace Help_Desk_2.Controllers
 {
@@ -16,12 +17,17 @@ namespace Help_Desk_2.Controllers
         private HelpDeskContext db = new HelpDeskContext();
 
         // GET: KB
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
-            return View(db.KnowledgeFAQs.Where(k => k.type == 2 && k.published).ToList());            
+            int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
+
+            return View(db.KnowledgeFAQs.Where(k => k.type == 2)
+                    .OrderByDescending(k => k.dateComposed)
+                    .ToPagedList(currentPageIndex, AllSorts.pageSize));
+            //return View(db.KnowledgeFAQs.Where(k => k.type == 2 && k.published).ToList());            
         }
 
-        public ActionResult Admin(string searchType, string searchStr)
+        public ActionResult Admin(string searchType, string searchStr, int? page)
         {
             var kbs = from m in db.KnowledgeFAQs
                        where (m.type == 2)
@@ -45,11 +51,15 @@ namespace Help_Desk_2.Controllers
                 kbs = kbs.Where(s => s.headerText.Contains(searchStr) || s.description.Contains(searchStr));
             }
 
-            ViewBag.selectedOption = "" + searchType;
-            return View("Index", kbs.ToList()); ;
+            //ViewBag.selectedOption = "" + searchType;
+            int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
+
+            //ViewBag.selectedOption = ""+ searchType;
+            return View("Index", kbs.OrderByDescending(m => m.dateComposed).ToPagedList(currentPageIndex, AllSorts.pageSize)); ;
+            //return View("Index", kbs.ToList()); ;
         }
 
-        public ActionResult Search(string searchStr)
+        public ActionResult Search(string searchStr, int? page)
         {
             var kbs = from m in db.KnowledgeFAQs
                        where (m.type == 2 && m.published)
@@ -60,9 +70,10 @@ namespace Help_Desk_2.Controllers
                 kbs = kbs.Where(s => s.headerText.Contains(searchStr) || s.description.Contains(searchStr));
             }
 
-            ViewBag.displayMessage = searchStr;
 
-            return View("Index", kbs.ToList());
+            int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
+            return View("Index", kbs.OrderByDescending(m => m.dateComposed).ToPagedList(currentPageIndex, AllSorts.pageSize)); ;
+
         }
 
         // GET: KB/Details/5

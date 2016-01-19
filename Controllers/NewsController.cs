@@ -27,7 +27,7 @@ namespace Help_Desk_2.Controllers
             
             int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
 
-            return View(news.ToPagedList(currentPageIndex, 5));
+            return View(news.ToPagedList(currentPageIndex, AllSorts.pageSize));
 
         }
 
@@ -51,7 +51,7 @@ namespace Help_Desk_2.Controllers
         {
             int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
 
-            return View(db.News.ToPagedList(currentPageIndex, 5));
+            return View(db.News.OrderByDescending(x=> x.creationDate).ToPagedList(currentPageIndex, AllSorts.pageSize));
             
         }
 

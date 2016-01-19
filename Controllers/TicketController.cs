@@ -23,26 +23,26 @@ namespace Help_Desk_2.Controllers
         private HelpDeskContext db = new HelpDeskContext();
 
         //List all my tickets draft/open
-        public ActionResult Index(int? page)
+        public ActionResult Index(string searchType, int? page)
         {
 
             int currentPageIndex = page.HasValue ? page.Value - 1 : 0;     
 
-            return View(db.Tickets.OrderBy(t => t.dateComposed).ToPagedList(currentPageIndex,5));
+            return View(db.Tickets.OrderBy(t => t.dateComposed).ToPagedList(currentPageIndex, AllSorts.pageSize));
         }
 
         //List all my tickets draft/open/closed
         public ActionResult List(int? page)
         {
             int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
-            return View("Index", db.Tickets.OrderBy(t => t.dateComposed).ToPagedList(currentPageIndex, 5));
+            return View("Index", db.Tickets.OrderBy(t => t.dateComposed).ToPagedList(currentPageIndex, AllSorts.pageSize));
         }
 
         //List all tickets from all users draft/open/closed
         public ActionResult Admin(int? page)
         {
             int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
-            return View("Index", db.Tickets.OrderBy(t => t.dateComposed).ToPagedList(currentPageIndex, 5));
+            return View("Index", db.Tickets.OrderBy(t => t.dateComposed).ToPagedList(currentPageIndex, AllSorts.pageSize));
         }
 
         // GET: Ticket/Details/5

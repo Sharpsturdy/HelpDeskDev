@@ -35,19 +35,7 @@
             <div class="form-group">
                 <label for="searchType">Filter by: </label>
                 @Html.DropDownList("searchType", (IEnumerable<SelectListItem>)ViewBag.searchType, new { @class = "form-control" })
-               @* <select class="form-control" id="searchType" name="searchType">
-                    <option value="" >Unpublished</option>
-                    <option value="1" @if (ViewBag.selectedOption == "1") { @Html.Raw(" selected")  }>Expired</option>
-                    <option value="2" @if (ViewBag.selectedOption == "2") { @Html.Raw(" selected")  }>Published</option>
-                    <option value="3" @if (ViewBag.selectedOption == "3") { @Html.Raw(" selected")  }>All</option>
-
-
-    <option value="" @if (ViewBag.selectedOption == "") { @Html.Raw(" selected") }>Unpublished</option>
-    <option value="1" @if (ViewBag.selectedOption == "1") { @Html.Raw(" selected") }>Expired</option>
-    <option value="2" @if (ViewBag.selectedOption == "2") { @Html.Raw(" selected") }>Published</option>
-    <option value="3" @if (ViewBag.selectedOption == "3") { @Html.Raw(" selected") }>All</option>
-
-                </select>*@
+              
             </div>
         }
         <div class="form-group">
@@ -63,14 +51,9 @@
             <tr>
                 <th>@Html.DisplayName("Question")</th>
                 <th>Originator</th>
-                <th>Brief description</th>
                 <th>Creation date</th>
                 <th>Exiry date</th>
-                @*
-    <th>@Html.DisplayNameFor(model => model.UserProfile.displayName)</th>
-    <th>@Html.DisplayNameFor(model => model.dateComposed)</th>
-    <th>@Html.DisplayNameFor(model => model.expiryDate)</th>
-                *@
+               
             </tr>
         </thead>
         <tbody>
@@ -95,7 +78,7 @@
         .SetPreviousPageText("Prev")
         .SetNextPageText("Next"))
        
-        <p class="text-muted">Displaying @Model.ItemStart - @Model.ItemEnd of @Model.TotalItemCount</p>
+        <div class="text-muted">Displaying @Model.ItemStart - @Model.ItemEnd of @Model.TotalItemCount</div>
     </div>
 </div>
 

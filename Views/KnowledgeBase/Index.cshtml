@@ -1,4 +1,6 @@
-﻿@model IEnumerable<Help_Desk_2.Models.KnowledgeFAQ>
+﻿@using System.Collections.Generic;
+@using Help_Desk_2.Models
+@model IPagedList<KnowledgeFAQ>
 
 @{
     ViewBag.Title = "Knowledge Base";
@@ -7,6 +9,13 @@
     var actionName = ViewContext.RouteData.Values["action"].ToString().ToLower();
     ViewBag.formAction = actionName == "index" ? "KnowledgeBase/Search" : "";
     ViewBag.showSelect = actionName == "admin";
+    ViewBag.searchType = new SelectList(new List<SelectListItem>
+    {
+        new SelectListItem {Value = "", Text = "Unpublished" },
+        new SelectListItem {Value = "1", Text = "Expired" },
+        new SelectListItem {Value = "2", Text = "Published" },
+        new SelectListItem {Value = "3", Text = "All" }
+    }, "Value", "Text");
 }
 
 <header>
@@ -19,14 +28,7 @@
         {
             <div class="form-group">
                 <label for="searchType">Filter by: </label>
-                <select class="form-control" id="searchType" name="searchType">
-
-                    <option value="" @if (ViewBag.selectedOption == "") { @Html.Raw(" selected")  }>Unpublished</option>
-                    <option value="1" @if (ViewBag.selectedOption == "1") { @Html.Raw(" selected")  }>Expired</option>
-                    <option value="2" @if (ViewBag.selectedOption == "2") { @Html.Raw(" selected")  }>Published</option>
-                    <option value="3" @if (ViewBag.selectedOption == "3") { @Html.Raw(" selected")  }>All</option>
-
-                </select>
+                @Html.DropDownList("searchType", (IEnumerable<SelectListItem>)ViewBag.searchType, new { @class = "form-control" })
             </div>
         }
         <div class="form-group">
@@ -38,11 +40,11 @@
 <div class="container-view">
     <table class="table table-bordered table-hover table-condensed table-view">
         <thead>
-            <tr>
-                <th>@Html.DisplayNameFor(model => model.headerText)</th>
-                <th>@Html.DisplayNameFor(model => model.UserProfile.displayName)</th>
-                <th>@Html.DisplayNameFor(model => model.dateComposed)</th>
-                <th>@Html.DisplayNameFor(model => model.expiryDate)</th>
+            <tr>                
+                <th>Brief description</th>
+                <th>Originator</th>                
+                <th>Creation date</th>
+                <th>Exiry date</th>
             </tr>
         </thead>
         <tbody>
@@ -58,4 +60,15 @@
             }
         </tbody>
     </table>
+    <div class="pager">
+        @Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount).Options(o => o.AddRouteValue("searchType", @Request.QueryString["searchType"])
+        .AddRouteValue("searchStr", @Request.QueryString["searchStr"])
+        .DisplayFirstAndLastPage()
+        .SetFirstPageText("First")
+        .SetLastPageText("Last")
+        .SetPreviousPageText("Prev")
+        .SetNextPageText("Next"))
+
+        <div class="text-muted">Displaying @Model.ItemStart - @Model.ItemEnd of @Model.TotalItemCount</div>
+    </div>
 </div>

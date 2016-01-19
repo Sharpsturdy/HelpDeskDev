@@ -9,7 +9,6 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using MvcPaging;
-using System.Collections.ObjectModel;
 
 namespace Help_Desk_2.Controllers
 {
@@ -57,7 +56,7 @@ namespace Help_Desk_2.Controllers
             int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
 
             //ViewBag.selectedOption = ""+ searchType;
-            return View("Index", faqs.OrderByDescending(m=>m.dateComposed).ToPagedList(currentPageIndex, AllSorts.pageSize));;            
+            return View("Index", faqs.OrderByDescending(m=>m.dateComposed).ToPagedList(currentPageIndex, AllSorts.pageSize));           
         }
 
         public ActionResult Search(string searchStr, int? page)

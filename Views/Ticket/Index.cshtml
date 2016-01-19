@@ -6,6 +6,14 @@
     Session["lastView"] = Request.Url.PathAndQuery;
     var actionName = ViewContext.RouteData.Values["action"].ToString().ToLower();
     ViewBag.showSelect = actionName == "admin";
+
+    ViewBag.searchType = new SelectList(new List<SelectListItem>
+    {
+        new SelectListItem {Value = "", Text = "Open" },
+        new SelectListItem {Value = "1", Text = "Expired" },
+        new SelectListItem {Value = "2", Text = "Published" },
+        new SelectListItem {Value = "3", Text = "All" }
+    }, "Value", "Text");
 }
 
 <header>
@@ -13,6 +21,22 @@
 </header>
 
 <div class="container-view">
+    <form class="form-inline" action="@ViewBag.formAction">
+        @if (ViewBag.showSelect)
+        {
+            <div class="form-group">
+                <label for="searchType">Filter by: </label>
+                @Html.DropDownList("searchType", (IEnumerable<SelectListItem>)ViewBag.searchType, new { @class = "form-control" })
+
+            </div>
+        }
+        @*
+    <div class="form-group hidden">
+        <input type="text" class="form-control" id="searchStr1" name="searchStr" placeholder="Enter search text" value='@Request.QueryString["searchStr"]'>
+    </div>
+        *@
+        <button type="submit" class="btn btn-default">Search</button>
+    </form>
     <table class="table table-bordered table-hover table-condensed table-view">
         <thead>
             <tr>
@@ -40,8 +64,16 @@
             }
         </tbody>
     </table>
+
     <div class="pager">
-        @Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount)
-        
+        @Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount).Options(o => o.AddRouteValue("searchType", @Request.QueryString["searchType"])
+        .AddRouteValue("searchStr", @Request.QueryString["searchStr"])
+        .DisplayFirstAndLastPage()
+        .SetFirstPageText("First")
+        .SetLastPageText("Last")
+        .SetPreviousPageText("Prev")
+        .SetNextPageText("Next"))
+
+        <div class="text-muted">Displaying @Model.ItemStart - @Model.ItemEnd of @Model.TotalItemCount</div>
     </div>
 </div>
