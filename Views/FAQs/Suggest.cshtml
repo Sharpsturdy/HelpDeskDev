@@ -106,7 +106,7 @@
 
                         <input type="submit" name="btnSave" value="Save" class="btn btn-primary" />
                         <input type="submit" name="btnSClose" value="Save & Close" class="btn btn-primary" />
-                        if(Model.suggest){ 
+                        if(ViewBag.mode ==1 && Model.suggest){ //if this is a suggestion in edit mode
                             <input type="submit" name="btnConvert" value="Convert to FAQ" class="btn btn-primary" />
                         }
                         <a href="@ViewBag.prevURL" title="Click to return to News home" class="btn btn-primary">Cancel</a>

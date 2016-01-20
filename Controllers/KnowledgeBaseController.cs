@@ -21,7 +21,7 @@ namespace Help_Desk_2.Controllers
         {
             int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
 
-            return View(db.KnowledgeFAQs.Where(k => k.type == 2)
+            return View(db.KnowledgeFAQs.Where(k => k.type == 2 && k.published)
                     .OrderByDescending(k => k.dateComposed)
                     .ToPagedList(currentPageIndex, AllSorts.pageSize));
             //return View(db.KnowledgeFAQs.Where(k => k.type == 2 && k.published).ToList());            

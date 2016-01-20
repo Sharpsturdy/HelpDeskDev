@@ -1,22 +1,42 @@
-﻿@model IEnumerable<Help_Desk_2.Models.News>
+﻿@using Help_Desk_2.Models
+@model IPagedList<News>
+
 
 @{
     ViewBag.Title = "News Admin";
+    ViewBag.searchType = new SelectList(new List<SelectListItem>
+    {
+        new SelectListItem {Value = "", Text = "Unpublished" },
+        new SelectListItem {Value = "2", Text = "Published" },
+        new SelectListItem {Value = "3", Text = "All" }
+    }, "Value", "Text");
 }
 
 <header>
     <h2 class="title">@ViewBag.Title<span class="summary-top pull-right">@Html.ActionLink("New Article", "New", null, htmlAttributes: new { @class = "btn btn-primary" })</span></h2>
 </header>
 <div class="container-view">
+    <form class="form-inline" action="@ViewBag.formAction">
+        
+        <div class="form-group">
+            <label for="searchType">Filter by: </label>
+            @Html.DropDownList("searchType", (IEnumerable<SelectListItem>)ViewBag.searchType, new { @class = "form-control" })
+        </div>
+        
+        <div class="form-group">
+            <input type="text" class="form-control" id="searchStr1" name="searchStr" placeholder="Enter search text" value='@Request.QueryString["searchStr"]'>
+        </div>
+        <button type="submit" class="btn btn-default">Search</button>
+    </form>
     <table class="table table-bordered table-hover table-condensed table-view">
         <thead>
             <tr>
-                <th>@Html.DisplayNameFor(model => model.title)</th>
-                <th>@Html.DisplayNameFor(model => model.creationDate)</th>
-                <th>@Html.DisplayNameFor(model => model.UserProfile.displayName)</th>
-                <th>@Html.DisplayNameFor(model => model.published)</th>
-                <th>@Html.DisplayNameFor(model => model.publishedDate)</th>
-                <th>@Html.DisplayNameFor(model => model.sticky)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().title)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().creationDate)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().UserProfile.displayName)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().published)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().publishedDate)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().sticky)</th>
             </tr>
         </thead>
         <tbody>
@@ -37,4 +57,13 @@
             }
         </tbody>
     </table>
+    <div class="pager">
+        @Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount).Options(o => o.AddRouteValue("searchType", @Request.QueryString["searchType"])
+        .AddRouteValue("searchStr", @Request.QueryString["searchStr"])
+        .DisplayFirstAndLastPage()
+        .SetFirstPageText("First")
+        .SetLastPageText("Last")
+        .SetPreviousPageText("Prev")
+        .SetNextPageText("Next"))
+    </div>
 </div>

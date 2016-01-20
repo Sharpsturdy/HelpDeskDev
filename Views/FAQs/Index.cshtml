@@ -12,6 +12,8 @@
     var actionName = ViewContext.RouteData.Values["action"].ToString().ToLower();
     ViewBag.formAction = actionName == "index" ? "FAQs/Search" : "";
     ViewBag.showSelect = actionName == "admin";
+    ViewBag.isSuggestions = actionName == "suggestions";
+
     ViewBag.searchType = new SelectList(new List<SelectListItem>
     {
         new SelectListItem {Value = "", Text = "Unpublished" },
@@ -27,7 +29,7 @@
     <h2 class="title">@ViewBag.Title<span class="summary-top pull-right">@Html.ActionLink("New FAQ", "New", null, htmlAttributes: new { @class = "btn btn-primary" })</span></h2>
 </header>
 
-<div class="container-view">
+<div class="container-view faqs">
     
     <form class="form-inline" action="@ViewBag.formAction">
         @if (ViewBag.showSelect)
@@ -43,9 +45,9 @@
         </div>
         <button type="submit" class="btn btn-default">Search</button>
     </form>
-</div>
 
-<div class="container-view">
+    @if (ViewBag.showSelect || ViewBag.isSuggestions)
+    {
     <table class="table table-bordered table-hover table-condensed table-view">
         <thead>
             <tr>
@@ -69,6 +71,25 @@
             }
         </tbody>
     </table>
+    }
+    else
+    {
+
+        foreach (var item in Model)
+        {
+            <div class="panel panel-default">
+                <a class="article-title" onclick="$(location).attr('href', '@Url.Action("Details", "FAQs", new { @id = item.ID })')">
+                    @Html.DisplayFor(modelItem => item.headerText)
+                </a>
+                @*<div class="article-body">
+                        @Html.Raw(item.body)
+                    </div>*@
+                <p class="text-muted">@Html.DisplayFor(modelItem => item.dateComposed) / Author: @Html.DisplayFor(modelItem => item.UserProfile.displayName)</p>
+
+
+            </div>
+        }
+    }
     <div class="pager">
         @Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount).Options(o => o.AddRouteValue("searchType", @Request.QueryString["searchType"])
         .AddRouteValue("searchStr", @Request.QueryString["searchStr"])

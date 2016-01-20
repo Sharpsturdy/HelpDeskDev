@@ -47,11 +47,29 @@ namespace Help_Desk_2.Controllers
         }
 
         // GET: News
-        public ActionResult Admin(int? page)
+        public ActionResult Admin(string searchType, string searchStr, int? page)
         {
+            var news = from m in db.News
+                       select m;
+
+            if (String.IsNullOrEmpty(searchType))
+            {
+                news = news.Where(s => !s.published);
+            }
+            
+            else if (searchType == "2")
+            {
+                news = news.Where(s => s.published);
+            }
+            
+            if (!String.IsNullOrEmpty(searchStr))
+            {
+                news = news.Where(s => s.title.Contains(searchStr) || s.body.Contains(searchStr));
+            }
+
             int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
 
-            return View(db.News.OrderByDescending(x=> x.creationDate).ToPagedList(currentPageIndex, AllSorts.pageSize));
+            return View(news.OrderByDescending(x=> x.creationDate).ToPagedList(currentPageIndex, AllSorts.pageSize));
             
         }
 
