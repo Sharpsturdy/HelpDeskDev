@@ -70,8 +70,6 @@ namespace Help_Desk_2.Models
         [NotMapped]
         public string linkURL { get; set; }
 
-        //read-only faq approverID
-
         [Column(TypeName = "DateTime")]
         [DataType(DataType.DateTime)]
         public DateTime? dateSubmitted { get; set; }

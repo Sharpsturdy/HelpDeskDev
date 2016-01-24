@@ -17,6 +17,7 @@ namespace Help_Desk_2.Controllers
         private HelpDeskContext db = new HelpDeskContext();
 
         // GET: FAQs
+        
         public ActionResult Index(int? page)
         {
             int currentPageIndex = page.HasValue ? page.Value - 1 : 0;

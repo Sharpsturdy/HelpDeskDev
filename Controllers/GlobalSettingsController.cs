@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Linq;
-using System.Net;
 using System.Web.Mvc;
 using Help_Desk_2.DataAccessLayer;
 using Help_Desk_2.Models;
-using Help_Desk_2.ViewModels;
+using Help_Desk_2.Utilities;
 
 namespace Help_Desk_2.Controllers
 {
+    [Authorize(Roles = "Administrators")]
     public class GlobalSettingsController : Controller
     {
         private HelpDeskContext db = new HelpDeskContext();
@@ -16,23 +16,14 @@ namespace Help_Desk_2.Controllers
         // GET: GlobalSettings, get first record
         public ActionResult Index()
         {
-            GlobalSettingsEditModel gsm = null;
-            GlobalSettings globalSettings = db.GlobalSettingss.FirstOrDefault<GlobalSettings>();
-            
-            if (globalSettings == null || globalSettings.ID == null)
-            {
-                ViewBag.Msg = "No previous settings found. Creating new settings!";
-                gsm = new GlobalSettingsEditModel();
-            } else
-            {
-                gsm = new GlobalSettingsEditModel(globalSettings);
-            }
-                        
-            ViewBag.keywords = db.WordLists.Where(k => k.type == 1).ToList();
-            
-            ViewBag.expertareas = db.WordLists.Where(k => k.type == 1).ToList();
-            return View(gsm);
+            GlobalSettings gs = db.GlobalSettingss.FirstOrDefault<GlobalSettings>();
+           
+            //if (gs == null) { }
+            ViewBag.faqapprovers = new MultiSelectList(AllSorts.AllUsers, "userID", "displayName", AllSorts.AllUsers.Where(x => x.isFaqApprover).Select(u=>u.userID));
+            ViewBag.kbapprovers = new MultiSelectList(AllSorts.AllUsers, "userID", "displayName", AllSorts.AllUsers.Where(x => x.isKbApprover).Select(u => u.userID));
+            ViewBag.adminemails = new MultiSelectList(AllSorts.AllUsers, "userID", "displayName", AllSorts.AllUsers.Where(x => x.isResponsible).Select(u => u.userID));
 
+            return View(gs);
         }
 
         // POST: GlobalSettings/Edit/5
@@ -40,13 +31,11 @@ namespace Help_Desk_2.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Index([Bind(Include = "ID,AdminEmail,TicketSeeder,TicketHeader,TicketExpiryDays,KBFAQsExpiryDays")] GlobalSettings globalSettings)
+        public ActionResult Index([Bind(Include = "ID,TicketSeeder,TicketHeader,TicketExpiryDays,KBFAQsExpiryDays")] GlobalSettings globalSettings)
         {
             
             if (ModelState.IsValid)
             {
-                //GlobalSettings globalSettings = gsm.getSettings();
-               
 
                 if (globalSettings.ID == Guid.Empty || globalSettings.ID == null)
                 {
@@ -56,6 +45,11 @@ namespace Help_Desk_2.Controllers
                 else {
                     db.Entry(globalSettings).State = EntityState.Modified;
                 }
+
+                AllSorts.saveGSLists(Request.Form.GetValues("faqapprovers"), db, 1);
+                AllSorts.saveGSLists(Request.Form.GetValues("kbapprovers"), db, 2);
+                AllSorts.saveGSLists(Request.Form.GetValues("adminemails"), db, 3);
+
                 db.SaveChanges();
 
                 ViewBag.Msg = "Changes saved";
@@ -65,8 +59,11 @@ namespace Help_Desk_2.Controllers
                 ViewBag.Msg = "Model not valid";
             }
 
-            GlobalSettingsEditModel gsm = new GlobalSettingsEditModel(globalSettings);
-            return View(gsm);
+            ViewBag.faqapprovers = new MultiSelectList(AllSorts.AllUsers, "userID", "displayName", AllSorts.AllUsers.Where(x => x.isFaqApprover).Select(u => u.userID));
+            ViewBag.kbapprovers = new MultiSelectList(AllSorts.AllUsers, "userID", "displayName", AllSorts.AllUsers.Where(x => x.isKbApprover).Select(u => u.userID));
+            ViewBag.adminemails = new MultiSelectList(AllSorts.AllUsers, "userID", "displayName", AllSorts.AllUsers.Where(x => x.isResponsible).Select(u => u.userID));
+
+            return View(globalSettings);
         }
 
         /********* Keywords Section ****************/

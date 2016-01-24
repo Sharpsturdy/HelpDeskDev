@@ -11,7 +11,6 @@ using Help_Desk_2.Models;
 
 using System.Security.Principal;
 using System.DirectoryServices.AccountManagement;
-using Help_Desk_2.ViewModels;
 using Help_Desk_2.Utilities;
 using System.IO;
 using MvcPaging;
@@ -129,7 +128,7 @@ namespace Help_Desk_2.Controllers
 
             
             ViewBag.mode = 1;
-            ViewBag.responsibleID = new SelectList(db.UserProfiles, "userID", "displayName", ticket.responsibleID);
+            ViewBag.responsibleID = new SelectList(AllSorts.AllUsers.Where(x => x.isResponsible), "userID", "displayName", ticket.responsibleID);
             return View("TicketOne", ticket);
         }
 
@@ -179,7 +178,9 @@ namespace Help_Desk_2.Controllers
             }
 
             ViewBag.mode = 1;
-            ViewBag.responsibleID = new SelectList(db.UserProfiles, "userID", "displayName", ticket.responsibleID);
+            //ViewBag.responsibleID = new SelectList(db.UserProfiles, "userID", "displayName", ticket.responsibleID);
+            ViewBag.responsibleID = new SelectList(AllSorts.AllUsers.Where(x => x.isResponsible), "userID", "displayName", ticket.responsibleID);
+
             return View("TicketOne", ticket);
         }
        

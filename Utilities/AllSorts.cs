@@ -78,7 +78,12 @@ namespace Help_Desk_2.Utilities
 
         public static IEnumerable<WordList> FullWordList
         {
-            get { HelpDeskContext db = new HelpDeskContext(); return db.WordLists; }
+            get { HelpDeskContext db = new HelpDeskContext(); return db.WordLists.OrderBy(x => x.text); }
+        }
+
+        public static IEnumerable<UserProfile> AllUsers
+        {
+            get { HelpDeskContext db = new HelpDeskContext(); return db.UserProfiles.OrderBy(u => (u.firstName + u.surName)); }
         }
 
         public static void saveWordLists(string[] kwtmp, string[] eatmp, HelpDeskContext db, KnowledgeFAQ kbfaq)
@@ -121,6 +126,77 @@ namespace Help_Desk_2.Utilities
 
                 if (wd != null)
                     kbfaq.wordList.Remove(wd);
+            }
+
+        }
+
+        public static void saveGSLists(string[] intmp, HelpDeskContext db, int type)
+        {
+
+            if (intmp == null) intmp = new string[] { "0" };
+
+            //All Users            
+            string[] orgList = null;
+            if (type == 1)
+            {
+                orgList = db.UserProfiles.Where(x => x.isFaqApprover).Select(x => "" + x.userID).ToArray<string>();
+            } else if (type == 2)
+            {
+                orgList = db.UserProfiles.Where(x => x.isKbApprover).Select(x => "" + x.userID).ToArray<string>();
+            } else if (type == 3)
+            {
+                orgList = db.UserProfiles.Where(x => x.isResponsible).Select(x => "" + x.userID).ToArray<string>();
+            }
+
+            //displayMessage += string.Join(",", orgList) + "//" + string.Join(",", kwords) + "#";
+
+            //New keywords to be added 
+            string[] newUsers = intmp.Where(x => !orgList.Contains(x)).ToArray();
+
+            string[] delUsers = orgList.Where(x => !intmp.Contains(x)).ToArray();
+
+            displayMessage += string.Join(",", newUsers) + "#" + string.Join(",", delUsers);
+
+            foreach (var uid in newUsers)
+            {
+                UserProfile user = db.UserProfiles.Find(new Guid(uid));
+
+                if (user != null)
+                {
+                    if (type == 1)
+                    {
+                        user.isFaqApprover = true;
+                    }
+                    else if (type == 2)
+                    {
+                        user.isKbApprover = true;
+                    }
+                    else if (type == 3)
+                    {
+                        user.isResponsible = true;
+                    }
+                }
+            }
+
+            foreach (var uid in delUsers)
+            {
+                UserProfile user = db.UserProfiles.Find(new Guid(uid));
+
+                if (user != null)
+                {
+                    if (type == 1)
+                    {
+                        user.isFaqApprover = false;
+                    }
+                    else if (type == 2)
+                    {
+                        user.isKbApprover = false;
+                    }
+                    else if (type == 3)
+                    {
+                        user.isResponsible = false;
+                    }
+                }
             }
 
         }

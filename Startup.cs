@@ -4,6 +4,7 @@ using Hangfire.Dashboard;
 using Hangfire.SqlServer;
 using System;
 using Microsoft.Owin;
+using Help_Desk_2.BackgroundJobs;
 
 [assembly: OwinStartup(typeof(Help_Desk_2.Startup))]
 namespace Help_Desk_2
@@ -35,6 +36,8 @@ namespace Help_Desk_2
             app.UseHangfireDashboard("/hangfire", options);
 
             app.UseHangfireServer();
+
+            RecurringJob.AddOrUpdate("ContentNotification", () => Mailer.sendNotification(), "*/5 * * * *");
         }
     }
 }

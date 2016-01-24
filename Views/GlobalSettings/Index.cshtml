@@ -1,7 +1,19 @@
-﻿@model Help_Desk_2.ViewModels.GlobalSettingsEditModel
+﻿@using Help_Desk_2.Utilities
+@model Help_Desk_2.Models.GlobalSettings
 
 @{
     ViewBag.Title = "Global Settings";
+    ViewBag.addAttachCode = "1"; //Edit mode -activates some code in layout
+
+}
+
+@section cssCustomTop {
+    @Styles.Render("~/Content/Select2/css/select2.min.css")
+    @Styles.Render("~/Content/Select2/css/select2-bootstrap.min.css")
+}
+
+@section scriptsCustom {
+    <script src="~/Content/Select2/js/select2.min.js"></script>
 }
 
 <h2 class="title">@ViewBag.Title</h2>
@@ -21,15 +33,16 @@
             @Html.HiddenFor(model => model.ID)
         }
         <div class="form-group odd">
-            @Html.LabelFor(model => model.AdminEmail, htmlAttributes: new { @class = "control-label col-md-6" })
+            @Html.Label("Ticket Administrators", htmlAttributes: new { @class = "control-label col-md-6" })
             @Html.LabelFor(model => model.TicketSeeder, htmlAttributes: new { @class = "control-label col-md-6" })
            
         </div>
 
         <div class="form-group even">
             <div class="col-md-6">
-                @Html.EditorFor(model => model.AdminEmail, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.AdminEmail, "", new { @class = "text-danger" })
+                @*Html.EditorFor(model => model.AdminEmail, new { htmlAttributes = new { @class = "form-control" } })*@
+                @Html.DropDownList("adminemails", null, htmlAttributes: new { @class = "select2-editor", multiple = "multiple" })
+                @*Html.ValidationMessageFor(model => model.AdminEmails, "", new { @class = "text-danger" })*@
             </div>
            
             <div class="col-md-6">
@@ -39,20 +52,20 @@
         </div>
 
         <div class="form-group odd">
-            @Html.LabelFor(model => model.FAQApprover, htmlAttributes: new { @class = "control-label col-md-6" })
-            @Html.LabelFor(model => model.KBApprover, htmlAttributes: new { @class = "control-label col-md-6" })
+            @Html.Label("FAQ Approver(s)", htmlAttributes: new { @class = "control-label col-md-6" })
+            @Html.Label("Knowledgebase Approver(s)", htmlAttributes: new { @class = "control-label col-md-6" })
 
         </div>
 
         <div class="form-group even">
-            <div class="col-md-6">
-                @Html.EditorFor(model => model.FAQApprover, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.FAQApprover, "", new { @class = "text-danger" })
+            <div class="col-md-6">    
+
+                @Html.DropDownList("faqapprovers", null, htmlAttributes: new { @class = "select2-editor", multiple = "multiple" })
+
             </div>
            <div class="col-md-6">
                
-                @Html.EditorFor(model => model.KBApprover, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.KBApprover, "", new { @class = "text-danger" })
+               @Html.DropDownList("kbapprovers", null, htmlAttributes: new { @class = "select2-editor", multiple = "multiple" })
             </div>
         </div>
 

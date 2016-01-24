@@ -6,7 +6,6 @@ using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Configuration;
 using Help_Desk_2.Models;
 using System.Data.Entity.ModelConfiguration.Conventions;
-using Help_Desk_2.ViewModels;
 
 namespace Help_Desk_2.DataAccessLayer
 {
@@ -23,8 +22,6 @@ namespace Help_Desk_2.DataAccessLayer
         public DbSet<Attachment> Attachments { get; set; }
         public DbSet<News> News { get; set; }
         public DbSet<KnowledgeFAQ> KnowledgeFAQs { get; set;  }
-
-        public DbSet<WordListViewModel> WordListViewModels { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

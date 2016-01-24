@@ -39,6 +39,12 @@ namespace Help_Desk_2.Models
         [DefaultValue(false)]
         public bool isResponsible { get; set;  }
 
+        [DefaultValue(false)]
+        public bool isFaqApprover { get; set; }
+
+        [DefaultValue(false)]
+        public bool isKbApprover { get; set; }
+
         //public int preferedLanguage { get; set;  }
 
         [NotMapped]
