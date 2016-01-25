@@ -37,7 +37,7 @@ namespace Help_Desk_2
 
             app.UseHangfireServer();
 
-            RecurringJob.AddOrUpdate("ContentNotification", () => Mailer.sendNotification(), "*/5 * * * *");
+            //RecurringJob.AddOrUpdate("ContentNotification", () => Mailer.sendNotification(), "*/5 * * * *");
         }
     }
 }

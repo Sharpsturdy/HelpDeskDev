@@ -28,6 +28,11 @@ namespace Help_Desk_2.Controllers
             return View();
         }
 
+        public ActionResult UnAuthorized()
+        {
+            return View();
+        }
+
         
         
     }

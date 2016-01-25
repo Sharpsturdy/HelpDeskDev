@@ -93,7 +93,7 @@
             <div>
                 @if (ViewBag.mode == 2)
                 {
-                    @Html.DisplayFor(model => model.description)
+                    @Html.Raw(Model.description)
                 }
                 else {
                     @Html.TextAreaFor(model => model.description, new { @class = "form-control richeditor" })

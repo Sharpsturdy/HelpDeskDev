@@ -187,6 +187,7 @@
     <Compile Include="Models\News.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utilities\AllSorts.cs" />
+    <Compile Include="Utilities\CustomAuthorise.cs" />
     <Compile Include="Utilities\Globals - Copy.cs" />
     <Compile Include="Utilities\HangFireAuthorize.cs" />
     <Compile Include="Utilities\UserData.cs" />
@@ -457,7 +458,6 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\GlobalSettings\Index.cshtml" />
     <Content Include="Views\WordList\Create.cshtml" />
@@ -468,7 +468,6 @@
     <Content Include="Views\GlobalSettings\Keywords.cshtml" />
     <Content Include="Views\GlobalSettings\ExpertAreas.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
-    <Content Include="Views\Home\FAQs.cshtml" />
     <Content Include="Views\Home\KnowledgeBase.cshtml" />
     <Content Include="Views\Ticket\New.cshtml" />
     <Content Include="Views\Ticket\Index.cshtml" />
@@ -512,6 +511,10 @@
     <Content Include="Views\Emails\Web.config" />
     <Content Include="Views\Emails\_Attachments.cshtml" />
     <Content Include="Views\Emails\Test.cshtml" />
+    <Content Include="Views\Home\Unauthorized.cshtml" />
+    <Content Include="Views\Emails\General.cshtml" />
+    <Content Include="Views\Emails\General.Html.cshtml" />
+    <Content Include="Views\Emails\General.Text.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Files\" />

@@ -133,7 +133,7 @@ namespace Help_Desk_2.Utilities
         public static void saveGSLists(string[] intmp, HelpDeskContext db, int type)
         {
 
-            if (intmp == null) intmp = new string[] { "0" };
+            if (intmp == null) intmp = new string[] { "" };
 
             //All Users            
             string[] orgList = null;
@@ -157,48 +157,37 @@ namespace Help_Desk_2.Utilities
 
             displayMessage += string.Join(",", newUsers) + "#" + string.Join(",", delUsers);
 
-            foreach (var uid in newUsers)
-            {
-                UserProfile user = db.UserProfiles.Find(new Guid(uid));
+            GSListHelper(newUsers, db, type, true);
 
-                if (user != null)
+            GSListHelper(delUsers, db, type, false);
+            
+        }
+
+        private static void GSListHelper(string[] users, HelpDeskContext db, int type, bool value)
+        {
+            foreach (var uid in users)
+            {
+                if (!string.IsNullOrEmpty(uid))
                 {
-                    if (type == 1)
+                    UserProfile user = db.UserProfiles.Find(new Guid(uid));
+
+                    if (user != null)
                     {
-                        user.isFaqApprover = true;
-                    }
-                    else if (type == 2)
-                    {
-                        user.isKbApprover = true;
-                    }
-                    else if (type == 3)
-                    {
-                        user.isResponsible = true;
+                        if (type == 1)
+                        {
+                            user.isFaqApprover = value;
+                        }
+                        else if (type == 2)
+                        {
+                            user.isKbApprover = value;
+                        }
+                        else if (type == 3)
+                        {
+                            user.isResponsible = value;
+                        }
                     }
                 }
             }
-
-            foreach (var uid in delUsers)
-            {
-                UserProfile user = db.UserProfiles.Find(new Guid(uid));
-
-                if (user != null)
-                {
-                    if (type == 1)
-                    {
-                        user.isFaqApprover = false;
-                    }
-                    else if (type == 2)
-                    {
-                        user.isKbApprover = false;
-                    }
-                    else if (type == 3)
-                    {
-                        user.isResponsible = false;
-                    }
-                }
-            }
-
         }
 
         public static int getExpiryDays(HelpDeskContext db, bool kb = false)

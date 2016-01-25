@@ -14,6 +14,8 @@ using System.DirectoryServices.AccountManagement;
 using Help_Desk_2.Utilities;
 using System.IO;
 using MvcPaging;
+using Hangfire;
+using Help_Desk_2.BackgroundJobs;
 
 namespace Help_Desk_2.Controllers
 {
@@ -88,6 +90,7 @@ namespace Help_Desk_2.Controllers
                 {
                     ticket.dateSubmitted = DateTime.Now;
                     ticket.expiryDate = ticket.dateSubmitted.Value.AddDays(AllSorts.getExpiryDays(db));
+
                 }
                 
                 ticket = db.Tickets.Add(ticket);
@@ -95,6 +98,12 @@ namespace Help_Desk_2.Controllers
                 /***** Add File ************/
                 AllSorts.saveAttachments(ticket.ID, db);
                 db.SaveChanges();
+
+                //Better to send mail post save in case there errors
+                if (Request.Form.AllKeys.Contains("btnSubmit"))
+                {
+                    BackgroundJob.Enqueue(() => Mailer.sendTicketNotification("SubmitTicket", ticket.UserProfile.emailAddress, ticket.ID));
+                }
 
                 if (Request.Form.AllKeys.Contains("btnSave")) // || Request.Form.AllKeys.Contains("btnSubmit") || Request.Form.AllKeys.Contains("btnUnApprove"))
                 {
@@ -165,7 +174,14 @@ namespace Help_Desk_2.Controllers
                 }
 
                 db.SaveChanges();
-                
+
+                //Better to send mail post save in case there errors
+                if (Request.Form.AllKeys.Contains("btnSubmit"))
+                {
+                    BackgroundJob.Enqueue(() => Mailer.sendNotification());
+                    //Mailer.sendTicketNotification("SubmitTicket", ticket.UserProfile.emailAddress, ticket.ID));
+                }
+
                 if (Request.Form.AllKeys.Contains("btnSave")) //|| Request.Form.AllKeys.Contains("btnSubmit") || Request.Form.AllKeys.Contains("btnUnApprove"))
                 {
                     return RedirectToAction("Edit/" + ticket.ID);

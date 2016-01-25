@@ -8,7 +8,7 @@ using Help_Desk_2.Utilities;
 
 namespace Help_Desk_2.Controllers
 {
-    [Authorize(Roles = "Administrators")]
+    [CustomAuthorise(Roles = "Administrators")]
     public class GlobalSettingsController : Controller
     {
         private HelpDeskContext db = new HelpDeskContext();
