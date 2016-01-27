@@ -167,6 +167,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="BackgroundJobs\Emailer.cs" />
     <Compile Include="BackgroundJobs\Mailer.cs" />
     <Compile Include="Controllers\KnowledgeBaseController.cs" />
     <Compile Include="Controllers\FAQsController.cs" />
@@ -189,6 +190,7 @@
     <Compile Include="Utilities\AllSorts.cs" />
     <Compile Include="Utilities\CustomAuthorise.cs" />
     <Compile Include="Utilities\Globals - Copy.cs" />
+    <Compile Include="Utilities\Globals.cs" />
     <Compile Include="Utilities\HangFireAuthorize.cs" />
     <Compile Include="Utilities\UserData.cs" />
     <Compile Include="Migrations\201512161337213_InitialCreate.cs" />

@@ -29,21 +29,21 @@ namespace Help_Desk_2.Controllers
 
             int currentPageIndex = page.HasValue ? page.Value - 1 : 0;     
 
-            return View(db.Tickets.OrderBy(t => t.dateComposed).ToPagedList(currentPageIndex, AllSorts.pageSize));
+            return View(db.Tickets.OrderByDescending(t => t.dateComposed).ToPagedList(currentPageIndex, AllSorts.pageSize));
         }
 
         //List all my tickets draft/open/closed
         public ActionResult List(int? page)
         {
             int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
-            return View("Index", db.Tickets.OrderBy(t => t.dateComposed).ToPagedList(currentPageIndex, AllSorts.pageSize));
+            return View("Index", db.Tickets.OrderByDescending(t => t.dateComposed).ToPagedList(currentPageIndex, AllSorts.pageSize));
         }
 
-        //List all tickets from all users draft/open/closed
+        //List all tickets from all user for administration
         public ActionResult Admin(int? page)
         {
             int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
-            return View("Index", db.Tickets.OrderBy(t => t.dateComposed).ToPagedList(currentPageIndex, AllSorts.pageSize));
+            return View("Index", db.Tickets.OrderByDescending(t => t.dateSubmitted).ToPagedList(currentPageIndex, AllSorts.pageSize));
         }
 
         // GET: Ticket/Details/5
@@ -90,7 +90,6 @@ namespace Help_Desk_2.Controllers
                 {
                     ticket.dateSubmitted = DateTime.Now;
                     ticket.expiryDate = ticket.dateSubmitted.Value.AddDays(AllSorts.getExpiryDays(db));
-
                 }
                 
                 ticket = db.Tickets.Add(ticket);
@@ -102,7 +101,10 @@ namespace Help_Desk_2.Controllers
                 //Better to send mail post save in case there errors
                 if (Request.Form.AllKeys.Contains("btnSubmit"))
                 {
-                    BackgroundJob.Enqueue(() => Mailer.sendTicketNotification("SubmitTicket", ticket.UserProfile.emailAddress, ticket.ID));
+                    Emailer em = new Emailer();
+                    string email = "" + ticket.UserProfile.emailAddress;
+                    int id = 0 + ticket.ID;
+                    em.sendTicketNotification("SubmitTicket", email, id);
                 }
 
                 if (Request.Form.AllKeys.Contains("btnSave")) // || Request.Form.AllKeys.Contains("btnSubmit") || Request.Form.AllKeys.Contains("btnUnApprove"))
@@ -178,8 +180,23 @@ namespace Help_Desk_2.Controllers
                 //Better to send mail post save in case there errors
                 if (Request.Form.AllKeys.Contains("btnSubmit"))
                 {
-                    BackgroundJob.Enqueue(() => Mailer.sendNotification());
-                    //Mailer.sendTicketNotification("SubmitTicket", ticket.UserProfile.emailAddress, ticket.ID));
+                    //BackgroundJob.Enqueue(() => Mailer.sendNotification());
+                    //BackgroundJob.Enqueue<Emailer>(x => x.sendTicketNotification("SubmitTicket", ticket.UserProfile.emailAddress, ticket.ID));
+                    //Emailer em = new Emailer();
+                    //em.sendTicketNotification("SubmitTicket", ticket.UserProfile.emailAddress, ticket.ID)
+                    //Mailer.sendTicketNotification("SubmitTicket", ticket.UserProfile.emailAddress, ticket.ID);
+                    // Hangfire.BackgroundJob.Enqueue<Emailer>(me => me.sendTicketNotification("SubmitTicket", ticket.UserProfile.emailAddress, ticket.ID));
+
+                    Emailer em = new Emailer();
+                    string email = ticket.UserProfile.emailAddress;
+                    int id = ticket.ID;
+                    em.sendTicketNotification("SubmitTicket", email + "", id + 0);
+
+                    //Trying this
+                    HelpDeskContext db = new HelpDeskContext();
+                    Ticket t = db.Tickets.Find(18);
+                    Hangfire.BackgroundJob.Enqueue<Emailer>(me => me.sendTicketNotification("SubmitTicket", t.UserProfile.emailAddress, 5000 + t.ID));
+
                 }
 
                 if (Request.Form.AllKeys.Contains("btnSave")) //|| Request.Form.AllKeys.Contains("btnSubmit") || Request.Form.AllKeys.Contains("btnUnApprove"))
@@ -194,7 +211,6 @@ namespace Help_Desk_2.Controllers
             }
 
             ViewBag.mode = 1;
-            //ViewBag.responsibleID = new SelectList(db.UserProfiles, "userID", "displayName", ticket.responsibleID);
             ViewBag.responsibleID = new SelectList(AllSorts.AllUsers.Where(x => x.isResponsible), "userID", "displayName", ticket.responsibleID);
 
             return View("TicketOne", ticket);

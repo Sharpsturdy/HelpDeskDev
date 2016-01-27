@@ -1,12 +1,8 @@
-﻿using Help_Desk_2.DataAccessLayer;
+﻿using Help_Desk_2.BackgroundJobs;
+using Help_Desk_2.DataAccessLayer;
+using Postal;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
-using System.Net;
-using System.Net.Mail;
-using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 
 namespace Help_Desk_2.Controllers
@@ -33,7 +29,11 @@ namespace Help_Desk_2.Controllers
             return View();
         }
 
-        
-        
+        public string TestSend() {
+            Emailer em = new Emailer();
+            return em.sendThis();
+        }
+
+
     }
 }
