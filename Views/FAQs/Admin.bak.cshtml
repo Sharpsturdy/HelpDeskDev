@@ -38,7 +38,7 @@
         <thead>
             <tr>
                 <th>@Html.DisplayName("Question")</th>
-                <th>@Html.DisplayNameFor(model => model.UserProfile.displayName)</th>
+                <th>@Html.DisplayNameFor(model => model.Originator.displayName)</th>
                 <th>@Html.DisplayNameFor(model => model.dateComposed)</th>
                 <th>@Html.DisplayNameFor(model => model.expiryDate)</th>
             </tr>
@@ -49,7 +49,7 @@
                 <tr onclick="$(location).attr('href', '@Url.Action("Details", "FAQs", new { @id = item.ID })')">
 
                     <td>@Html.DisplayFor(modelItem => item.headerText)</td>
-                    <td>@Html.DisplayFor(model => item.UserProfile.displayName)</td>
+                    <td>@Html.DisplayFor(model => item.Originator.displayName)</td>
                     <td>@Html.DisplayFor(modelItem => item.dateComposed)</td>
                     <td>@Html.DisplayFor(modelItem => item.expiryDate)</td>
                 </tr>

@@ -18,7 +18,7 @@ namespace Help_Desk_2.Controllers
         // GET: KnowledgeFAQsTest
         public ActionResult Index()
         {
-            var knowledgeFAQs = db.KnowledgeFAQs.Include(k => k.UserProfile);
+            var knowledgeFAQs = db.KnowledgeFAQs.Include(k => k.Originator);
             return View(knowledgeFAQs.ToList());
         }
 

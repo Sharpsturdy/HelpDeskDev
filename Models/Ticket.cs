@@ -30,7 +30,7 @@ namespace Help_Desk_2.Models
         [Display(Name = "Ticket No.")]
         public int ticketID { get; set;  }
 
-        [ForeignKey("UserProfile")]
+        [ForeignKey("Originator")]
         public Guid originatorID { get; set; } //AD Username
 
 
@@ -45,6 +45,11 @@ namespace Help_Desk_2.Models
         [Display(Name = "Expires on:"), DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:d}")]
         [DataType(DataType.DateTime)]
         public DateTime? expiryDate { get; set; }
+
+        [Column(TypeName = "DateTime")]
+        [Display(Name = "Date Completed"), DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:d}")]
+        [DataType(DataType.DateTime)]
+        public DateTime? dateCompleted { get; set; }
 
         [NotMapped]
         public string message { get; set; }
@@ -139,7 +144,7 @@ namespace Help_Desk_2.Models
 
         public virtual ICollection<WordList> wordList { get; set; }
 
-        public virtual UserProfile UserProfile { get; set; }
+        public virtual UserProfile Originator { get; set; }
 
         [ForeignKey("responsibleID")]
         public virtual UserProfile Responsible { get; set; }

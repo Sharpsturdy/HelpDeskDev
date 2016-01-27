@@ -13,7 +13,7 @@
                     <a class="article-title" onclick="$(location).attr('href', '@Url.Action("Article", "News", new { @id = item.ID })')">
                         @item.title
                     </a>
-                    <p class="text-muted">@item.publishedDate / Author: @item.UserProfile.displayName</p>
+                    <p class="text-muted">@item.publishedDate / Author: @item.Originator.displayName</p>
                 </li>
             }
         </ul>
@@ -29,7 +29,7 @@
                 @item.headerText
             </a>
          
-            <p class="text-muted">@item.dateComposed / Author: @item.UserProfile.displayName</p>
+            <p class="text-muted">@item.dateComposed / Author: @item.Originator.displayName</p>
         </li>
     }
     </ul>

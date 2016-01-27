@@ -24,39 +24,11 @@
     {
         ViewBag.Title = "Ticket: TMP" + Model.ID;
         ViewBag.status = Html.DisplayFor(model => model.status);
-        ViewBag.displayName = Model.UserProfile.displayName;
+        ViewBag.displayName = Model.Originator.displayName;
         ViewBag.Status = Model.status;
         ViewBag.CreationDate = Html.DisplayFor(model => model.dateComposed);
 
-        try
-        {
-            //Emailer em = new Emailer();
-            //em.sendTicketNotification("SubmitTicket",Model.UserProfile.emailAddress, Model.ID);
-
-            //Hangfire.BackgroundJob.Enqueue<Emailer>(me => me.sendThis());
-            /* This works
-            int refNum = 7100;
-             GeneralEmail gemail = new GeneralEmail
-             {
-                 To = "patrice.elias@gmail.com",
-                 CC = "patrice@aloehealthsecrets.com",
-                 Subject = "New Ticket submitted: " + refNum,
-                 Message = "A new ticket, ref: " + refNum + ", has been submitted for your attention."
-             };
-             gemail.Send();
-             */
-            //This works too
-            //Hangfire.BackgroundJob.Enqueue<Emailer>(me => me.sendTicketNotification("SubmitTicket", Model.UserProfile.emailAddress,9000 + Model.ID));
-
-            //Trying this
-            HelpDeskContext db = new HelpDeskContext();
-            Ticket t = db.Tickets.Find(18);
-            Hangfire.BackgroundJob.Enqueue<Emailer>(me => me.sendTicketNotification("SubmitTicket", t.UserProfile.emailAddress, t.ID));
-        }
-        catch (Exception e)
-        {
-            Response.Write(e.StackTrace);
-        }
+        
     }
 
     if (ViewBag.mode < 2)

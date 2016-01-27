@@ -53,7 +53,7 @@
                 <tr onclick="$(location).attr('href', '@Url.Action("Details", "Ticket", new { @id = item.ID })')">
 
                     <td>@Html.DisplayFor(modelItem => item.dateComposed)</td>
-                    <td>@Html.DisplayFor(modelItem => item.UserProfile.displayName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Originator.displayName)</td>
                     <td>@Html.DisplayFor(modelItem => item.headerText)</td>       
                     
                     <td>

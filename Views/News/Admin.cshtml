@@ -33,7 +33,7 @@
             <tr>
                 <th>@Html.DisplayNameFor(model => model.FirstOrDefault().title)</th>
                 <th>@Html.DisplayNameFor(model => model.FirstOrDefault().creationDate)</th>
-                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().UserProfile.displayName)</th>
+                <th>@Html.DisplayNameFor(model => model.FirstOrDefault().Originator.displayName)</th>
                 <th>@Html.DisplayNameFor(model => model.FirstOrDefault().published)</th>
                 <th>@Html.DisplayNameFor(model => model.FirstOrDefault().publishedDate)</th>
                 <th>@Html.DisplayNameFor(model => model.FirstOrDefault().sticky)</th>
@@ -47,7 +47,7 @@
                         @Html.DisplayFor(modelItem => item.title)
                     </td>
                     <td>@Html.DisplayFor(modelItem => item.creationDate)</td>
-                    <td>@Html.DisplayFor(modelItem => item.UserProfile.displayName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Originator.displayName)</td>
 
                     <td>@Html.DisplayFor(modelItem => item.dspPublished)</td>
                     <td>@Html.DisplayFor(modelItem => item.publishedDate)</td>

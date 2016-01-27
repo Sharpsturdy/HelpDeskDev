@@ -1,10 +1,7 @@
 ﻿using Postal;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using Help_Desk_2.Utilities;
-using Help_Desk_2.BackgroundJobs;
+using Help_Desk_2.DataAccessLayer;
 using Help_Desk_2.Models;
 
 namespace Help_Desk_2.BackgroundJobs
@@ -22,6 +19,8 @@ namespace Help_Desk_2.BackgroundJobs
     public class Emailer
     {
 
+        private HelpDeskContext db;
+
         public void sendNotification()
         {
             dynamic email = new Email("Test");
@@ -30,20 +29,58 @@ namespace Help_Desk_2.BackgroundJobs
             email.Send();
         }
 
-        public void sendTicketNotification(string mailType, string copyTo, int refNum)
+
+        public void sendTicketNotification(string mailType, int id)
         {
 
             if (mailType == "SubmitTicket")
             {
                 //HelpDeskContext db = new HelpDeskContext();
                 //string sendTo = "webmaster@mispo.org,patrice@aloehealthsecrets.com";//string.Join(",", db.UserProfiles.Where(x => x.isResponsible).Select(x => x.emailAddress).ToArray<string>());
+
+                Ticket t = db.Tickets.Find(id);
+
+                if (t == null) return;
+
+                string approvers = string.Join(",", db.UserProfiles.Where(u => u.isResponsible).Select(x => x.emailAddress).ToArray()).Trim();
+
                 GeneralEmail gemail = new GeneralEmail
                 {
-                    To = copyTo,
-                    CC = "patrice@aloehealthsecrets.com",
-                    Subject = "New Ticket submitted: " + refNum,
-                    Message = "A new ticket, ref: " + refNum + ", has been submitted for your attention."
+                    To = approvers,
+                    CC = t.Originator.emailAddress,
+                    Subject = "New Ticket submitted: " + t.ID,
+                    Message = "A new ticket, ref: " + t.ID + ", has been submitted for your attention."
                 };
+                gemail.Send();
+            }
+        }
+
+        public void sendFAQKBNotification(string mailType, int id)
+        {
+
+            if (mailType == "Approved")
+            {
+                //HelpDeskContext db = new HelpDeskContext();
+                //string sendTo = "webmaster@mispo.org,patrice@aloehealthsecrets.com";//string.Join(",", db.UserProfiles.Where(x => x.isResponsible).Select(x => x.emailAddress).ToArray<string>());
+
+                KnowledgeFAQ kf = db.KnowledgeFAQs.Find(id);
+                
+                if (kf == null) return;
+
+                string approvers = string.Join(",", db.UserProfiles.Where(u => u.isKbApprover).Select(x => x.emailAddress).ToArray()).Trim();
+                
+                GeneralEmail gemail = new GeneralEmail
+                {
+                    To = kf.Originator.emailAddress,
+                    Subject = "Knowledge base article approved!",
+
+                    Message = "<p>Your article '" + kf.headerText + "'has been approved.</p>"
+                    
+                };
+
+                if (!string.IsNullOrEmpty(approvers))
+                    gemail.CC = approvers;
+
                 gemail.Send();
             }
         }
@@ -73,7 +110,7 @@ namespace Help_Desk_2.BackgroundJobs
 
         public Emailer()
         {
-
+            db = new HelpDeskContext();
         }
     }
 }

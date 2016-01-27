@@ -517,6 +517,8 @@
     <Content Include="Views\Emails\General.cshtml" />
     <Content Include="Views\Emails\General.Html.cshtml" />
     <Content Include="Views\Emails\General.Text.cshtml" />
+    <Content Include="Views\Home\TestSend.cshtml" />
+    <Content Include="Views\Ticket\TestSend.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Files\" />

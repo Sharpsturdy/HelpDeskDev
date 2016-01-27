@@ -29,9 +29,18 @@ namespace Help_Desk_2.Controllers
             return View();
         }
 
-        public string TestSend() {
-            Emailer em = new Emailer();
-            return em.sendThis();
+        public ActionResult TestSend()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public string TestSend(int? id) {
+            
+
+            Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendTicketNotification("SubmitTicket", 11));
+            return "duet";
+
         }
 
 

@@ -22,7 +22,7 @@
     else
     {
         ViewBag.Title = "KB: " + Model.headerText;
-        ViewBag.displayName = Model.UserProfile.displayName;
+        ViewBag.displayName = Model.Originator.displayName;
         ViewBag.Status = Model.status;
         ViewBag.CreationDate = Html.DisplayFor(model => model.dateComposed);
     }

@@ -9,6 +9,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using MvcPaging;
+using Help_Desk_2.BackgroundJobs;
 
 namespace Help_Desk_2.Controllers
 {
@@ -188,6 +189,9 @@ namespace Help_Desk_2.Controllers
                     kb.published = true;
                     kb.expiryDate = kb.dateComposed.AddDays(AllSorts.getExpiryDays(db, true));
 
+                    //Send Email to originator to inform of approval
+                    Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendFAQKBNotification("Approved", kb.ID));
+
                 }
                 else if (Request.Form.AllKeys.Contains("btnUnApprove"))
                 {
@@ -202,7 +206,7 @@ namespace Help_Desk_2.Controllers
 
                 db.SaveChanges();
 
-                if (Request.Form.AllKeys.Contains("btnSave") || Request.Form.AllKeys.Contains("btnApprove") || Request.Form.AllKeys.Contains("btnUnApprove"))
+                if (Request.Form.AllKeys.Contains("btnSave")) // || Request.Form.AllKeys.Contains("btnApprove") || Request.Form.AllKeys.Contains("btnUnApprove"))
                 {
                     return RedirectToAction("Edit/" + kb.ID);
                 }

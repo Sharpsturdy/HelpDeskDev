@@ -34,7 +34,7 @@ namespace Help_Desk_2.Models
         [DataType(DataType.MultilineText)]       
         public string description { get; set; }
 
-        [ForeignKey("UserProfile")]
+        [ForeignKey("Originator")]
         public Guid originatorID { get; set; } //AD Username
 
         [Display(Name = "Suggestion?")]
@@ -54,7 +54,7 @@ namespace Help_Desk_2.Models
         [NotMapped]
         public string linkURL { get; set; }
 
-        public virtual UserProfile UserProfile { get; set; }
+        public virtual UserProfile Originator { get; set; }
 
         public virtual ICollection<Attachment> Files { get; set; }
 

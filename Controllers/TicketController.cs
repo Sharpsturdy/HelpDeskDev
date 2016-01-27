@@ -8,7 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using Help_Desk_2.DataAccessLayer;
 using Help_Desk_2.Models;
-
+using Postal;
 using System.Security.Principal;
 using System.DirectoryServices.AccountManagement;
 using Help_Desk_2.Utilities;
@@ -22,7 +22,7 @@ namespace Help_Desk_2.Controllers
     public class TicketController : Controller
     {
         private HelpDeskContext db = new HelpDeskContext();
-
+        
         //List all my tickets draft/open
         public ActionResult Index(string searchType, int? page)
         {
@@ -101,10 +101,9 @@ namespace Help_Desk_2.Controllers
                 //Better to send mail post save in case there errors
                 if (Request.Form.AllKeys.Contains("btnSubmit"))
                 {
-                    Emailer em = new Emailer();
-                    string email = "" + ticket.UserProfile.emailAddress;
-                    int id = 0 + ticket.ID;
-                    em.sendTicketNotification("SubmitTicket", email, id);
+
+                    //Send email to ticket admins to let them know of this new ticket submission
+                    Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendTicketNotification("Submit", ticket.ID));
                 }
 
                 if (Request.Form.AllKeys.Contains("btnSave")) // || Request.Form.AllKeys.Contains("btnSubmit") || Request.Form.AllKeys.Contains("btnUnApprove"))
@@ -159,6 +158,9 @@ namespace Help_Desk_2.Controllers
                 {
                     ticket.dateSubmitted = DateTime.Now;
                     ticket.expiryDate = ticket.dateSubmitted.Value.AddDays(AllSorts.getExpiryDays(db));
+                                        
+                    //Send email to ticket admins to let them know of this new ticket submission
+                    Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendTicketNotification("Submit", ticket.ID));
 
                 }
                 /***** Add File ************/
@@ -172,33 +174,20 @@ namespace Help_Desk_2.Controllers
                 if(Request.Form.AllKeys.Contains("btnAssign"))
                 {
                     ticket.dateL2Release = DateTime.Now;
-                    //Send email to assigned
+                    
+                    //Send email to assigned to let them know of this new ticket assignment
+                    Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendTicketNotification("Assign", ticket.ID));
+                }
+                else if (Request.Form.AllKeys.Contains("btnComplete"))
+                {
+                    ticket.dateCompleted = DateTime.Now;
+
+                    //Send email to originator to let them know ticket is completed
+                    Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendTicketNotification("Assign", ticket.ID));
                 }
 
                 db.SaveChanges();
-
-                //Better to send mail post save in case there errors
-                if (Request.Form.AllKeys.Contains("btnSubmit"))
-                {
-                    //BackgroundJob.Enqueue(() => Mailer.sendNotification());
-                    //BackgroundJob.Enqueue<Emailer>(x => x.sendTicketNotification("SubmitTicket", ticket.UserProfile.emailAddress, ticket.ID));
-                    //Emailer em = new Emailer();
-                    //em.sendTicketNotification("SubmitTicket", ticket.UserProfile.emailAddress, ticket.ID)
-                    //Mailer.sendTicketNotification("SubmitTicket", ticket.UserProfile.emailAddress, ticket.ID);
-                    // Hangfire.BackgroundJob.Enqueue<Emailer>(me => me.sendTicketNotification("SubmitTicket", ticket.UserProfile.emailAddress, ticket.ID));
-
-                    Emailer em = new Emailer();
-                    string email = ticket.UserProfile.emailAddress;
-                    int id = ticket.ID;
-                    em.sendTicketNotification("SubmitTicket", email + "", id + 0);
-
-                    //Trying this
-                    HelpDeskContext db = new HelpDeskContext();
-                    Ticket t = db.Tickets.Find(18);
-                    Hangfire.BackgroundJob.Enqueue<Emailer>(me => me.sendTicketNotification("SubmitTicket", t.UserProfile.emailAddress, 5000 + t.ID));
-
-                }
-
+                                
                 if (Request.Form.AllKeys.Contains("btnSave")) //|| Request.Form.AllKeys.Contains("btnSubmit") || Request.Form.AllKeys.Contains("btnUnApprove"))
                 {
                     return RedirectToAction("Edit/" + ticket.ID);

@@ -18,7 +18,7 @@ namespace Help_Desk_2.Controllers
         // GET: TicketsAuto1
         public ActionResult Index()
         {
-            var tickets = db.Tickets.Include(t => t.Responsible).Include(t => t.UserProfile);
+            var tickets = db.Tickets.Include(t => t.Responsible).Include(t => t.Originator);
             return View(tickets.ToList());
         }
 

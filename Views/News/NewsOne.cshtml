@@ -22,7 +22,7 @@
     else
     {
         ViewBag.Title = "News: " + Model.title;
-        ViewBag.displayName = Model.UserProfile.displayName;
+        ViewBag.displayName = Model.Originator.displayName;
         ViewBag.Status = Model.status + (Model.sticky ? " / Sticky" : "");
         ViewBag.CreationDate = Html.DisplayFor(model => model.creationDate);
     }

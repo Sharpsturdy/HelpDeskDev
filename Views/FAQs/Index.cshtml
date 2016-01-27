@@ -64,7 +64,7 @@
                 <tr onclick="$(location).attr('href', '@Url.Action("Details", "FAQs", new { @id = item.ID })')">
 
                     <td>@Html.DisplayFor(modelItem => item.headerText)</td>
-                    <td>@Html.DisplayFor(modelItem => item.UserProfile.displayName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Originator.displayName)</td>
                     <td>@Html.DisplayFor(modelItem => item.dateComposed)</td>
                     <td>@Html.DisplayFor(modelItem => item.expiryDate)</td>
                 </tr>
@@ -84,7 +84,7 @@
                 @*<div class="article-body">
                         @Html.Raw(item.body)
                     </div>*@
-                <p class="text-muted">@Html.DisplayFor(modelItem => item.dateComposed) / Author: @Html.DisplayFor(modelItem => item.UserProfile.displayName)</p>
+                <p class="text-muted">@Html.DisplayFor(modelItem => item.dateComposed) / Author: @Html.DisplayFor(modelItem => item.Originator.displayName)</p>
 
 
             </div>
