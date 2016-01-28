@@ -23,9 +23,9 @@ namespace Help_Desk_2.BackgroundJobs
 
         public void sendNotification()
         {
-            dynamic email = new Email("Test");
+            dynamic email = new Email("KB");
             email.To = "pelias@avexacomputing.net";
-            email.Message = "DB.GetRandomLolcatLink()";
+            
             email.Send();
         }
 
@@ -58,30 +58,37 @@ namespace Help_Desk_2.BackgroundJobs
         public void sendFAQKBNotification(string mailType, int id)
         {
 
-            if (mailType == "Approved")
+            KnowledgeFAQ kf = db.KnowledgeFAQs.Find(id); //Get FAQ or KB
+
+            if (kf == null) return;
+           
+            dynamic email = new Email(kf.type == 1 ? "FAQ":"KB");
+            email.type = mailType;
+            email.title = kf.headerText;
+            email.id = "" + kf.ID;
+             
+            if (mailType == "Submitted")
             {
-                //HelpDeskContext db = new HelpDeskContext();
-                //string sendTo = "webmaster@mispo.org,patrice@aloehealthsecrets.com";//string.Join(",", db.UserProfiles.Where(x => x.isResponsible).Select(x => x.emailAddress).ToArray<string>());
+                var approvers = from x in db.UserProfiles
+                                select x;
 
-                KnowledgeFAQ kf = db.KnowledgeFAQs.Find(id);
-                
-                if (kf == null) return;
-
-                string approvers = string.Join(",", db.UserProfiles.Where(u => u.isKbApprover).Select(x => x.emailAddress).ToArray()).Trim();
-                
-                GeneralEmail gemail = new GeneralEmail
+                if (kf.type == 1)
                 {
-                    To = kf.Originator.emailAddress,
-                    Subject = "Knowledge base article approved!",
+                    approvers = approvers.Where(u => u.isFaqApprover && !string.IsNullOrEmpty(u.emailAddress));
+                }
+                else if (kf.type == 2)
+                {
+                    approvers = approvers.Where(u => u.isKbApprover && !string.IsNullOrEmpty(u.emailAddress));
+                }
+                email.To = string.Join(",", approvers.Select(x => x.emailAddress).ToArray()).Trim();
 
-                    Message = "<p>Your article '" + kf.headerText + "'has been approved.</p>"
-                    
-                };
-
-                if (!string.IsNullOrEmpty(approvers))
-                    gemail.CC = approvers;
-
-                gemail.Send();
+                email.Subject = "New " + (kf.type == 1 ? "FAQ":"Knowledgebase") + " article submitted";
+                
+            }
+            else if (mailType == "Approved")
+            {
+                email.To = kf.Originator.emailAddress;
+                email.Subject = (kf.type == 1 ? "FAQ" : "Knowledgebase") + " article approved!";
             }
         }
 

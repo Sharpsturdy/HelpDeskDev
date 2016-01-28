@@ -37,10 +37,10 @@ namespace Help_Desk_2.Models
         [DataType(DataType.Date)]
         public DateTime? publishedDate { get; set; }
 
-        [ForeignKey("UserProfile")]
+        [ForeignKey("Originator")]
         public Guid originatorID { get; set; } //AD Username
 
-        public virtual UserProfile UserProfile { get; set; }
+        public virtual UserProfile Originator { get; set; }
 
         [Display(Name = "Created on"), DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime creationDate {  get;  set; }

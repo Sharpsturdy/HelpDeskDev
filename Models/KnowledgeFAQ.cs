@@ -23,6 +23,10 @@ namespace Help_Desk_2.Models
         [DataType(DataType.DateTime)]
         public DateTime? expiryDate { get; set;  }
 
+        [Display(Name = "Submitted on:"), DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:d}")]
+        [DataType(DataType.DateTime)]
+        public DateTime dateSubmitted { get; set; }
+
         [Required]
         [Display(Name = "Brief description")]
         [StringLength(150, ErrorMessage = "Your brief description exceeds the maximum characters allowed")]
@@ -65,12 +69,27 @@ namespace Help_Desk_2.Models
 
         [NotMapped]
         [Display(Name = "Status")]
-        public string status
+        public Statuses? status
         {
             get
             {
-                return published? "Published":"Unpublished";
+                if (dateSubmitted == null)
+                {
+                    return Statuses.Draft;
+                }
+                else if (expiryDate <= DateTime.Now)
+                {
+                    return Statuses.Expired;
+                }
+                else if (published)
+                {
+                    return Statuses.Published;
+                }
+                else {
+                    return Statuses.Submitted;
+                };
             }
+
         }
 
         public virtual ICollection<WordList> wordList { get; set; }

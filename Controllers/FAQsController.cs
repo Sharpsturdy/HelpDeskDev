@@ -120,6 +120,9 @@ namespace Help_Desk_2.Controllers
                     faq.published = true;
                     faq.expiryDate = faq.dateComposed.AddDays(AllSorts.getExpiryDays(db, true));
 
+                    if (faq.dateSubmitted == null)
+                        faq.dateSubmitted = DateTime.Now;
+
                 }
                 else if (Request.Form.AllKeys.Contains("btnUnApprove"))
                 {
@@ -137,8 +140,15 @@ namespace Help_Desk_2.Controllers
                 AllSorts.saveWordLists(Request.Form.GetValues("inkeywords"), Request.Form.GetValues("inexpertareas"), db, faq);
 
                 db.SaveChanges();
+                //Better to send mail post save in case there errors
+                if (Request.Form.AllKeys.Contains("btnSubmit"))
+                {
 
-                if (Request.Form.AllKeys.Contains("btnSave") || Request.Form.AllKeys.Contains("btnApprove") || Request.Form.AllKeys.Contains("btnUnApprove"))
+                    //Send email to ticket admins to let them know of this new ticket submission
+                    Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendFAQKBNotification("Submitted",faq.ID));
+                }
+
+                if (Request.Form.AllKeys.Contains("btnSave")) // || Request.Form.AllKeys.Contains("btnApprove") || Request.Form.AllKeys.Contains("btnUnApprove"))
                 {
                     return RedirectToAction("Edit/" + faq.ID);
                 }
@@ -251,12 +261,10 @@ namespace Help_Desk_2.Controllers
                 if (Request.Form.AllKeys.Contains("btnApprove"))
                 {
                     faq.published = true;
-                    faq.expiryDate = faq.dateComposed.AddDays(AllSorts.getExpiryDays(db, true));
 
-                    //Send Email to originator to inform of approval
-                    
-                    Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendFAQKBNotification("Approved",faq.ID));
-
+                    //If being approved from expired then calculate expiry date from now instead of composed date
+                    faq.expiryDate = (faq.status == Statuses.Expired ? DateTime.Now : faq.dateComposed).AddDays(AllSorts.getExpiryDays(db, true));
+                   
                 } else if(Request.Form.AllKeys.Contains("btnUnApprove"))
                 {
                     faq.published = false;
@@ -276,6 +284,19 @@ namespace Help_Desk_2.Controllers
                     db.SaveChanges();
                 }
 
+                //Better to send mail post save in case there errors
+                if (Request.Form.AllKeys.Contains("btnSubmit"))
+                {
+
+                    //Send email to ticket admins to let them know of this new ticket submission
+                    Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendFAQKBNotification("Submitted", faq.ID));
+                }
+                else if (Request.Form.AllKeys.Contains("btnApprove"))
+                {
+                    //Send Email to originator to inform of approval
+                    Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendFAQKBNotification("Approved", faq.ID));
+
+                }
                 if (Request.Form.AllKeys.Contains("btnSave") || Request.Form.AllKeys.Contains("btnApprove") || Request.Form.AllKeys.Contains("btnUnApprove"))
                 {
                     return RedirectToAction("Edit/" + faq.ID);

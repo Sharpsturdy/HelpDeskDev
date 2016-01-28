@@ -101,6 +101,8 @@
                             <li><a href="#">Work on my tickets</a></li>
 
                             <li><hr /></li>
+                            <li>@Html.ActionLink("New FAQ Article", "New", "FAQs")</li>
+                            <li>@Html.ActionLink("New FAQ Suggestion", "Suggest", "FAQs")</li>
                             <li>@Html.ActionLink("Manage FAQs", "Admin", "FAQs")</li>
                             <li>@Html.ActionLink("Manage FAQ Suggestions", "Suggestions", "FAQs")</li>
 
@@ -108,7 +110,8 @@
                             <li>@Html.ActionLink("Manage News Articles", "Admin", "News")</li>
 
                             <li><hr /></li>
-                            <li>@Html.ActionLink("Manage Knowledge Base", "Admin", "KnowledgeBase")</li>
+                            <li>@Html.ActionLink("New KB Article", "New", "KnowledgeBase")</li>
+                            <li>@Html.ActionLink("Manage KB Articles", "Admin", "KnowledgeBase")</li>
 
                             <li><hr /></li>
                             <li>@Html.ActionLink("Global Settings", "", "GlobalSettings")</li>

@@ -35,7 +35,14 @@
 
     }
 
-    ViewBag.prevURL = string.IsNullOrEmpty((string)Session["lastView"]) ? Request.UrlReferrer.PathAndQuery : Session["lastView"];
+    try
+    {
+        ViewBag.prevURL = string.IsNullOrEmpty((string)Session["lastView"]) ? Request.UrlReferrer.PathAndQuery : Session["lastView"];
+    }
+    catch (Exception e)
+    {
+        ViewBag.prevURL = Url.Action("Index", "Home");
+    }
 }
 @section cssCustomTop {
     @Styles.Render("~/Content/Select2/css/select2.min.css")
@@ -253,6 +260,7 @@
 
                         <input type="submit" name="btnSave" value="Save" class="btn btn-primary" />
                         <input type="submit" name="btnSClose" value="Save & Close" class="btn btn-primary" />
+                        <input type="submit" name="btnSubmit" value="Submit" class="btn btn-primary" title="Submit article for approval"/>
                         if (User.IsInRole("Administrators"))
                         {
                             if (Model != null && Model.published)

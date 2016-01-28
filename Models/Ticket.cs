@@ -15,7 +15,7 @@ namespace Help_Desk_2.Models
 {
     public enum Statuses
     {
-        Draft, Submitted, Assigned, OnHold, Completed
+        Draft, Submitted, Assigned, Unpblished, Published, OnHold, Completed, Expired
     }
 
     public enum SanityChecks
