@@ -3,6 +3,8 @@
 @model Help_Desk_2.Models.KnowledgeFAQ
 
 @{
+    AllSorts.setNavProperties(ViewBag, true); //This is a single item page 
+
     if (ViewBag.mode == 0)
     {
 
@@ -33,8 +35,6 @@
         ViewBag.addTinyMCECode = "1"; //Activate tinymce code
 
     }
-
-    ViewBag.prevURL = string.IsNullOrEmpty((string)Session["lastView"]) ? Request.UrlReferrer.PathAndQuery : Session["lastView"];
 }
 <header>
     <h2>@ViewBag.Title <span class="summary-top pull-right">@ViewBag.Status</span></h2>

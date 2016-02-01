@@ -5,10 +5,11 @@ using System.Web.Mvc;
 using Help_Desk_2.DataAccessLayer;
 using Help_Desk_2.Models;
 using Help_Desk_2.Utilities;
+using MvcPaging;
 
 namespace Help_Desk_2.Controllers
 {
-    [CustomAuthorise(Roles = "Administrators")]
+    [CustomAuthorise(Roles = "AdminUsers")]
     public class GlobalSettingsController : Controller
     {
         private HelpDeskContext db = new HelpDeskContext();
@@ -16,6 +17,10 @@ namespace Help_Desk_2.Controllers
         // GET: GlobalSettings, get first record
         public ActionResult Index()
         {
+           /* if (!AllSorts.isAppAdmin())
+            {
+                return RedirectToAction("Unauthorized", "Home"); // ult("~/Home/Unauthorized");
+            }*/
             GlobalSettings gs = db.GlobalSettingss.FirstOrDefault<GlobalSettings>();
            
             //if (gs == null) { }
@@ -67,10 +72,14 @@ namespace Help_Desk_2.Controllers
         }
 
         /********* Keywords Section ****************/
-        public ActionResult Keywords()
+        public ActionResult Keywords(int? page)
         {
-            
-            return View(db.WordLists.Where(k => k.type == 1).ToList());
+            int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
+
+            return View(db.WordLists.Where(k => k.type == 1)
+                    .OrderBy(k => k.text)
+                    .ToPagedList(currentPageIndex, AllSorts.pageSize));
+           // return View(db.WordLists.Where(k => k.type == 1).ToList());
         }
 
         [HttpPost]
@@ -86,10 +95,13 @@ namespace Help_Desk_2.Controllers
         }
 
         /********* Expert Area Section ****************/
-        public ActionResult ExpertAreas()
+        public ActionResult ExpertAreas(int? page)
         {
-            
-            return View(db.WordLists.Where(k => k.type == 2).ToList());
+            int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
+
+            return View(db.WordLists.Where(k => k.type == 2)
+                    .OrderBy(k => k.text)
+                    .ToPagedList(currentPageIndex, AllSorts.pageSize));
         }
 
         [HttpPost]

@@ -79,6 +79,8 @@ namespace Help_Desk_2.Utilities
                     if (userProfile != null && userProfile.userID != Guid.Empty)
                     {
                         HttpContext.Current.Session.Add("UserID", userProfile.userID);
+                        HttpContext.Current.Session.Add("UserPrincipal", userProfile.principalName);
+                        HttpContext.Current.Session.Add("UserDisplayName", userProfile.displayName);
                     }
 
                 }

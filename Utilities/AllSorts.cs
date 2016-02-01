@@ -2,9 +2,12 @@
 using Help_Desk_2.Models;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Security.Policy;
 using System.Web;
+using System.Web.Mvc;
 
 namespace Help_Desk_2.Utilities
 {
@@ -76,14 +79,18 @@ namespace Help_Desk_2.Utilities
 
         public static string displayMessage { get ; set; }
 
+        public static string appAdmins {  get { return "Administrators,AppGroup2,AppGroup1";  } }
+
+        private static HelpDeskContext db { get { return new HelpDeskContext(); } }
+
         public static IEnumerable<WordList> FullWordList
         {
-            get { HelpDeskContext db = new HelpDeskContext(); return db.WordLists.OrderBy(x => x.text); }
+            get { return db.WordLists.OrderBy(x => x.text); }
         }
 
         public static IEnumerable<UserProfile> AllUsers
         {
-            get { HelpDeskContext db = new HelpDeskContext(); return db.UserProfiles.OrderBy(u => (u.firstName + u.surName)); }
+            get { return db.UserProfiles.OrderBy(u => (u.firstName + u.surName)); }
         }
 
         public static void saveWordLists(string[] kwtmp, string[] eatmp, HelpDeskContext db, KnowledgeFAQ kbfaq)
@@ -157,13 +164,13 @@ namespace Help_Desk_2.Utilities
 
             displayMessage += string.Join(",", newUsers) + "#" + string.Join(",", delUsers);
 
-            GSListHelper(newUsers, db, type, true);
+            GSListHelper(newUsers, type, true);
 
-            GSListHelper(delUsers, db, type, false);
+            GSListHelper(delUsers, type, false);
             
         }
 
-        private static void GSListHelper(string[] users, HelpDeskContext db, int type, bool value)
+        private static void GSListHelper(string[] users, int type, bool value)
         {
             foreach (var uid in users)
             {
@@ -190,7 +197,7 @@ namespace Help_Desk_2.Utilities
             }
         }
 
-        public static int getExpiryDays(HelpDeskContext db, bool kb = false)
+        public static int getExpiryDays(bool kb = false)
         {
             GlobalSettings globalSettings = db.GlobalSettingss.FirstOrDefault<GlobalSettings>();
 
@@ -205,5 +212,102 @@ namespace Help_Desk_2.Utilities
         }
 
         public static int pageSize {  get { return 5; } }
+
+        public static void setNavProperties(dynamic ViewBag, bool isSinglePage = false)
+        {
+            HttpContext ctx = HttpContext.Current;
+            if(isSinglePage)
+            {
+                try
+                {
+                    ViewBag.prevURL = string.IsNullOrEmpty((string)ctx.Session["lastView"]) ? ctx.Request.UrlReferrer.PathAndQuery : ctx.Session["lastView"];
+                }
+                catch (Exception e)
+                {
+                    ViewBag.prevURL = "~/";
+                }
+            } else
+            {
+                ctx.Session["lastView"] = ctx.Request.Url.PathAndQuery;    //Record this as last view
+            }
+        }
+
+        public static bool userHasRole(string roleName) //Configured in web config as CSL
+        {
+            var appSettings = ConfigurationManager.AppSettings[roleName];
+            var user = HttpContext.Current.User;
+
+            if (string.IsNullOrEmpty(appSettings))
+            {
+                return false;
+            }
+
+            foreach ( string grp in appSettings.Split(','))
+            {
+                if (user.IsInRole(grp.Trim()))
+                    return true;
+            }
+
+            return false;
+        }
+
+        public static bool UserCan(string ActionName)
+        {
+            var user = HttpContext.Current.User.Identity.Name;
+            if (ActionName == "ManageNews")
+            {
+                return AllSorts.userHasRole("AdminUsers");
+
+            }
+            else if (ActionName == "ManageKBs")
+            {
+                return AllSorts.userHasRole("AdminUsers") || db.UserProfiles.Where(u => (u.isKbApprover && u.loginName == user)).Count() > 0;
+
+            }
+            else if (ActionName == "ManageFAQs")
+            {
+                return AllSorts.userHasRole("AdminUsers") || db.UserProfiles.Where(u => (u.isFaqApprover && u.loginName == user)).Count() > 0;
+            }
+            else if (ActionName == "ManageTickets")
+            {
+                return AllSorts.userHasRole("AdminUsers") || db.UserProfiles.Where(u => (u.isResponsible && u.loginName == user)).Count() > 0;
+            }
+            else if (ActionName.StartsWith("Create"))
+            {
+                return AllSorts.userHasRole(ActionName);
+            }
+            return false;
+        }
+
+        private static string up(string sessValue) {
+            if (string.IsNullOrEmpty(sessValue))
+                return null;
+
+            if (HttpContext.Current.Session[sessValue] == null)
+            {
+                UserData ud = new UserData();
+                UserProfile up = ud.getUserProfile();
+                if (sessValue == "UserID") { 
+                    return up.userID.ToString();
+                } else if (sessValue == "UserDisplayName")
+                {
+                    return up.displayName;
+                }
+                return null;
+            }
+            else
+            {
+                return (string)HttpContext.Current.Session[sessValue];
+            }
+        }
+        public static string getUserDisplayName()
+        {
+            return up("UserDisplayName");
+        }
+
+        public static string getUserID()
+        {
+            return up("UserID");
+        }
     }
 }

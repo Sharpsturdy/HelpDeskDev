@@ -3,6 +3,7 @@
 @model Help_Desk_2.Models.KnowledgeFAQ
 
 @{
+    AllSorts.setNavProperties(ViewBag,true); //This is a single item page 
 
     if (ViewBag.mode == 0)
     {
@@ -36,7 +37,6 @@
 
     }
 
-    ViewBag.prevURL = string.IsNullOrEmpty((string) Session["lastView"]) ? Request.UrlReferrer.PathAndQuery : Session["lastView"];
 }
 
 @section cssCustomTop {

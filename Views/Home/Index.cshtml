@@ -1,22 +1,19 @@
 ﻿@using Help_Desk_2.Utilities
-@using Help_Desk_2.DataAccessLayer
-@using Help_Desk_2.BackgroundJobs
-@using Help_Desk_2.Models
 @using Postal
+
 @{
     ViewBag.Title = "Home Page";
-
-    dynamic email = new Email("KB");
+    AllSorts.setNavProperties(ViewBag); //This is a single item page 
+    /* dynamic email = new Email("KB");
     email.To = "pelias@avexacomputing.net";
-    /*email.CC = "patrice@aloehealthsecrets.com";*/
+    /*email.CC = "patrice@aloehealthsecrets.com";* /
     email.Subject = "New Knowledgebase article submitted";
     email.type = "Approved";
     email.user = "Chenjerai Hunzvi";
     email.articleTitle = "Hameno";
     email.id = "45";
-    email.Send();
+    email.Send();*/
 }
-
 <div class="content home">
     <div class="col-sm-12" style="border: 1px solid #ddd">
     <h3>News and messages</h3>

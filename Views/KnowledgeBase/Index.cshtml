@@ -4,7 +4,7 @@
 
 @{
     ViewBag.Title = "Knowledge Base";
-    Session["lastView"] = Request.Url.PathAndQuery;    //Record this as last view
+    Help_Desk_2.Utilities.AllSorts.setNavProperties(ViewBag); 
 
     var actionName = ViewContext.RouteData.Values["action"].ToString().ToLower();
     ViewBag.formAction = actionName == "index" ? "KnowledgeBase/Search" : "";

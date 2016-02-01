@@ -46,7 +46,8 @@ namespace Help_Desk_2.Controllers
             return View(news);
         }
 
-        // GET: News
+        // GET: News for Admins  
+        [CustomAuthorise(Roles = "AdminUsers")]
         public ActionResult Admin(string searchType, string searchStr, int? page)
         {
             var news = from m in db.News
@@ -73,7 +74,8 @@ namespace Help_Desk_2.Controllers
             
         }
 
-        // GET: News/Details/5
+        // GET: News/Details/5 for admins
+        [CustomAuthorise(Roles = "AdminUsers")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -90,6 +92,7 @@ namespace Help_Desk_2.Controllers
         }
 
         // GET: News/New (aka Create)
+        [CustomAuthorise(Roles = "AdminUsers")]
         public ActionResult New()
         {
             
@@ -100,6 +103,7 @@ namespace Help_Desk_2.Controllers
         // POST: News/New (aka Create)
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [CustomAuthorise(Roles = "AdminUsers")]
         public ActionResult New([Bind(Include = "ID,title,body,sticky,published,publishedDate,creationDate")] News news)
         {
             if (ModelState.IsValid)
@@ -129,6 +133,7 @@ namespace Help_Desk_2.Controllers
         }
 
         // GET: News/Edit/5
+        [CustomAuthorise(Roles = "AdminUsers")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -150,6 +155,7 @@ namespace Help_Desk_2.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [CustomAuthorise(Roles = "AdminUsers")]
         public ActionResult Edit([Bind(Include = "ID,originatorID,title,body,sticky,published,publishedDate,creationDate")] News news)
         {
             if (ModelState.IsValid)

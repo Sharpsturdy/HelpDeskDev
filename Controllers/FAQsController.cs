@@ -118,7 +118,7 @@ namespace Help_Desk_2.Controllers
                 if (Request.Form.AllKeys.Contains("btnApprove"))
                 {
                     faq.published = true;
-                    faq.expiryDate = faq.dateComposed.AddDays(AllSorts.getExpiryDays(db, true));
+                    faq.expiryDate = faq.dateComposed.AddDays(AllSorts.getExpiryDays(true));
 
                     if (faq.dateSubmitted == null)
                         faq.dateSubmitted = DateTime.Now;
@@ -251,7 +251,7 @@ namespace Help_Desk_2.Controllers
 
         // POST: FAQs/Edit/5
         [HttpPost]
-        public ActionResult Edit([Bind(Include = "ID,originatorID,expiryDate,dateComposed,type,headerText,description,links,deleteField,suggest,published")] KnowledgeFAQ faq)
+        public ActionResult Edit([Bind(Include = "ID,originatorID,expiryDate,dateComposed,dateSubmitted,type,headerText,description,links,deleteField,suggest,published")] KnowledgeFAQ faq)
         {
             if (ModelState.IsValid)
             {
@@ -263,7 +263,7 @@ namespace Help_Desk_2.Controllers
                     faq.published = true;
 
                     //If being approved from expired then calculate expiry date from now instead of composed date
-                    faq.expiryDate = (faq.status == Statuses.Expired ? DateTime.Now : faq.dateComposed).AddDays(AllSorts.getExpiryDays(db, true));
+                    faq.expiryDate = (faq.status == Statuses.Expired ? DateTime.Now : faq.dateComposed).AddDays(AllSorts.getExpiryDays(true));
                    
                 } else if(Request.Form.AllKeys.Contains("btnUnApprove"))
                 {

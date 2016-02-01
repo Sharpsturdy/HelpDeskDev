@@ -90,6 +90,8 @@ namespace Help_Desk_2.BackgroundJobs
                 email.To = kf.Originator.emailAddress;
                 email.Subject = (kf.type == 1 ? "FAQ" : "Knowledgebase") + " article approved!";
             }
+
+            email.Send();
         }
 
         public string sendThis()

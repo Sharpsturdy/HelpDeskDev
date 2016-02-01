@@ -3,6 +3,7 @@
 @model Help_Desk_2.Models.KnowledgeFAQ
 
 @{
+    AllSorts.setNavProperties(ViewBag, true); //This is a single item page 
     if (ViewBag.mode == 0)
     {
 
@@ -27,21 +28,12 @@
         ViewBag.CreationDate = Html.DisplayFor(model => model.dateComposed);
     }
 
-    if(ViewBag.mode < 2)
+    if (ViewBag.mode < 2)
     {
 
         ViewBag.addAttachCode = "1"; //Activate attach code 
         ViewBag.addTinyMCECode = "1"; //Activate tinymce code
 
-    }
-
-    try
-    {
-        ViewBag.prevURL = string.IsNullOrEmpty((string)Session["lastView"]) ? Request.UrlReferrer.PathAndQuery : Session["lastView"];
-    }
-    catch (Exception e)
-    {
-        ViewBag.prevURL = Url.Action("Index", "Home");
     }
 }
 @section cssCustomTop {
@@ -75,6 +67,7 @@
             @Html.HiddenFor(model => model.ID)
             @Html.HiddenFor(model => model.originatorID)
             @Html.HiddenFor(model => model.dateComposed)
+            @Html.HiddenFor(model => model.dateSubmitted)
             @Html.HiddenFor(model => model.expiryDate)
         }
         <div class="container-form knowledgebase">

@@ -58,7 +58,8 @@
 
     //Multi-select fields
     $(".select2-editor").select2({
-        placeholder: "Select a state", width: "100%",
+        placeholder: "Select value(s) from the list",
+        width: "100%",
         theme: "bootstrap"
     });
 

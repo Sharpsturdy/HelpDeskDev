@@ -1,15 +1,10 @@
 ﻿@using Help_Desk_2.Utilities;
 @using Help_Desk_2.Models;
 @{
-    UserProfile userProfile;
-    if (ViewBag.displayName == null)
-    {
-        UserData ud = new UserData();
-        userProfile = ud.getUserProfile();
+   
 
-        ViewBag.displayName = userProfile.displayName;
-    }
-    string displayName = ViewBag.displayName;
+    Response.Write("The view page type is: " + ViewBag.pageType + "& last view: " + Session["lastView"]);
+
 }
 
 <!DOCTYPE html>
@@ -78,7 +73,7 @@
                 }
                 <li>@Html.ActionLink("Latest news","Index", "News")</li>
             </ul>
-            <p class="nav navbar-text navbar-right">@Html.ActionLink(displayName, "Index", "UserProfile")</p>
+            <p class="nav navbar-text navbar-right">@Html.ActionLink(AllSorts.getUserDisplayName(), "Index", "UserProfile")</p>
         </div>
     </div>
 
@@ -97,24 +92,28 @@
                             <li>@Html.ActionLink("Suggest an FAQ", "Suggest","FAQs")</li>
                             <li><a href="#">My subscriptions</a></li>
                             <li>@Html.ActionLink("My Profile", "Index", "UserProfile")</li>
+                            @if (AllSorts.UserCan("ManageTickets"))
+                            {
+                                <li><hr /></li>
+                                <li>@Html.SecureActionLink("Manage Tickets", "Admin", "Tickets")</li>
+                            }
+                            
                             <li><hr /></li>
-                            <li><a href="#">Work on my tickets</a></li>
-
-                            <li><hr /></li>
-                            <li>@Html.ActionLink("New FAQ Article", "New", "FAQs")</li>
+                            <li>@Html.SecureActionLink("New FAQ Article", "New", "FAQs", "CreateFAQs")</li>
                             <li>@Html.ActionLink("New FAQ Suggestion", "Suggest", "FAQs")</li>
-                            <li>@Html.ActionLink("Manage FAQs", "Admin", "FAQs")</li>
-                            <li>@Html.ActionLink("Manage FAQ Suggestions", "Suggestions", "FAQs")</li>
+                            <li>@Html.SecureActionLink("Manage FAQs", "Admin", "FAQs", "ManageFAQs")</li>
+                            <li>@Html.SecureActionLink("Manage FAQ Suggestions", "Suggestions", "FAQs", "ManageFAQs")</li>
 
+                            @if (AllSorts.UserCan("ManageNews"))
+                            {
+                                <li><hr /></li>
+                                <li>@Html.ActionLink("Manage News Articles", "Admin", "News")</li>
+                            }
                             <li><hr /></li>
-                            <li>@Html.ActionLink("Manage News Articles", "Admin", "News")</li>
-
+                            <li>@Html.SecureActionLink("New KB Article", "New", "KnowledgeBase", "CreateKBs")</li>
+                            <li>@Html.SecureActionLink("Manage KB Articles", "Admin", "Knowledgebase", "ManageKBs")</li>
                             <li><hr /></li>
-                            <li>@Html.ActionLink("New KB Article", "New", "KnowledgeBase")</li>
-                            <li>@Html.ActionLink("Manage KB Articles", "Admin", "KnowledgeBase")</li>
-
-                            <li><hr /></li>
-                            <li>@Html.ActionLink("Global Settings", "", "GlobalSettings")</li>
+                            <li>@Html.SecureActionLink("Global Settings", "", "GlobalSettings", "AdminUsers")</li>
                         </ul>
                         <div class="quick-search">
                             @using (Html.BeginForm("Search", "FAQs", FormMethod.Get))

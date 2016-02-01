@@ -12,14 +12,14 @@ Content-Type: text/html; charset=utf-8
         }
         @if (ViewBag.type == "Submitted")
         {
-            <p>Hi FAQ Approvers,</p>
-            <p>A new FAQ article <strong>@ViewBag.title</strong> has been submitted for your consideration.</p>
+            <p>Hi Knowledgebase Approvers,</p>
+            <p>A new Knowledgebase article <strong>@ViewBag.title</strong> has been submitted for your consideration.</p>
             <p>You can access this article at @Html.Raw(ViewBag.link)</p>
         }
         else if (ViewBag.type == "Approved")
         {
             <p>Hi @ViewBag.user,</p>
-            <p>Your FAQ article <strong>@ViewBag.articleTitle</strong> has been approved!</p>
+            <p>Your Knowledgebase article <strong>@ViewBag.articleTitle</strong> has been approved!</p>
             <p>You can access this article at @Html.Raw(ViewBag.link)</p>
         }
         <p><b>System Message</b></p>

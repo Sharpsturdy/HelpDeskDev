@@ -13,6 +13,7 @@ using Help_Desk_2.BackgroundJobs;
 
 namespace Help_Desk_2.Controllers
 {
+    [CustomAuthorise(Roles = "SuperUsers")]
     public class KnowledgeBaseController : Controller
     {
         private HelpDeskContext db = new HelpDeskContext();
@@ -118,7 +119,7 @@ namespace Help_Desk_2.Controllers
                 if (Request.Form.AllKeys.Contains("btnApprove"))
                 {
                     kb.published = true;
-                    kb.expiryDate = kb.dateComposed.AddDays(AllSorts.getExpiryDays(db, true));
+                    kb.expiryDate = kb.dateComposed.AddDays(AllSorts.getExpiryDays(true));
 
                     if (kb.dateSubmitted == null)
                         kb.dateSubmitted = DateTime.Now;
@@ -192,7 +193,7 @@ namespace Help_Desk_2.Controllers
 
         // POST: KB/Edit/5
         [HttpPost]
-        public ActionResult Edit([Bind(Include = "ID,originatorID,expiryDate,dateComposed,type,headerText,description,links,deleteField,published")] KnowledgeFAQ kb)
+        public ActionResult Edit([Bind(Include = "ID,originatorID,expiryDate,dateComposed,dateSubmitted,type,headerText,description,links,deleteField,published")] KnowledgeFAQ kb)
         {
             if (ModelState.IsValid)
             {
@@ -204,7 +205,7 @@ namespace Help_Desk_2.Controllers
                     kb.published = true;
 
                     //If being approved from expired then calculate expiry date from now instead of composed date
-                    kb.expiryDate = (kb.status == Statuses.Expired ? DateTime.Now : kb.dateComposed).AddDays(AllSorts.getExpiryDays(db, true));                    
+                    kb.expiryDate = (kb.status == Statuses.Expired ? DateTime.Now : kb.dateComposed).AddDays(AllSorts.getExpiryDays(true));                    
                 }
                 else if (Request.Form.AllKeys.Contains("btnUnApprove"))
                 {

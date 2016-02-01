@@ -27,8 +27,6 @@
         ViewBag.displayName = Model.Originator.displayName;
         ViewBag.Status = Model.status;
         ViewBag.CreationDate = Html.DisplayFor(model => model.dateComposed);
-
-        
     }
 
     if (ViewBag.mode < 2)
@@ -45,14 +43,16 @@
     {
         ViewBag.prevURL = Url.Action("Index", "Home");
     }
+
+    
 }
 
 @section cssCustomTop {
-@Styles.Render("~/Content/Select2/css/select2.min.css")
+    @Styles.Render("~/Content/Select2/css/select2.min.css")
 @Styles.Render("~/Content/Select2/css/select2-bootstrap.min.css")
 }
 
-@section scriptsCustom {
+            @section scriptsCustom {
 <script src="~/Content/Select2/js/select2.min.js"></script>
 }
 <header class="container-custom-top">
@@ -71,8 +71,8 @@ new { enctype = "multipart/form-data" }))
 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
 @if (ViewBag.mode == 1)
-{
- @Html.HiddenFor(model => model.ID)
+    {
+        @Html.HiddenFor(model => model.ID)
  @Html.HiddenFor(model => model.originatorID)
  @Html.HiddenFor(model => model.dateComposed)
  @Html.HiddenFor(model => model.dateL1Release)
@@ -85,8 +85,8 @@ new { enctype = "multipart/form-data" }))
      <div class="panel-heading"> @Html.DisplayNameFor(model => model.headerText)</div>
      <div>
          @if (ViewBag.mode == 2)
-         {
-             @Html.DisplayFor(model => model.headerText)
+    {
+        @Html.DisplayFor(model => model.headerText)
          }
          else {
              @Html.EditorFor(model => model.headerText, new { htmlAttributes = new { @class = "form-control" } })
@@ -101,8 +101,8 @@ new { enctype = "multipart/form-data" }))
      </div>
      <div>
          @if (ViewBag.mode == 2)
-         {
-             @Html.Raw(Model.description)
+    {
+        @Html.Raw(Model.description)
          }
          else {
              @Html.TextAreaFor(model => model.description, new { @class = "form-control richeditor" })
@@ -116,20 +116,20 @@ new { enctype = "multipart/form-data" }))
      <div class="panel-heading">@Html.DisplayName("Attachments")</div>
      <div>
          @if (Model != null)
-         {
-             @Html.HiddenFor(model => model.deleteField)
+    {
+        @Html.HiddenFor(model => model.deleteField)
              if (Model.Files != null && Model.Files.Count > 0)
-             {
+        {
              <table class="table table-condensed">
                  <tr><th>File Name</th><th>Size</th><th></th></tr>
                  @foreach (var t in Model.Files)
-                 {
+    {
                          <tr>
                              <td class="fileID hidden">@t.ID</td>
                              <td>@Html.ActionLink(t.fileName, "d/" + t.ID, "Files", null, new { target = "_blank" })</td>
                              <td>@t.displaySize</td>
                              @if (ViewBag.mode < 2)
-                             {
+    {
                                  <td>
                                      <div tabindex="500" class="btn btn-primary btn-custom btn-custom-undelete hidden">
                                          <i class="fa fa-undo"></i>
@@ -148,7 +148,7 @@ new { enctype = "multipart/form-data" }))
              }
          }
          @if (ViewBag.mode < 2)
-         {
+    {
              <input type="file" name="file1" class="file" data-show-upload="false" data-show-preview="false" />
          }
      </div>
@@ -163,7 +163,7 @@ new { enctype = "multipart/form-data" }))
          <tbody>
              @{
                  string tmpLinks = Model == null ? null : Model.links;
-                 string displayLinks = "";
+    string displayLinks = "";
                  if (!string.IsNullOrEmpty(tmpLinks))
                  {
                      var links = tmpLinks.Split(new char[] { '|' });
@@ -172,7 +172,7 @@ new { enctype = "multipart/form-data" }))
                          if (!string.IsNullOrEmpty(link))
                          {
                              var tmp = link.Split(new char[] { '^' });
-                             displayLinks += "<tr class=\"normal\"><td><a href=\"" + tmp[1] + "\" target=\"_blank\">" + tmp[0] + "</a></td>" +
+    displayLinks += "<tr class=\"normal\"><td><a href=\"" + tmp[1] + "\" target=\"_blank\">" + tmp[0] + "</a></td>" +
                                  "<td>" + (ViewBag.mode == 2 ? "" : "<input type=\"button\" value=\"Delete\" class=\"btn btn-default btn-custom-action\">") +
                                  "</td></tr>";
                          }
@@ -183,7 +183,7 @@ new { enctype = "multipart/form-data" }))
 
          </tbody>
          @if (ViewBag.mode < 2)
-         {
+    {
              <tfoot>
                  <tr>
                      <td colspan="2">
@@ -209,15 +209,15 @@ new { enctype = "multipart/form-data" }))
 
  <!-- Level 1 Release -->
  @if (ViewBag.status != Statuses.Draft)
- {
+    {
      <div class="panel panel-info">
          <div class="panel-heading">Level 1 Release</div>
          <div class="row level1-release">
              <div class="col-md-6">
                  @Html.LabelFor(model => model.sanityCheck, htmlAttributes: new { @class = "control-label text-left" })
                  @if (ViewBag.mode == 2)
-                 {
-                     @Html.DisplayFor(model => model.sanityCheck)
+    {
+        @Html.DisplayFor(model => model.sanityCheck)
                  }
                  else {
                      <div>
@@ -232,8 +232,8 @@ new { enctype = "multipart/form-data" }))
              <div class="sanity-check-reason">
                  @Html.LabelFor(model => model.reason, htmlAttributes: new { @class = "control-label text-left" })
                  @if (ViewBag.mode == 2)
-                 {
-                     @Html.DisplayFor(model => model.reason)
+    {
+        @Html.DisplayFor(model => model.reason)
                  }
                  else {
                      <div>
@@ -252,7 +252,7 @@ new { enctype = "multipart/form-data" }))
 
  <!-- Level 2 Release -->
  @if (Model != null && Model.sanityCheck == SanityChecks.Accept)
- {
+    {
      <div class="panel panel-info">
          <div class="panel-heading">Level 2 Release</div>
          <div class="row level2-release">
@@ -260,8 +260,8 @@ new { enctype = "multipart/form-data" }))
                  <div>
                      @Html.Label("Assignee", htmlAttributes: new { @class = "control-label text-left" })
                      @if (ViewBag.mode == 2)
-                     {
-                         @Html.DisplayFor(model => model.Responsible.displayName)
+    {
+        @Html.DisplayFor(model => model.Responsible.displayName)
                      }
                      else {
                          <div>

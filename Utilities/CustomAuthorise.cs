@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using System.Web.Security;
 
 namespace Help_Desk_2.Utilities
 {
@@ -15,6 +18,7 @@ namespace Help_Desk_2.Utilities
             filterContext.Result = new RedirectResult("~/Home/Unauthorized");
         }
 
+        /*
         public override void OnAuthorization(AuthorizationContext filterContext)
         {
             if (this.AuthorizeCore(filterContext.HttpContext))
@@ -25,6 +29,25 @@ namespace Help_Desk_2.Utilities
             {
                 this.HandleUnauthorizedRequest(filterContext);
             }
+        }
+        */
+        protected override bool AuthorizeCore(HttpContextBase httpContext) {
+            if (!httpContext.User.Identity.IsAuthenticated)
+                return false; var roles = GetAuthorizedRoles();
+
+            var provider = new WindowsTokenRoleProvider();
+            if (roles.Any(role => provider.IsUserInRole(httpContext.User.Identity.Name, role))) {
+                return true;
+            } return base.AuthorizeCore(httpContext);
+        }
+
+        private IEnumerable<string> GetAuthorizedRoles() {
+            var appSettings = ConfigurationManager.AppSettings[Roles];
+            if (string.IsNullOrEmpty(appSettings)) {
+                Trace.TraceError("Missing AD groups in Web.config for Roles {0}", Roles);
+                return new[] { "" };
+            }
+            return appSettings.Split(',');
         }
 
     }

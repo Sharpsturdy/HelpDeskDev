@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Keywords";
+    Help_Desk_2.Utilities.AllSorts.setNavProperties(ViewBag, true);
 }
 
 <h2>@ViewBag.Title</h2>
@@ -19,7 +20,7 @@
         {
             <tr>
                 <td>
-                    Name
+                    @item.text
                 </td>
                 <td>
                     @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |

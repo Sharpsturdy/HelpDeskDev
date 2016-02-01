@@ -2,11 +2,21 @@
 @model IPagedList<Ticket>
 
 @{
-    ViewBag.Title = "My Open Tickets";
+    //ViewBag.Title = "My Open Tickets";
     Session["lastView"] = Request.Url.PathAndQuery;
     var actionName = ViewContext.RouteData.Values["action"].ToString().ToLower();
     ViewBag.showSelect = actionName == "admin";
 
+    if (actionName == "List")
+    {
+        ViewBag.Title = "All My Tickets";
+    } else if (actionName == "admin")
+    {
+        ViewBag.Title = "Manage Tickets";
+    } else
+    {
+        ViewBag.Title = "My Open Tickets";
+    }
     ViewBag.searchType = new SelectList(new List<SelectListItem>
     {
         new SelectListItem {Value = "", Text = "Open" },

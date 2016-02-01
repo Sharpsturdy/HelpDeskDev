@@ -22,21 +22,34 @@ namespace Help_Desk_2.Controllers
     public class TicketController : Controller
     {
         private HelpDeskContext db = new HelpDeskContext();
-        
+
         //List all my tickets draft/open
         public ActionResult Index(string searchType, int? page)
         {
 
-            int currentPageIndex = page.HasValue ? page.Value - 1 : 0;     
+            int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
 
-            return View(db.Tickets.OrderByDescending(t => t.dateComposed).ToPagedList(currentPageIndex, AllSorts.pageSize));
+            string userName = AllSorts.getUserID();
+            var tickets = from t in db.Tickets
+                          where (t.originatorID.ToString() == userName && t.dateCompleted == null)
+                          orderby t.dateComposed descending
+                          select t;
+
+            return View(tickets.ToPagedList(currentPageIndex, AllSorts.pageSize));
         }
 
         //List all my tickets draft/open/closed
         public ActionResult List(int? page)
         {
             int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
-            return View("Index", db.Tickets.OrderByDescending(t => t.dateComposed).ToPagedList(currentPageIndex, AllSorts.pageSize));
+
+            string userName = AllSorts.getUserID();
+            var tickets = from t in db.Tickets
+                          where (t.originatorID.ToString() == userName)
+                          orderby t.dateComposed descending
+                          select t;
+
+            return View("Index", tickets.ToPagedList(currentPageIndex, AllSorts.pageSize));
         }
 
         //List all tickets from all user for administration
@@ -89,7 +102,7 @@ namespace Help_Desk_2.Controllers
                 if (Request.Form.AllKeys.Contains("btnSubmit"))
                 {
                     ticket.dateSubmitted = DateTime.Now;
-                    ticket.expiryDate = ticket.dateSubmitted.Value.AddDays(AllSorts.getExpiryDays(db));
+                    ticket.expiryDate = ticket.dateSubmitted.Value.AddDays(AllSorts.getExpiryDays());
                 }
                 
                 ticket = db.Tickets.Add(ticket);
@@ -157,7 +170,7 @@ namespace Help_Desk_2.Controllers
                 if (Request.Form.AllKeys.Contains("btnSubmit"))
                 {
                     ticket.dateSubmitted = DateTime.Now;
-                    ticket.expiryDate = ticket.dateSubmitted.Value.AddDays(AllSorts.getExpiryDays(db));
+                    ticket.expiryDate = ticket.dateSubmitted.Value.AddDays(AllSorts.getExpiryDays());
                                         
                     //Send email to ticket admins to let them know of this new ticket submission
                     Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendTicketNotification("Submit", ticket.ID));

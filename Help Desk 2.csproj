@@ -95,6 +95,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.DirectoryServices.AccountManagement" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
@@ -184,6 +185,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers.cs" />
     <Compile Include="Models\Attachment.cs" />
     <Compile Include="Models\News.cs" />
     <Compile Include="Startup.cs" />
@@ -502,8 +504,6 @@
     <Content Include="Views\FAQs\Suggest.cshtml" />
     <Content Include="Views\News\Admin.cshtml" />
     <Content Include="Views\News\Article.cshtml" />
-    <Content Include="Views\FAQs\Admin.bak.cshtml" />
-    <Content Include="Views\KnowledgeBase\Admin.kb.cshtml" />
     <Content Include="Views\TicketsAuto1\Create.cshtml" />
     <Content Include="Views\TicketsAuto1\Delete.cshtml" />
     <Content Include="Views\TicketsAuto1\Details.cshtml" />

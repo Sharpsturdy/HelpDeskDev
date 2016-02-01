@@ -5,10 +5,12 @@
 
 @{
     ViewBag.Title = "FAQs";
-    Session["lastView"] = Request.Url.PathAndQuery;    //Record this as last view
-                                                       /*ViewContext.RouteData.Values["action"]
-                                                   ViewContext.RouteData.Values["controller"]
-                                                   ViewContext.RouteData.Values["id"]*/
+
+    AllSorts.setNavProperties(ViewBag);
+
+    //Session["lastView"] = Request.Url.PathAndQuery;    //Record this as last view
+    /*ViewContext.RouteData.Values["action"]    ViewContext.RouteData.Values["controller"]    ViewContext.RouteData.Values["id"]*/
+
     var actionName = ViewContext.RouteData.Values["action"].ToString().ToLower();
     ViewBag.formAction = actionName == "index" ? "FAQs/Search" : "";
     ViewBag.showSelect = actionName == "admin";
