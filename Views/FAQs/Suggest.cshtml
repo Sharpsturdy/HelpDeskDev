@@ -12,14 +12,8 @@
         ViewBag.Status = "Draft";
         ViewBag.CreationDate = String.Format("{0:d}", DateTime.Now);
 
-        UserProfile userProfile;
-        if (ViewBag.displayName == null)
-        {
-            UserData ud = new UserData();
-            userProfile = ud.getUserProfile();
+        ViewBag.displayName = AllSorts.getUserDisplayName();
 
-            ViewBag.displayName = userProfile.displayName;
-        }
     }
     else
     {
@@ -106,7 +100,8 @@
 
                         <input type="submit" name="btnSave" value="Save" class="btn btn-primary" />
                         <input type="submit" name="btnSClose" value="Save & Close" class="btn btn-primary" />
-                        if(ViewBag.mode ==1 && Model.suggest){ //if this is a suggestion in edit mode
+                        if(ViewBag.mode ==1 && Model.suggest && AllSorts.UserCan("ManageFAQs"))
+                        { //if this is a suggestion in edit mode
                             <input type="submit" name="btnConvert" value="Convert to FAQ" class="btn btn-primary" />
                         }
                         <a href="@ViewBag.prevURL" title="Click to return to News home" class="btn btn-primary">Cancel</a>

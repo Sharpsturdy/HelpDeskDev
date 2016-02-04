@@ -26,14 +26,27 @@ namespace Help_Desk_2.Controllers
             return View(db.KnowledgeFAQs.Where(k => k.type == 1 && !k.suggest && k.published)
                     .OrderByDescending(k => k.dateComposed)
                     .ToPagedList(currentPageIndex, AllSorts.pageSize));
-            //return View(db.KnowledgeFAQs.ToList()); 
                    
         }
 
+        public ActionResult Drafts(int? page)
+        {
+            int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
+
+            string userName = AllSorts.getUserID();
+            return View("Index", db.KnowledgeFAQs.Where(k => k.type == 1 && k.dateSubmitted == null && (k.originatorID.ToString() == userName))
+                    .OrderByDescending(k => k.dateComposed)
+                    .ToPagedList(currentPageIndex, AllSorts.pageSize));
+        }
+
+
         public ActionResult Admin(string searchType, string searchStr, int? page)
         {
+            if (!AllSorts.UserCan("ManageFAQs"))
+                return RedirectToAction("Unauthorized", "Home");
+
             var faqs = from m in db.KnowledgeFAQs
-                       where (m.type == 1 && !m.suggest)
+                       where (m.type == 1 && !m.suggest && m.dateSubmitted != null)
                        select m;
 
             if (String.IsNullOrEmpty(searchType))
@@ -53,7 +66,6 @@ namespace Help_Desk_2.Controllers
             {
                 faqs = faqs.Where(s => s.headerText.Contains(searchStr) || s.description.Contains(searchStr));
             }
-
             
             int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
 
@@ -198,8 +210,24 @@ namespace Help_Desk_2.Controllers
             return View(faq);
         }
 
+        public ActionResult MySuggestions(int? page)
+        {
+            string userName = AllSorts.getUserID();
+            var faqs = from m in db.KnowledgeFAQs
+                       where (m.type == 1 && m.suggest)
+                       select m;
+
+            faqs = faqs.Where(s => s.originatorID.ToString() == userName);
+            
+            int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
+            return View("Index", faqs.OrderByDescending(m => m.dateComposed).ToPagedList(currentPageIndex, AllSorts.pageSize));
+
+        }
         public ActionResult Suggestions(string searchType, string searchStr, int? page)
         {
+            if (!AllSorts.UserCan("ManageFAQs"))
+                return RedirectToAction("Unauthorized", "Home");
+
             var faqs = from m in db.KnowledgeFAQs
                        where (m.type == 1 && m.suggest)
                        select m;

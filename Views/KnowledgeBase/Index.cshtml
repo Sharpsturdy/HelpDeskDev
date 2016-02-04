@@ -9,6 +9,9 @@
     var actionName = ViewContext.RouteData.Values["action"].ToString().ToLower();
     ViewBag.formAction = actionName == "index" ? "KnowledgeBase/Search" : "";
     ViewBag.showSelect = actionName == "admin";
+    ViewBag.adminView = (actionName == "admin" || actionName == "drafts");
+    ViewBag.noSearch = actionName == "drafts";
+
     ViewBag.searchType = new SelectList(new List<SelectListItem>
     {
         new SelectListItem {Value = "", Text = "Unpublished" },
@@ -19,10 +22,11 @@
 }
 
 <header>
-    <h2 class="title">@ViewBag.Title<span class="summary-top pull-right">@Html.ActionLink("New Article", "New", null, htmlAttributes: new { @class = "btn btn-primary" })</span></h2>
+    <h2 class="title">@ViewBag.Title</h2>
 </header>
 <div class="container-view knowledgebase">
-
+    @if (!ViewBag.noSearch)
+    {
     <form class="form-inline" action="@ViewBag.formAction">
         @if (ViewBag.showSelect)
         {
@@ -36,8 +40,8 @@
         </div>
         <button type="submit" class="btn btn-default">Search</button>
     </form>
-
-    @if (ViewBag.showSelect)
+    }
+    @if (ViewBag.adminView)
     {
         <table class="table table-bordered table-hover table-condensed table-view">
             <thead>

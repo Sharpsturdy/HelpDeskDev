@@ -1,10 +1,7 @@
 ﻿@using Help_Desk_2.Utilities;
 @using Help_Desk_2.Models;
 @{
-   
-
-    Response.Write("The view page type is: " + ViewBag.pageType + "& last view: " + Session["lastView"]);
-
+    Response.Write("The view page last view: " + Session["lastView"] + "/" + Session["UserID"] + "/" + Session["UserDisplayName"]);
 }
 
 <!DOCTYPE html>
@@ -67,10 +64,7 @@
             <ul class="nav navbar-nav">
                 <li>@Html.ActionLink("Home", "Index", "Home")</li>
                 <li>@Html.ActionLink("FAQs", "Index","FAQs")</li>
-                @if (User.IsInRole("Administrators"))
-                {
-                    <li>@Html.ActionLink("Knowledge base", "Index", "KnowledgeBase")</li>
-                }
+                <li>@Html.SecureActionLink("Knowledge base", "Index", "KnowledgeBase", "SuperFunctions")</li>
                 <li>@Html.ActionLink("Latest news","Index", "News")</li>
             </ul>
             <p class="nav navbar-text navbar-right">@Html.ActionLink(AllSorts.getUserDisplayName(), "Index", "UserProfile")</p>
@@ -88,32 +82,43 @@
                             <li>@Html.ActionLink("Raise new ticket", "New", "Ticket")</li>
                             <li>@Html.ActionLink("View my open tickets", "Index", "Ticket", null,htmlAttributes: new { @title = "Draft & Open"  })</li>
                             <li>@Html.ActionLink("View all my tickets", "List", "Ticket", null, htmlAttributes: new { @title = "Draft & Open & Closed" })</li>
-
-                            <li>@Html.ActionLink("Suggest an FAQ", "Suggest","FAQs")</li>
-                            <li><a href="#">My subscriptions</a></li>
+                            <li>@Html.SecureActionLink("Manage Tickets", "Admin", "Tickets", "ManageTickets")</li>
+                            <li><hr /></li>
                             <li>@Html.ActionLink("My Profile", "Index", "UserProfile")</li>
-                            @if (AllSorts.UserCan("ManageTickets"))
-                            {
-                                <li><hr /></li>
-                                <li>@Html.SecureActionLink("Manage Tickets", "Admin", "Tickets")</li>
-                            }
+                            <li>@Html.ActionLink("My Subscriptions", "Subs", "UserProfile")</li>
+
                             
                             <li><hr /></li>
-                            <li>@Html.SecureActionLink("New FAQ Article", "New", "FAQs", "CreateFAQs")</li>
-                            <li>@Html.ActionLink("New FAQ Suggestion", "Suggest", "FAQs")</li>
+                            @if (AllSorts.UserCan("CreateFAQs"))
+                            {
+                                <li>@Html.ActionLink("New FAQ Article", "New", "FAQs")</li>
+                                <li>@Html.ActionLink("View My FAQ Drafts", "Drafts", "FAQs")</li>
+
+                            }
+                            else
+                            {
+                                <li>@Html.ActionLink("Suggest an FAQ", "Suggest", "FAQs")</li>
+                                <li>@Html.ActionLink("View My FAQ Suggestons", "MySuggestions", "FAQs")</li>
+                            }
+
                             <li>@Html.SecureActionLink("Manage FAQs", "Admin", "FAQs", "ManageFAQs")</li>
                             <li>@Html.SecureActionLink("Manage FAQ Suggestions", "Suggestions", "FAQs", "ManageFAQs")</li>
 
-                            @if (AllSorts.UserCan("ManageNews"))
+                            @if (AllSorts.UserCan("CreateKBs"))
+                            {
+                            <li><hr /></li>
+                            <li>@Html.ActionLink("New KB Article", "New", "KnowledgeBase")</li>
+                            <li>@Html.ActionLink("View My KB Drafts", "Drafts", "KnowledgeBase")</li>
+                            <li>@Html.SecureActionLink("Manage KB Articles", "Admin", "KnowledgeBase", "ManageKBs")</li>
+                            }
+                            @if (AllSorts.UserCan("ManageAll"))
                             {
                                 <li><hr /></li>
                                 <li>@Html.ActionLink("Manage News Articles", "Admin", "News")</li>
+                                <li><hr /></li>
+                                <li>@Html.ActionLink("Global Settings", "", "GlobalSettings")</li>
                             }
-                            <li><hr /></li>
-                            <li>@Html.SecureActionLink("New KB Article", "New", "KnowledgeBase", "CreateKBs")</li>
-                            <li>@Html.SecureActionLink("Manage KB Articles", "Admin", "Knowledgebase", "ManageKBs")</li>
-                            <li><hr /></li>
-                            <li>@Html.SecureActionLink("Global Settings", "", "GlobalSettings", "AdminUsers")</li>
+                            
                         </ul>
                         <div class="quick-search">
                             @using (Html.BeginForm("Search", "FAQs", FormMethod.Get))
@@ -127,7 +132,10 @@
                     </div>
                 </div>
                 <div class="col-md-9 col-sm-8 col-sm-height">
-                    <div class="inside-full-height content-column">                        
+                    <div class="inside-full-height content-column"> 
+                        @if(!string.IsNullOrEmpty(AllSorts.displayMessage)) {
+                            <div class="container alert-danger">@AllSorts.displayMessage</div>
+                        }                      
                         @RenderBody()
                     </div>
                 </div>

@@ -31,7 +31,10 @@ namespace Help_Desk_2.Models
 
         [Display(Name = "Published")]
         [DefaultValue(false)]
-        public bool published { get; set; } 
+        public bool published { get; set; }
+
+        [DefaultValue(false)]
+        public bool deleted { get; set; }
 
         [Display(Name = "Published on"), DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
         [DataType(DataType.Date)]

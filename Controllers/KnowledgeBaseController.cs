@@ -25,14 +25,26 @@ namespace Help_Desk_2.Controllers
 
             return View(db.KnowledgeFAQs.Where(k => k.type == 2 && k.published)
                     .OrderByDescending(k => k.dateComposed)
-                    .ToPagedList(currentPageIndex, AllSorts.pageSize));
-            //return View(db.KnowledgeFAQs.Where(k => k.type == 2 && k.published).ToList());            
+                    .ToPagedList(currentPageIndex, AllSorts.pageSize));         
+        }
+
+        public ActionResult Drafts(int? page)
+        {
+            int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
+
+            string userName = AllSorts.getUserID();
+            return View("Index",db.KnowledgeFAQs.Where(k => k.type == 2 && k.dateSubmitted == null && (k.originatorID.ToString() == userName))
+                    .OrderByDescending(k => k.dateComposed)
+                    .ToPagedList(currentPageIndex, AllSorts.pageSize));            
         }
 
         public ActionResult Admin(string searchType, string searchStr, int? page)
         {
+            if (!AllSorts.UserCan("ManageKBs"))
+                return RedirectToAction("Unauthorized", "Home");
+
             var kbs = from m in db.KnowledgeFAQs
-                       where (m.type == 2)
+                       where (m.type == 2 && m.dateSubmitted != null)
                        select m;
 
             if (String.IsNullOrEmpty(searchType))
@@ -168,11 +180,7 @@ namespace Help_Desk_2.Controllers
             return View("KBOne", kb);
         }
         
-        // GET: KB/Suggest
-        public ActionResult Suggest()
-        {
-            return View();
-        }
+       
 
         // GET: KB/Edit/5
         public ActionResult Edit(int? id)

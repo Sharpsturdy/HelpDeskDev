@@ -77,7 +77,11 @@ namespace Help_Desk_2.Utilities
             }
         }
 
-        public static string displayMessage { get ; set; }
+        public static string displayMessage {
+            get { return (string)HttpContext.Current.Session["message"]; }
+
+            set { HttpContext.Current.Session["message"] += value; }
+        }
 
         public static string appAdmins {  get { return "Administrators,AppGroup2,AppGroup1";  } }
 
@@ -137,7 +141,7 @@ namespace Help_Desk_2.Utilities
 
         }
 
-        public static void saveGSLists(string[] intmp, HelpDeskContext db, int type)
+        public static void saveGSLists(HelpDeskContext db, string[] intmp, int type)
         {
 
             if (intmp == null) intmp = new string[] { "" };
@@ -162,15 +166,17 @@ namespace Help_Desk_2.Utilities
 
             string[] delUsers = orgList.Where(x => !intmp.Contains(x)).ToArray();
 
-            displayMessage += string.Join(",", newUsers) + "#" + string.Join(",", delUsers);
+            //displayMessage +="<br/> [" + string.Join(",", newUsers) + "#" + string.Join(",", delUsers) + " of type = " + type + "]";
 
-            GSListHelper(newUsers, type, true);
+            GSListHelper(newUsers, db, type, true);
 
-            GSListHelper(delUsers, type, false);
-            
+            GSListHelper(delUsers, db, type, false);
+
+            db.SaveChanges();
+
         }
 
-        private static void GSListHelper(string[] users, int type, bool value)
+        private static void GSListHelper(string[] users, HelpDeskContext db, int type, bool value)
         {
             foreach (var uid in users)
             {
@@ -254,27 +260,30 @@ namespace Help_Desk_2.Utilities
         public static bool UserCan(string ActionName)
         {
             var user = HttpContext.Current.User.Identity.Name;
-            if (ActionName == "ManageNews")
+            if (ActionName == "ManageAll")
             {
-                return AllSorts.userHasRole("AdminUsers");
+                return userHasRole("AdminUsers");
 
             }
             else if (ActionName == "ManageKBs")
             {
-                return AllSorts.userHasRole("AdminUsers") || db.UserProfiles.Where(u => (u.isKbApprover && u.loginName == user)).Count() > 0;
+                return userHasRole("AdminUsers") || db.UserProfiles.Where(u => (u.isKbApprover && u.loginName == user)).Count() > 0;
 
             }
             else if (ActionName == "ManageFAQs")
             {
-                return AllSorts.userHasRole("AdminUsers") || db.UserProfiles.Where(u => (u.isFaqApprover && u.loginName == user)).Count() > 0;
+                return userHasRole("AdminUsers") || db.UserProfiles.Where(u => (u.isFaqApprover && u.loginName == user)).Count() > 0;
             }
             else if (ActionName == "ManageTickets")
             {
-                return AllSorts.userHasRole("AdminUsers") || db.UserProfiles.Where(u => (u.isResponsible && u.loginName == user)).Count() > 0;
+                return userHasRole("AdminUsers") || db.UserProfiles.Where(u => (u.isResponsible && u.loginName == user)).Count() > 0;
             }
             else if (ActionName.StartsWith("Create"))
             {
                 return AllSorts.userHasRole(ActionName);
+            } else if (ActionName == "SuperFunctions")
+            {
+                return userHasRole("AdminUsers") || userHasRole("SuperUsers");
             }
             return false;
         }
@@ -283,7 +292,7 @@ namespace Help_Desk_2.Utilities
             if (string.IsNullOrEmpty(sessValue))
                 return null;
 
-            if (HttpContext.Current.Session[sessValue] == null)
+            if (string.IsNullOrEmpty((string) HttpContext.Current.Session[sessValue]))
             {
                 UserData ud = new UserData();
                 UserProfile up = ud.getUserProfile();

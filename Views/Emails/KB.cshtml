@@ -7,7 +7,8 @@ Content-Type: text/html; charset=utf-8
 <html>
     <body>
         @{
-            ViewBag.link = "<a href='" + Url.Action("Details/" + ViewBag.id, "Knowledgebase")
+            var baseURL = System.Configuration.ConfigurationManager.AppSettings["BaseURL"];
+            ViewBag.link = "<a href='" + baseURL + Url.Action("Details/" + ViewBag.id, "Knowledgebase")
                 +"'>" + Url.Action("Details/" + ViewBag.id, "Knowledgebase") + "</a>";
         }
         @if (ViewBag.type == "Submitted")

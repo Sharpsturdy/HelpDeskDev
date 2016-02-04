@@ -10,15 +10,8 @@
         ViewBag.Title = "New Knowledge Base Article";
         ViewBag.Status = "Draft";
         ViewBag.CreationDate = String.Format("{0:d}", DateTime.Now);
-
-        UserProfile userProfile;
-        if (ViewBag.displayName == null)
-        {
-            UserData ud = new UserData();
-            userProfile = ud.getUserProfile();
-
-            ViewBag.displayName = userProfile.displayName;
-        }
+        
+        ViewBag.displayName = AllSorts.getUserDisplayName();
     }
     else
     {
@@ -244,8 +237,10 @@
                 <div class="btn-group btn-group-custom" style="padding-bottom:15px; padding-top:15px">
                     @if (ViewBag.mode == 2)
                     {
-
-                        @Html.ActionLink("Edit", "Edit/" + Model.ID, null, htmlAttributes: new { @title = "Click to modify document", @class = "btn btn-primary" })
+                        if ((Model.status == Statuses.Draft && Model.originatorID.ToString() == AllSorts.getUserID()) ||
+                            (Model.dateSubmitted != null && AllSorts.UserCan("ManageKBs"))) {
+                            @Html.ActionLink("Edit", "Edit/" + Model.ID, null, htmlAttributes: new { @title = "Click to modify document", @class = "btn btn-primary" })
+                        }
                         <a href="@ViewBag.prevURL" title="Click to return to News home" class="btn btn-primary">Close</a>
 
                     }
@@ -253,8 +248,11 @@
 
                         <input type="submit" name="btnSave" value="Save" class="btn btn-primary" />
                         <input type="submit" name="btnSClose" value="Save & Close" class="btn btn-primary" />
-                        <input type="submit" name="btnSubmit" value="Submit" class="btn btn-primary" title="Submit article for approval"/>
-                        if (User.IsInRole("Administrators"))
+                        if (Model == null || Model.dateSubmitted == null)
+                        {
+                            <input type="submit" name="btnSubmit" value="Submit" class="btn btn-primary" title="Submit article for approval"/>
+                        }
+                        if (AllSorts.UserCan("ManageKBs"))
                         {
                             if (Model != null && Model.published)
                             {

@@ -4,6 +4,8 @@
 
 @{
     ViewBag.Title = "News Admin";
+    Help_Desk_2.Utilities.AllSorts.setNavProperties(ViewBag);
+
     ViewBag.searchType = new SelectList(new List<SelectListItem>
     {
         new SelectListItem {Value = "", Text = "Unpublished" },
@@ -13,7 +15,7 @@
 }
 
 <header>
-    <h2 class="title">@ViewBag.Title<span class="summary-top pull-right">@Html.ActionLink("New Article", "New", null, htmlAttributes: new { @class = "btn btn-primary" })</span></h2>
+    <h2 class="title">@ViewBag.Title</h2>
 </header>
 <div class="container-view">
     <form class="form-inline" action="@ViewBag.formAction">

@@ -15,6 +15,7 @@
     ViewBag.formAction = actionName == "index" ? "FAQs/Search" : "";
     ViewBag.showSelect = actionName == "admin";
     ViewBag.isSuggestions = actionName == "suggestions";
+    ViewBag.adminView = (actionName == "admin" || actionName == "drafts" || ViewBag.isSuggestions);
 
     ViewBag.searchType = new SelectList(new List<SelectListItem>
     {
@@ -28,7 +29,7 @@
 }
 
 <header>
-    <h2 class="title">@ViewBag.Title<span class="summary-top pull-right">@Html.ActionLink("New FAQ", "New", null, htmlAttributes: new { @class = "btn btn-primary" })</span></h2>
+    <h2 class="title">@ViewBag.Title</h2>
 </header>
 
 <div class="container-view faqs">
@@ -48,7 +49,7 @@
         <button type="submit" class="btn btn-default">Search</button>
     </form>
 
-    @if (ViewBag.showSelect || ViewBag.isSuggestions)
+    @if (ViewBag.adminView)
     {
     <table class="table table-bordered table-hover table-condensed table-view">
         <thead>
@@ -56,7 +57,7 @@
                 <th>@Html.DisplayName("Question")</th>
                 <th>Originator</th>
                 <th>Creation date</th>
-                <th>Exiry date</th>
+                <th>Status</th>
                
             </tr>
         </thead>
@@ -68,7 +69,7 @@
                     <td>@Html.DisplayFor(modelItem => item.headerText)</td>
                     <td>@Html.DisplayFor(modelItem => item.Originator.displayName)</td>
                     <td>@Html.DisplayFor(modelItem => item.dateComposed)</td>
-                    <td>@Html.DisplayFor(modelItem => item.expiryDate)</td>
+                    <td>@Html.DisplayFor(modelItem => item.status)</td>
                 </tr>
             }
         </tbody>

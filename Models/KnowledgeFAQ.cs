@@ -25,7 +25,7 @@ namespace Help_Desk_2.Models
 
         [Display(Name = "Submitted on:"), DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:d}")]
         [DataType(DataType.DateTime)]
-        public DateTime dateSubmitted { get; set; }
+        public DateTime? dateSubmitted { get; set; }
 
         [Required]
         [Display(Name = "Brief description")]
@@ -48,6 +48,9 @@ namespace Help_Desk_2.Models
         [Display(Name = "Published")]
         [DefaultValue(false)]
         public bool published { get; set; }
+
+        [DefaultValue(false)]
+        public bool deleted { get; set; }
 
         [Display(Name = "Links")]
         public string links { get; set; }

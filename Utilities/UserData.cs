@@ -78,7 +78,7 @@ namespace Help_Desk_2.Utilities
 
                     if (userProfile != null && userProfile.userID != Guid.Empty)
                     {
-                        HttpContext.Current.Session.Add("UserID", userProfile.userID);
+                        HttpContext.Current.Session.Add("UserID", userProfile.userID.ToString());
                         HttpContext.Current.Session.Add("UserPrincipal", userProfile.principalName);
                         HttpContext.Current.Session.Add("UserDisplayName", userProfile.displayName);
                     }
@@ -94,7 +94,7 @@ namespace Help_Desk_2.Utilities
 
             } else
             {
-                return db.UserProfiles.Find((Guid)HttpContext.Current.Session["UserID"]);
+                return db.UserProfiles.Find(new Guid((string)HttpContext.Current.Session["UserID"]));
             }
 
             

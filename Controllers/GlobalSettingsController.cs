@@ -51,17 +51,12 @@ namespace Help_Desk_2.Controllers
                     db.Entry(globalSettings).State = EntityState.Modified;
                 }
 
-                AllSorts.saveGSLists(Request.Form.GetValues("faqapprovers"), db, 1);
-                AllSorts.saveGSLists(Request.Form.GetValues("kbapprovers"), db, 2);
-                AllSorts.saveGSLists(Request.Form.GetValues("adminemails"), db, 3);
+                AllSorts.saveGSLists(db,Request.Form.GetValues("faqapprovers"), 1);
+                AllSorts.saveGSLists(db,Request.Form.GetValues("kbapprovers"), 2);
+                AllSorts.saveGSLists(db,Request.Form.GetValues("adminemails"), 3);
 
                 db.SaveChanges();
-
-                ViewBag.Msg = "Changes saved";
                 return RedirectToAction("Index");
-            } else
-            {
-                ViewBag.Msg = "Model not valid";
             }
 
             ViewBag.faqapprovers = new MultiSelectList(AllSorts.AllUsers, "userID", "displayName", AllSorts.AllUsers.Where(x => x.isFaqApprover).Select(u => u.userID));

@@ -10,12 +10,13 @@ using System.DirectoryServices.AccountManagement;
 using Help_Desk_2.Utilities;
 using Help_Desk_2.DataAccessLayer;
 using System.Web.Mvc;
+using System.ComponentModel;
 
 namespace Help_Desk_2.Models
 {
     public enum Statuses
     {
-        Draft, Submitted, Assigned, Unpblished, Published, OnHold, Completed, Expired
+        Suggestion, Draft, Submitted, Assigned, Unpblished, Published, OnHold, Completed, Expired
     }
 
     public enum SanityChecks
@@ -50,6 +51,9 @@ namespace Help_Desk_2.Models
         [Display(Name = "Date Completed"), DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:d}")]
         [DataType(DataType.DateTime)]
         public DateTime? dateCompleted { get; set; }
+
+        [DefaultValue(false)]
+        public bool deleted { get; set; }
 
         [NotMapped]
         public string message { get; set; }

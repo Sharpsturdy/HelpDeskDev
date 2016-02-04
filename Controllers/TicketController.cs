@@ -53,6 +53,7 @@ namespace Help_Desk_2.Controllers
         }
 
         //List all tickets from all user for administration
+        [CustomAuthorise(Roles = "ManageTickets")]
         public ActionResult Admin(int? page)
         {
             int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
@@ -139,6 +140,7 @@ namespace Help_Desk_2.Controllers
         // GET: Ticket/Edit/5
         public ActionResult Edit(int? id)
         {
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -149,7 +151,24 @@ namespace Help_Desk_2.Controllers
                 return HttpNotFound();
             }
 
-            
+            //Check access
+            bool allowAccess = false;
+            if (ticket.dateSubmitted == null)
+            {
+                if (ticket.originatorID.ToString() == AllSorts.getUserID())
+                {
+                    allowAccess = true;
+                }
+            }
+            else {
+                if (ticket.responsibleID.ToString() == AllSorts.getUserID() || AllSorts.UserCan("ManageTickets"))
+                {
+                    allowAccess = true; // go ahead
+                }
+            }
+
+            if(!allowAccess)
+
             ViewBag.mode = 1;
             ViewBag.responsibleID = new SelectList(AllSorts.AllUsers.Where(x => x.isResponsible), "userID", "displayName", ticket.responsibleID);
             return View("TicketOne", ticket);

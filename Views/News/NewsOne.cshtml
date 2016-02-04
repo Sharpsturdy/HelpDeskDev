@@ -10,14 +10,8 @@
         ViewBag.Status = "Unpublished";
         ViewBag.CreationDate = String.Format("{0:d}", DateTime.Now);
         
-        UserProfile userProfile;
-        if (ViewBag.displayName == null)
-        {
-            UserData ud = new UserData();
-            userProfile = ud.getUserProfile();
-
-            ViewBag.displayName = userProfile.displayName;
-        }
+        ViewBag.displayName = AllSorts.getUserDisplayName();
+        
     }
     else
     {
