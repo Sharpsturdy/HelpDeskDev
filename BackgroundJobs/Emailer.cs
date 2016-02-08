@@ -32,27 +32,51 @@ namespace Help_Desk_2.BackgroundJobs
 
         public void sendTicketNotification(string mailType, int id)
         {
+            Ticket tik  = db.Tickets.Find(id); //Get Ticket
 
-            if (mailType == "SubmitTicket")
+            if (tik == null) return;
+
+            dynamic email = new Email("Ticket");
+            email.type = mailType;
+            email.title = tik.headerText;
+            email.id = "" + tik.ID;
+            email.user = tik.Originator.displayName;
+
+            if (mailType == "Submitted")
             {
-                //HelpDeskContext db = new HelpDeskContext();
-                //string sendTo = "webmaster@mispo.org,patrice@aloehealthsecrets.com";//string.Join(",", db.UserProfiles.Where(x => x.isResponsible).Select(x => x.emailAddress).ToArray<string>());
+                var approvers = from x in db.UserProfiles
+                                where x.isResponsible
+                                select x;
+                
+                email.To = string.Join(",", approvers.Select(x => x.emailAddress).ToArray()).Trim();
 
-                Ticket t = db.Tickets.Find(id);
+                email.Subject = "New Ticket Submitted";
 
-                if (t == null) return;
-
-                string approvers = string.Join(",", db.UserProfiles.Where(u => u.isResponsible).Select(x => x.emailAddress).ToArray()).Trim();
-
-                GeneralEmail gemail = new GeneralEmail
-                {
-                    To = approvers,
-                    CC = t.Originator.emailAddress,
-                    Subject = "New Ticket submitted: " + t.ID,
-                    Message = "A new ticket, ref: " + t.ID + ", has been submitted for your attention."
-                };
-                gemail.Send();
             }
+            else if (mailType == "Assigned")
+            {
+                email.To = tik.Responsible.emailAddress;
+                email.Subject = "New Ticket Assigned to you [" + tik.ticketID + "]";
+            }
+            else if (mailType == "Returned")
+            {
+                var approvers = from x in db.UserProfiles
+                                where x.isResponsible
+                                select x;
+
+                email.To = string.Join(",", approvers.Select(x => x.emailAddress).ToArray()).Trim();
+
+                email.Subject = "Ticket Returned [" + tik.ticketID + "]";
+            }
+            else if (mailType == "Completed")
+            {
+                email.To = tik.Responsible.emailAddress;
+                email.Subject = "Ticket Completed [" + tik.ticketID + "]";
+            }
+
+            email.Send();
+
+            
         }
 
         public void sendFAQKBNotification(string mailType, int id)
@@ -66,6 +90,7 @@ namespace Help_Desk_2.BackgroundJobs
             email.type = mailType;
             email.title = kf.headerText;
             email.id = "" + kf.ID;
+            email.user = kf.Originator.displayName;
              
             if (mailType == "Submitted")
             {

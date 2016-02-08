@@ -62,10 +62,14 @@
         width: "100%",
         theme: "bootstrap"
     });
+      
 
-    $(".select2-editor").onchange(function () {
-        alert('Hey'); alert($(this).val());
-    })
+    $("#frmTicket").submit(function () {
+
+        if ($("input[type='submit']:focus").val() == "Delete") {
+            return confirm('Are you sure you want to delete this ticket?');
+        }
+    });
 
 });
 

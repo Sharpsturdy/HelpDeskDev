@@ -318,5 +318,38 @@ namespace Help_Desk_2.Utilities
         {
             return up("UserID");
         }
+
+        public static void addAuditTrail(HelpDeskContext db, int id, Guid user, string auditText)
+        {
+            try
+            {
+                db.AuditTrails.Add(new AuditTrail
+                {
+                    refID = id,
+                    userID = user,
+                    timeStamp = DateTime.Now,
+                    text = auditText
+
+                });
+            } catch (Exception ex)
+            {
+
+            }
+        }
+
+        public static int getNextTicketNumber()
+        {
+            int num = 0;
+            try {
+                GlobalSettings gs = db.GlobalSettingss.First<GlobalSettings>();
+                if (gs != null && gs.ID != Guid.Empty)
+                {
+                    num = gs.TicketSeeder;
+                    gs.TicketSeeder = gs.TicketSeeder + 1;
+                    db.SaveChanges();
+                }
+            } catch (Exception ex) { }
+            return num;
+        }
     }
 }

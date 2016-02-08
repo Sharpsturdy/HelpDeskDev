@@ -16,7 +16,7 @@ namespace Help_Desk_2.Models
 {
     public enum Statuses
     {
-        Suggestion, Draft, Submitted, Assigned, Unpblished, Published, OnHold, Completed, Expired
+        Suggestion, Draft, Submitted, Checked,Accepted,Rejected,Junked, Assigned, Returned, Unpblished, Published, OnHold, Completed, Expired, Deleted
     }
 
     public enum SanityChecks
@@ -55,6 +55,12 @@ namespace Help_Desk_2.Models
         [DefaultValue(false)]
         public bool deleted { get; set; }
 
+        [DefaultValue(false)]
+        public bool onhold { get; set; }
+
+        [DefaultValue(false)]
+        public bool returned { get; set; }
+
         [NotMapped]
         public string message { get; set; }
 
@@ -84,17 +90,38 @@ namespace Help_Desk_2.Models
         public DateTime? dateSubmitted { get; set; }
         
         [Column(TypeName = "DateTime")]
-        [DataType(DataType.DateTime)]
+        [DataType(DataType.DateTime), Display(Name = "Release Date")]
         public DateTime? dateL1Release { get; set; }
 
         [Column(TypeName = "DateTime")]
-        [DataType(DataType.DateTime)]
+        [DataType(DataType.DateTime), Display(Name = "Release Date")]
         public DateTime? dateL2Release { get; set; }
                 
         [NotMapped]
         [Display(Name = "Status")]
         public Statuses? status {
-            get { if (dateSubmitted == null) { return Statuses.Draft ; }; return Statuses.Submitted; }
+            get {
+                if (deleted) return Statuses.Deleted;
+                if (expiryDate <= DateTime.Now) return Statuses.Expired;
+                if (onhold) { return Statuses.OnHold; };
+                if (returned) { return Statuses.Returned; };
+
+                if (dateSubmitted == null)  return Statuses.Draft ; 
+                if (dateL1Release == null)  return Statuses.Submitted;
+                if (dateL2Release == null) {
+                    if (sanityCheck == SanityChecks.Accept)
+                        return Statuses.Accepted;
+
+                    if (sanityCheck == SanityChecks.Reject)
+                        return Statuses.Rejected;
+
+                    //else
+                    return Statuses.Junked;
+                }
+                if (dateCompleted == null)  return Statuses.Assigned; 
+                
+                return Statuses.Completed; 
+            }
             
         }
 
@@ -146,6 +173,16 @@ namespace Help_Desk_2.Models
             set { expertAreas = value; }
         }
 
+        [NotMapped]
+        public string  displayID {  get
+            {
+                if (sanityCheck == SanityChecks.Accept)
+                    return string.Format("{0,5:D5}", ticketID);
+
+                return string.Format("TMP{0,5:D5}", ID);
+            }
+        }
+
         public virtual ICollection<WordList> wordList { get; set; }
 
         public virtual UserProfile Originator { get; set; }
@@ -154,6 +191,8 @@ namespace Help_Desk_2.Models
         public virtual UserProfile Responsible { get; set; }
 
         public virtual ICollection<Attachment> Files { get; set; }
+                
+        public virtual ICollection<AuditTrail> AuditTrail { get; set; }
 
     }
 }

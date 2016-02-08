@@ -1,0 +1,36 @@
+﻿@using Help_Desk_2.DataAccessLayer
+
+<div class="container-view">
+    @{
+        HelpDeskContext db = new HelpDeskContext();
+
+        var tDels = db.Tickets.Where(x => x.deleted).OrderByDescending(x=>x.dateComposed);
+        if (tDels.Count() > 0)
+        {
+        <table class="table table-bordered table-hover table-condensed table-view">
+            <thead>
+                <tr>
+                    <th>Created on</th>
+                    <th>Originitor</th>
+                    <th>Brief description</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in tDels)
+            {
+                    <tr onclick="$(location).attr('href', '@Url.Action("Details", "Ticket", new { @id = item.ID })')">
+
+                        <td>@Html.DisplayFor(hitem => item.dateComposed)</td>
+                        <td>item.Originator.displayName</td>
+                        <td>@Html.DisplayFor(hitem => item.headerText)</td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+        } else
+        {
+            <p>No deleted tickets within the last 30 days!</p>
+        }
+    }
+</div>

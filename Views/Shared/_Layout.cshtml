@@ -82,7 +82,7 @@
                             <li>@Html.ActionLink("Raise new ticket", "New", "Ticket")</li>
                             <li>@Html.ActionLink("View my open tickets", "Index", "Ticket", null,htmlAttributes: new { @title = "Draft & Open"  })</li>
                             <li>@Html.ActionLink("View all my tickets", "List", "Ticket", null, htmlAttributes: new { @title = "Draft & Open & Closed" })</li>
-                            <li>@Html.SecureActionLink("Manage Tickets", "Admin", "Tickets", "ManageTickets")</li>
+                            <li>@Html.SecureActionLink("Manage Tickets", "Admin", "Ticket", "ManageTickets")</li>
                             <li><hr /></li>
                             <li>@Html.ActionLink("My Profile", "Index", "UserProfile")</li>
                             <li>@Html.ActionLink("My Subscriptions", "Subs", "UserProfile")</li>
