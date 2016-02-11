@@ -1,7 +1,7 @@
 ﻿@using Help_Desk_2.Utilities;
 @using Help_Desk_2.Models;
 @{
-    Response.Write("The view page last view: " + Session["lastView"] + "/" + Session["UserID"] + "/" + Session["UserDisplayName"]);
+ //   Response.Write("The view page last view: " + Session["lastView"] + "/" + Session["UserID"] + "/" + Session["UserDisplayName"]);
 }
 
 <!DOCTYPE html>
@@ -82,6 +82,7 @@
                             <li>@Html.ActionLink("Raise new ticket", "New", "Ticket")</li>
                             <li>@Html.ActionLink("View my open tickets", "Index", "Ticket", null,htmlAttributes: new { @title = "Draft & Open"  })</li>
                             <li>@Html.ActionLink("View all my tickets", "List", "Ticket", null, htmlAttributes: new { @title = "Draft & Open & Closed" })</li>
+                            <li>@Html.SecureActionLink("My Assigned Tickets", "Assigned", "Ticket", "ManageTickets")</li>
                             <li>@Html.SecureActionLink("Manage Tickets", "Admin", "Ticket", "ManageTickets")</li>
                             <li><hr /></li>
                             <li>@Html.ActionLink("My Profile", "Index", "UserProfile")</li>

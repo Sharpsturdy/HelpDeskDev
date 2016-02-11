@@ -71,6 +71,17 @@
         }
     });
 
+    $("#sanityCheck").on("change", function () {
+       
+        var v = $("#sanityCheck").val();
+
+        if (v == "0") {
+            $(".sanity-check-reason").addClass("hidden");
+        } else {
+            $(".sanity-check-reason").removeClass("hidden");
+        }
+    });
+    alert('Yeah!');
 });
 
 

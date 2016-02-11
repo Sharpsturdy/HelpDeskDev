@@ -45,6 +45,21 @@ namespace Help_Desk_2.Controllers
             return View("Index", tickets.ToPagedList(currentPageIndex, AllSorts.pageSize));
         }
 
+
+        //List all my tickets draft/open/closed
+        public ActionResult Assigned(int? page)
+        {
+            int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
+
+            string userName = AllSorts.getUserID();
+            var tickets = from t in db.Tickets
+                          where (!t.deleted && t.dateL2Release !=null && (t.responsibleID.ToString() == userName))
+                          orderby t.dateComposed descending
+                          select t;
+
+            return View("Index", tickets.ToPagedList(currentPageIndex, AllSorts.pageSize));
+        }
+
         //List all tickets from all user for administration
         //[CustomAuthorise(Roles = "ManageTickets")]
         public ActionResult Admin(string searchType, string searchStr, int? page)
@@ -76,7 +91,7 @@ namespace Help_Desk_2.Controllers
                     tickets = tickets.Where(s => s.status == Statuses.Submitted);
                     break;
                 case "2":
-                    tickets = tickets.Where(s => s.status == Statuses.Checked);
+                    tickets = tickets.Where(s => s.status == Statuses.Accepted);
                     break;
                 case "3":
                     tickets = tickets.Where(s => s.status == Statuses.Assigned);
@@ -90,10 +105,13 @@ namespace Help_Desk_2.Controllers
                 case "6":
                     tickets = tickets.Where(s => s.status == Statuses.Completed);
                     break;
-                /*case "7":
-                    tickets = tickets.Where(s => s.status == Statuses.Submitted);
+                case "8":
+                    tickets = tickets.Where(s => s.status == Statuses.Rejected);
                     break;
-                */
+                case "9":
+                    tickets = tickets.Where(s => s.status == Statuses.Junked);
+                    break;
+
             }
 
             if (!String.IsNullOrEmpty(searchStr))
@@ -166,15 +184,22 @@ namespace Help_Desk_2.Controllers
                     Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendTicketNotification("Submitted", ticket.ID));
                     auditMsg = "Ticket submitted and notification(s) sent to "
                         + string.Join(", ", AllSorts.AllUsers.Where(x => x.isResponsible).Select(x => x.displayName).ToArray());
+
+                    AllSorts.displayMessage = "Ticket created and submitted successfully!";
+
                 }
                 else if (submittedValues.Contains("btnSave") || submittedValues.Contains("btnSClose"))
                 {
                     auditMsg = "Ticket created";
+                    AllSorts.displayMessage = "Ticket created successfully!";
+                }
+
+                if (auditMsg == "")
+                {
+                    auditMsg = "Ticket modified";
+                    AllSorts.displayMessage = "Ticket modified successfully!";
                 }
                 
-                if (auditMsg == "")
-                    auditMsg = "Ticket modified";
-
                 //Add action to audit trail
                 AllSorts.addAuditTrail(db, ticket.ID, new Guid(AllSorts.getUserID()), auditMsg);
                 db.SaveChanges();
@@ -189,7 +214,7 @@ namespace Help_Desk_2.Controllers
 
             ViewBag.mode = 0;
             //ViewBag.responsibleID = new SelectList(db.UserProfiles, "userID", "displayName", ticket.responsibleID);
-            ViewBag.errorMsg = "Model Binding failed";
+            AllSorts.displayMessage = "0#General error updating ticket";
             return View("TicketOne", ticket);
         }
 
@@ -227,7 +252,7 @@ namespace Help_Desk_2.Controllers
                 return RedirectToAction("Unauthorized", "Home");
 
             ViewBag.mode = 1;
-            ViewBag.responsibleID = new SelectList(AllSorts.AllUsers, "userID", "displayName", ticket.responsibleID);
+            //ViewBag.responsibleID = new SelectList(AllSorts.AllUsers, "userID", "displayName", ticket.responsibleID);
             return View("TicketOne", ticket);
         }
 
@@ -236,28 +261,32 @@ namespace Help_Desk_2.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,headerText,description,dateComposed,dateSubmitted,dateL1Release,dateL2Release,originatorID,links,deleteField,"+ "sanityCheck,ticketID,adminComments,reason,responsibleID,dateCompleted")] Ticket ticket)
+        public ActionResult Edit([Bind(Include = "ID,ticketID,headerText,description,dateComposed,dateSubmitted,dateL1Release,dateL2Release,dateCompleted," + "originatorID,responsibleID,links,deleteField,sanityCheck,adminComments,reason,report,summary")] Ticket ticket)
         {
             if (ModelState.IsValid)
             {
+
                 string auditMsg = "";
                 var submittedValues = Request.Form.AllKeys;
 
                 if (submittedValues.Contains("btnDelete") && ticket.dateSubmitted == null)
-                {  //this is a draft so fully delete
+                {   
+                    //this is a draft so fully delete
                     Ticket tDel = db.Tickets.Find(ticket.ID);
                     db.Tickets.Remove(tDel);
                     db.SaveChanges();
+
+                    AllSorts.displayMessage = "Ticket permanently deleted successfully!";
 
                     //Quit. You're done!
                     if (!string.IsNullOrEmpty((string)Session["lastView"]))
                         return Redirect((string)Session["lastView"]);
 
-                    return RedirectToAction("Index", "Home");                   
+                    return RedirectToAction("Index", "Home");
                 }
 
                 //Ticket ticket = db.Tickets.Find(ticketM.ID);
-                db.Entry(ticket).State = EntityState.Modified;               
+                db.Entry(ticket).State = EntityState.Modified;
 
                 /***** Add File ************/
                 AllSorts.saveAttachments(ticket.ID, db, ticket.deleteField);
@@ -268,9 +297,11 @@ namespace Help_Desk_2.Controllers
                 }
 
                 //Button specific code
-                if (submittedValues.Contains("btnDelete")) {
+                if (submittedValues.Contains("btnDelete"))
+                {
                     ticket.deleted = true;
                     auditMsg = "Ticket deleted";
+                    AllSorts.displayMessage = "Ticket deleted successfully!";
                 }
                 else if (submittedValues.Contains("btnSubmit"))
                 {
@@ -282,26 +313,49 @@ namespace Help_Desk_2.Controllers
                     auditMsg = "Ticket submitted and notification(s) sent to "
                         + string.Join(", ", AllSorts.AllUsers.Where(x => x.isResponsible).Select(x => x.displayName).ToArray());
 
+                    AllSorts.displayMessage = "Ticket submitted successfully!";
+
                 }
-                
-                else if(submittedValues.Contains("btnAssign"))
+
+                else if (submittedValues.Contains("btnAssign"))
                 {
                     if (ticket.dateL2Release == null)
                         ticket.dateL2Release = DateTime.Now;
 
                     //Assign ticket number from globals settings
-                    ticket.ticketID = AllSorts.getNextTicketNumber();
-                   
+                    int num = 0;
+                    try
+                    {
+                        GlobalSettings gs = db.GlobalSettingss.First<GlobalSettings>();
+                        if (gs != null && gs.ID != Guid.Empty)
+                        {
+                            num = gs.TicketSeeder;
+                            db.Entry(gs).State = EntityState.Modified;
+                            gs.TicketSeeder = num + 1;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Response.Write("Some error message: " + ex.Message);
+                    }
+
+                    ticket.ticketID = num;
+
                     //Send email to assigned to let them know of this new ticket assignment
                     Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendTicketNotification("Assigned", ticket.ID));
-                    //auditMsg = "Ticket assigned and notification sent to "  + ticket.Responsible.displayName;
+                    var resp = db.UserProfiles.Find(ticket.responsibleID).displayName;
+                    auditMsg = "Ticket assigned and notification sent to " + resp; // ticket.Responsible.displayName;
+
+                    AllSorts.displayMessage = "Ticket assigned successfully!";
                 }
                 else if (submittedValues.Contains("btnReturn"))
                 {
                     ticket.returned = true;
                     Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendTicketNotification("Returned", ticket.ID));
                     auditMsg = "Ticket returned to queue and notification(s) sent to "
-                        + string.Join(", ", AllSorts.AllUsers.Where(x => x.isResponsible).Select(x => x.displayName).ToArray()); 
+                        + string.Join(", ", AllSorts.AllUsers.Where(x => x.isResponsible).Select(x => x.displayName).ToArray());
+
+                    AllSorts.displayMessage = "Ticket returned successfully!";
                 }
                 else if (submittedValues.Contains("btnComplete"))
                 {
@@ -309,17 +363,22 @@ namespace Help_Desk_2.Controllers
 
                     //Send email to originator to let them know ticket is completed
                     Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendTicketNotification("Completed", ticket.ID));
-                    auditMsg = "Ticket assigned and notification sent to " + ticket.Responsible.displayName;
+                    var resp = db.UserProfiles.Find(ticket.responsibleID).displayName;
+                    auditMsg = "Ticket assigned and notification sent to " + resp;
+
+                    AllSorts.displayMessage = "Ticket completed successfully!";
                 }
 
                 if (auditMsg == "")
+                {
                     auditMsg = "Ticket modified";
-
+                    AllSorts.displayMessage = "Ticket updated successfully!";
+                }
                 //Add action to audit trail
                 AllSorts.addAuditTrail(db, ticket.ID, new Guid(AllSorts.getUserID()), auditMsg);
 
                 db.SaveChanges();
-                                
+
                 if (submittedValues.Contains("btnSave")) //|| submittedValues.Contains("btnSubmit") || submittedValues.Contains("btnUnApprove"))
                 {
                     return RedirectToAction("Edit/" + ticket.ID);
@@ -329,12 +388,14 @@ namespace Help_Desk_2.Controllers
                     return Redirect((string)Session["lastView"]);
 
                 return RedirectToAction("Index");
+            } else {
+                ViewBag.mode = 1;
+                AllSorts.displayMessage = "0#General error updating ticket!";
+                ticket = db.Tickets.Find(ticket.ID);
+                //ViewBag.responsibleID = new SelectList(AllSorts.AllUsers, "userID", "displayName", ticket.responsibleID);
+                return View("TicketOne", ticket );
             }
 
-            ViewBag.mode = 1;
-            ViewBag.responsibleID = new SelectList(AllSorts.AllUsers, "userID", "displayName", ticket.responsibleID);
-
-            return View("TicketOne", ticket);
         }
        
                 // GET: Ticket/Delete/5

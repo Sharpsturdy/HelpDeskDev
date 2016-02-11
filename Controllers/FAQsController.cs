@@ -129,11 +129,14 @@ namespace Help_Desk_2.Controllers
 
                 if (Request.Form.AllKeys.Contains("btnApprove"))
                 {
+
                     faq.published = true;
                     faq.expiryDate = faq.dateComposed.AddDays(AllSorts.getExpiryDays(true));
 
                     if (faq.dateSubmitted == null)
                         faq.dateSubmitted = DateTime.Now;
+
+                    AllSorts.displayMessage = "New FAQ created and apprved successfully!";
 
                 }
                 else if (Request.Form.AllKeys.Contains("btnUnApprove"))
@@ -157,11 +160,13 @@ namespace Help_Desk_2.Controllers
                 {
 
                     //Send email to ticket admins to let them know of this new ticket submission
+                    AllSorts.displayMessage = "New FAQ created and submitted successfully!";
                     Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendFAQKBNotification("Submitted",faq.ID));
                 }
 
                 if (Request.Form.AllKeys.Contains("btnSave")) // || Request.Form.AllKeys.Contains("btnApprove") || Request.Form.AllKeys.Contains("btnUnApprove"))
                 {
+                    AllSorts.displayMessage = "New FAQ created successfully!";
                     return RedirectToAction("Edit/" + faq.ID);
                 }
 

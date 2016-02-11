@@ -3,6 +3,7 @@ using Help_Desk_2.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Security.Policy;
@@ -80,7 +81,7 @@ namespace Help_Desk_2.Utilities
         public static string displayMessage {
             get { return (string)HttpContext.Current.Session["message"]; }
 
-            set { HttpContext.Current.Session["message"] += value; }
+            set { HttpContext.Current.Session["message"] = value; }
         }
 
         public static string appAdmins {  get { return "Administrators,AppGroup2,AppGroup1";  } }
@@ -120,7 +121,7 @@ namespace Help_Desk_2.Utilities
 
             string[] delKeywords = orgList.Where(x => !kwords.Contains(x)).ToArray();
 
-            displayMessage += string.Join(",", newKeywords) + "#" + string.Join(",", delKeywords);
+            //displayMessage += string.Join(",", newKeywords) + "#" + string.Join(",", delKeywords);
 
             foreach (var w in newKeywords)
             {
@@ -309,6 +310,7 @@ namespace Help_Desk_2.Utilities
                 return (string)HttpContext.Current.Session[sessValue];
             }
         }
+
         public static string getUserDisplayName()
         {
             return up("UserDisplayName");
@@ -337,6 +339,7 @@ namespace Help_Desk_2.Utilities
             }
         }
 
+        /********************
         public static int getNextTicketNumber()
         {
             int num = 0;
@@ -345,11 +348,15 @@ namespace Help_Desk_2.Utilities
                 if (gs != null && gs.ID != Guid.Empty)
                 {
                     num = gs.TicketSeeder;
-                    gs.TicketSeeder = gs.TicketSeeder + 1;
+                    HttpContext.Current.Response.Write("Current Ticket Number: " + num);
+                    db.Entry(gs).State = EntityState.Modified;
+                    gs.TicketSeeder = num + 1;
+                    HttpContext.Current.Response.Write("Next Ticket Number: " + gs.TicketSeeder);
                     db.SaveChanges();
                 }
-            } catch (Exception ex) { }
+            } catch (Exception ex) { HttpContext.Current.Response.Write("Some error message: " + ex.Message); }
             return num;
         }
+        *****************/
     }
 }

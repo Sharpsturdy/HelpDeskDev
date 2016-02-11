@@ -90,11 +90,11 @@ namespace Help_Desk_2.Models
         public DateTime? dateSubmitted { get; set; }
         
         [Column(TypeName = "DateTime")]
-        [DataType(DataType.DateTime), Display(Name = "Release Date")]
+        [DataType(DataType.DateTime), Display(Name = "Release Date"), DisplayFormat(DataFormatString = "{0:d}")]
         public DateTime? dateL1Release { get; set; }
 
         [Column(TypeName = "DateTime")]
-        [DataType(DataType.DateTime), Display(Name = "Release Date")]
+        [DataType(DataType.DateTime), Display(Name = "Release Date"), DisplayFormat(DataFormatString = "{0:d}")]
         public DateTime? dateL2Release { get; set; }
                 
         [NotMapped]
@@ -176,7 +176,7 @@ namespace Help_Desk_2.Models
         [NotMapped]
         public string  displayID {  get
             {
-                if (sanityCheck == SanityChecks.Accept)
+                if (dateL2Release !=null)
                     return string.Format("{0,5:D5}", ticketID);
 
                 return string.Format("TMP{0,5:D5}", ID);

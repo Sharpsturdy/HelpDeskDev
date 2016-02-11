@@ -4,8 +4,6 @@
 
 @{
     ViewBag.readOnly = false; //Default unless overwritten below
-
-
     if (ViewBag.mode == 0)
     {
         ViewBag.Title = "New Ticket";
@@ -26,8 +24,20 @@
         ViewBag.readOnly = ViewBag.mode == 2 ||
             (Model.dateSubmitted != null && !canManage);
 
-        ViewBag.readOnly1 = ViewBag.mode == 2 || (ViewBag.readOnly && !canManage);
+        ViewBag.readOnly1 = ViewBag.readOnly && !canManage;
 
+        /*||
+        if (ViewBag.mode == 2)
+        {
+            ViewBag.readOnly = true;
+        }
+
+        if (Model.dateSubmitted != null && Model.dateL1Release == null && AllSorts.UserCan("ManageTickets")) {
+            ViewBag.readOnly = false;
+        }
+
+        //|| !AllSorts.UserCan("ManageTickets")) 
+        */
     }
 
     if (ViewBag.mode < 2)
@@ -48,11 +58,11 @@
    
 @section cssCustomTop {
     @Styles.Render("~/Content/Select2/css/select2.min.css")
-    @Styles.Render("~/Content/Select2/css/select2-bootstrap.min.css")
+@Styles.Render("~/Content/Select2/css/select2-bootstrap.min.css")
 }
 
-@section scriptsCustom {
-    <script src="~/Content/Select2/js/select2.min.js"></script>
+            @section scriptsCustom {
+<script src="~/Content/Select2/js/select2.min.js"></script>
 }
 <header class="container-custom-top">
 <h2>@ViewBag.Title <span class="summary-top pull-right">@ViewBag.Status</span></h2>
@@ -80,7 +90,6 @@ new { enctype = "multipart/form-data", id="frmTicket" }))
      @Html.HiddenFor(model => model.dateL1Release)
      @Html.HiddenFor(model => model.dateL2Release)
      @Html.HiddenFor(model => model.dateSubmitted)
-     @Html.HiddenFor(model => model.dateCompleted)
 }
     <div class="container-form ticket">
 
@@ -90,7 +99,6 @@ new { enctype = "multipart/form-data", id="frmTicket" }))
                 @if (ViewBag.readOnly)
                 {
                     @Html.DisplayFor(model => model.headerText)
-                    @Html.HiddenFor(model => model.headerText)
                 }
                 else {
                     @Html.EditorFor(model => model.headerText, new { htmlAttributes = new { @class = "form-control" } })
@@ -107,7 +115,6 @@ new { enctype = "multipart/form-data", id="frmTicket" }))
                 @if (ViewBag.readOnly)
                 {
                     @Html.Raw(Model.description)
-                    @Html.HiddenFor(model => model.description)
                 }
                 else {
                     @Html.TextAreaFor(model => model.description, new { @class = "form-control richeditor" })
@@ -167,53 +174,53 @@ new { enctype = "multipart/form-data", id="frmTicket" }))
             <table class="table table-condensed links">
                 <tbody>
                     @{
-                         string tmpLinks = Model == null ? null : Model.links;
-                         string displayLinks = "";
-                         if (!string.IsNullOrEmpty(tmpLinks))
+                 string tmpLinks = Model == null ? null : Model.links;
+    string displayLinks = "";
+                 if (!string.IsNullOrEmpty(tmpLinks))
+                 {
+                     var links = tmpLinks.Split(new char[] { '|' });
+                     foreach (string link in links)
+                     {
+                         if (!string.IsNullOrEmpty(link))
                          {
-                             var links = tmpLinks.Split(new char[] { '|' });
-                             foreach (string link in links)
-                             {
-                                 if (!string.IsNullOrEmpty(link))
-                                 {
-                                     var tmp = link.Split(new char[] { '^' });
-            displayLinks += "<tr class=\"normal\"><td><a href=\"" + tmp[1] + "\" target=\"_blank\">" + tmp[0] + "</a></td>" +
-                                         "<td>" + (ViewBag.mode == 2 ? "" : "<input type=\"button\" value=\"Delete\" class=\"btn btn-default btn-custom-action\">") +
-                                         "</td></tr>";
-                                 }
-                             }
-                        }
-                        @Html.Raw(displayLinks)
+                             var tmp = link.Split(new char[] { '^' });
+    displayLinks += "<tr class=\"normal\"><td><a href=\"" + tmp[1] + "\" target=\"_blank\">" + tmp[0] + "</a></td>" +
+                                 "<td>" + (ViewBag.mode == 2 ? "" : "<input type=\"button\" value=\"Delete\" class=\"btn btn-default btn-custom-action\">") +
+                                 "</td></tr>";
+                         }
+                     }
+                 }
+            @Html.Raw(displayLinks)
                     }
 
                 </tbody>
                 @if (!ViewBag.readOnly && ViewBag.mode < 2)
-                {
-                    <tfoot>
-                        <tr>
-                            <td colspan="2">
-                                <div class="row add-link">
-                                    <div class="col-sm-5">
-                                        @Html.EditorFor(model => model.linkText, new { htmlAttributes = new { @placeholder = "Link Display Text" } })
-                                    </div>
+    {
+        <tfoot>
+            <tr>
+                <td colspan="2">
+                    <div class="row add-link">
+                        <div class="col-sm-5">
+                            @Html.EditorFor(model => model.linkText, new { htmlAttributes = new { @placeholder = "Link Display Text" } })
+                        </div>
 
-                                    <div class="col-sm-5">
-                                        @Html.EditorFor(model => model.linkURL, new { htmlAttributes = new { @placeholder = "Link URL" } })
-                                    </div>
+                        <div class="col-sm-5">
+                            @Html.EditorFor(model => model.linkURL, new { htmlAttributes = new { @placeholder = "Link URL" } })
+                        </div>
 
-                                    <div class="col-sm-1">
-                                        <input type="button" id="addLink" value="Add Link" class="btn btn-default" />
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    </tfoot>
-                }
+                        <div class="col-sm-1">
+                            <input type="button" id="addLink" value="Add Link" class="btn btn-default" />
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tfoot>
+         }
             </table>
         </div>
 
         <!-- Level 1 Release -->
-        @if (Model != null && Model.dateSubmitted != null && (ViewBag.mode == 1 || Model.dateL1Release != null))
+        @if (Model != null && Model.dateSubmitted != null)
         {
             <div class="panel panel-info">
                 <div class="panel-heading">Level 1 Release</div>
@@ -224,7 +231,6 @@ new { enctype = "multipart/form-data", id="frmTicket" }))
                             @if (ViewBag.readOnly)
                             {
                                 @Html.DisplayFor(model => model.sanityCheck)
-                                @Html.HiddenFor(model => model.sanityCheck)
                             }
                             else {
                                 @Html.EnumDropDownListFor(model => model.sanityCheck, htmlAttributes: new { @class = "form-control pull-left", @style = "width:auto; margin-left: 10px;" })
@@ -235,12 +241,11 @@ new { enctype = "multipart/form-data", id="frmTicket" }))
                             @Html.DisplayFor(model => model.dateL1Release)
                         </div>
                     </div>
-                    <div class="sanity-check-reason @if(Model.sanityCheck == SanityChecks.Accept) { @Html.Raw("hidden"); } ">
+                    <div class="sanity-check-reason">
                         @Html.LabelFor(model => model.reason, htmlAttributes: new { @class = "control-label text-left" })
                         @if (ViewBag.readOnly)
                         {
                             @Html.DisplayFor(model => model.reason)
-                            @Html.HiddenFor(model => model.reason)
                         }
                         else {
                             @Html.TextAreaFor(model => model.reason, new { @class = "form-control" })
@@ -257,7 +262,7 @@ new { enctype = "multipart/form-data", id="frmTicket" }))
         }
 
         <!-- Level 2 Release -->
-        @if (Model != null && Model.sanityCheck == SanityChecks.Accept && (ViewBag.mode ==1 || Model.dateL2Release != null))
+        @if (Model != null && Model.sanityCheck == SanityChecks.Accept)
         {
             <div class="panel panel-info">
                 <div class="panel-heading">Level 2 Release</div>
@@ -269,16 +274,14 @@ new { enctype = "multipart/form-data", id="frmTicket" }))
                             @if (ViewBag.readOnly1)
                             {
                                 @Html.DisplayFor(model => model.Responsible.displayName)
-                                @Html.HiddenFor(model => model.responsibleID)
                             }
                             else {
-                                @Html.DropDownList("responsibleID", new SelectList(AllSorts.AllUsers, "userID", "displayName", Model.responsibleID), htmlAttributes: new { @class = "form-control pull-left", @style = "width:auto; margin-left: 10px" })
+                                @Html.DropDownList("responsibleID", null, htmlAttributes: new { @class = "form-control pull-left", @style = "width:auto; margin-left: 10px" })
                             }
                         </div>
                         <div class="col-md-6">
                             @Html.LabelFor(model => model.ticketID, htmlAttributes: new { @class = "control-label text-left" })
                             @Html.DisplayFor(model => model.ticketID)
-                            @Html.HiddenFor(model => model.ticketID)
                         </div>
                     </div>
 
@@ -287,7 +290,6 @@ new { enctype = "multipart/form-data", id="frmTicket" }))
                         @if (ViewBag.readOnly1)
                         {
                             @Html.DisplayFor(model => model.adminComments)
-                            @Html.HiddenFor(model => model.adminComments)
                         }
                         else {
                             @Html.EditorFor(model => model.adminComments, new { htmlAttributes = new { @class = "form-control" } })
@@ -318,7 +320,6 @@ new { enctype = "multipart/form-data", id="frmTicket" }))
                         @if (ViewBag.mode == 2)
                         {
                             @Html.DisplayFor(model => model.summary)
-                            @Html.HiddenFor(model => model.summary)
                         }
                         else {
                             <div>
@@ -335,7 +336,6 @@ new { enctype = "multipart/form-data", id="frmTicket" }))
                         @if (ViewBag.mode == 2)
                         {
                             @Html.DisplayFor(model => model.report)
-                            @Html.HiddenFor(model => model.report)
                         }
                         else {
                             <div>
@@ -354,18 +354,15 @@ new { enctype = "multipart/form-data", id="frmTicket" }))
                 <div class="panel-heading">@Html.DisplayNameFor(model => model.keywords)</div>
 
                 <div class="panel-body1">
-                    @*if (ViewBag.mode == 0)
-    {
-        @Html.DropDownList("inkeywords", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 1), "ID", "Text"), new { @class = "select2-editor", multiple = "multiple" })
-    }
-    else if (ViewBag.mode == 1)*@
-                    @if(ViewBag.mode < 2)
+                    @if (ViewBag.mode == 0)
+                    {
+                        @Html.DropDownList("inkeywords", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 1), "ID", "Text"), new { @class = "select2-editor", multiple = "multiple" })
+                    }
+                    else if (ViewBag.mode == 1)
                     {
                         //Help_Desk_2.DataAccessLayer.HelpDeskContext db = new Help_Desk_2.DataAccessLayer.HelpDeskContext();
 
-                        //@Html.DropDownList("inkeywords", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 1), "ID", "Text", Model.keywords.Select(x => x.ID)), new { @class = "select2-editor", multiple = "multiple" })
-
-                       // @Html.DropDownList("inkeywords", null, new { @class = "select2-editor", multiple = "multiple" })
+                        @Html.DropDownList("inkeywords", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 1), "ID", "Text", Model.keywords.Select(x => x.ID)), new { @class = "select2-editor", multiple = "multiple" })
 
                     }
                     else
@@ -381,7 +378,7 @@ new { enctype = "multipart/form-data", id="frmTicket" }))
                 <div class="panel-body1">
                     @if (ViewBag.mode == 0)
                     {
-                       @Html.DropDownList("inexpertareas", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 2), "ID", "Text"), new { @class = "select2-editor", multiple = "multiple" })
+                        @Html.DropDownList("inexpertareas", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 2), "ID", "Text"), new { @class = "select2-editor", multiple = "multiple" })
                     }
                     else if (ViewBag.mode == 1)
                     {
@@ -405,7 +402,7 @@ new { enctype = "multipart/form-data", id="frmTicket" }))
         <div class="panel panel-default">
             <div class="panel-heading">Audit Trail</div>
             <div>
-                @if (Model != null && ViewBag.mode != 0)
+                @if (Model != null)
                 {
                     var at = from x in Model.AuditTrail
                              join u in AllSorts.AllUsers on x.userID equals u.userID
@@ -413,10 +410,10 @@ new { enctype = "multipart/form-data", id="frmTicket" }))
                              select new { x.timeStamp, u.displayName, x.text };
 
                     <table class="table table-bordered table-condensed table-audit">
-                        <thead><tr><th style="width: 10.5em;">Date</th><th style="width: 10.5em;" nowrap>User</th><th>Action</th></tr></thead>
+                        <thead><tr><th class="width: 10.5em;">Date</th><th>User</th><th>Action</th></tr></thead>
                         @foreach(var tmp in at )
                         {
-                        <tr><td>@tmp.timeStamp</td><td nowrap>@tmp.displayName</td><td>@tmp.text</td></tr>
+                        <tr><td>@tmp.timeStamp</td><td>@tmp.displayName</td><td>@tmp.text</td></tr>
                         }
                     </table>
                 }
@@ -458,14 +455,14 @@ new { enctype = "multipart/form-data", id="frmTicket" }))
                     {
                        <input type="submit" name="btnSubmit" value="Submit" class="btn btn-primary" />
                     }
-                    if (Model != null && ViewBag.mode == 1)
+                    if (Model != null)
                     {
                         if (Model.dateL1Release != null)
                         {
                             <input type="submit" name="btnAssign" value="Assign Ticket" class="btn btn-primary" title="Marks ticket as assigned and notifies the assignee" />
                         }
 
-                        if (Model.dateL2Release != null && (AllSorts.UserCan("ManageTickets") || Model.responsibleID.ToString() == AllSorts.getUserID()))
+                        if (AllSorts.UserCan("ManageTickets") || Model.responsibleID.ToString() == AllSorts.getUserID())
                         {
                             <input type="submit" name="btnReturn" value="Return Ticket" class="btn btn-primary" title="Return ticket to Administrator" />
                             <input type="submit" name="btnComplete" value="Complete Ticket" class="btn btn-primary" title="Mark ticket as completed and notifies the originator" />
