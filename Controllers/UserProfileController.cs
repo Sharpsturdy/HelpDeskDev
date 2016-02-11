@@ -49,6 +49,16 @@ namespace Help_Desk_2.Controllers
 
         }
 
+        // GET: UserProfile/Create
+        public ActionResult Subscriptions()
+        {
+            UserData ud = new UserData();
+            UserProfile userProfile = ud.getUserProfile();
+
+            return View(userProfile);
+
+        }
+
         // POST: UserProfile/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.

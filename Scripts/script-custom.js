@@ -81,7 +81,7 @@
             $(".sanity-check-reason").removeClass("hidden");
         }
     });
-    alert('Yeah!');
+
 });
 
 

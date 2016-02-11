@@ -354,18 +354,15 @@ new { enctype = "multipart/form-data", id="frmTicket" }))
                 <div class="panel-heading">@Html.DisplayNameFor(model => model.keywords)</div>
 
                 <div class="panel-body1">
-                    @*if (ViewBag.mode == 0)
-    {
-        @Html.DropDownList("inkeywords", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 1), "ID", "Text"), new { @class = "select2-editor", multiple = "multiple" })
-    }
-    else if (ViewBag.mode == 1)*@
-                    @if(ViewBag.mode < 2)
+                    @if (ViewBag.mode == 0)
+                    {
+                        @Html.DropDownList("inkeywords", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 1), "ID", "Text"), new { @class = "select2-editor", multiple = "multiple" })
+                    }
+                    else if (ViewBag.mode == 1)
                     {
                         //Help_Desk_2.DataAccessLayer.HelpDeskContext db = new Help_Desk_2.DataAccessLayer.HelpDeskContext();
 
-                        //@Html.DropDownList("inkeywords", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 1), "ID", "Text", Model.keywords.Select(x => x.ID)), new { @class = "select2-editor", multiple = "multiple" })
-
-                       // @Html.DropDownList("inkeywords", null, new { @class = "select2-editor", multiple = "multiple" })
+                        @Html.DropDownList("inkeywords", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 1), "ID", "Text", Model.keywords.Select(x => x.ID)), new { @class = "select2-editor", multiple = "multiple" })
 
                     }
                     else

@@ -17,6 +17,8 @@ namespace Help_Desk_2.Models
 
         public virtual ICollection<KnowledgeFAQ> knowledgeFAQ { get; set;  }
 
-        //public virtual ICollection<KnowledgeFAQ> ticket { get; set; }
+        public virtual ICollection<Ticket> ticket { get; set; }
+
+        public virtual ICollection<UserProfile> users { get; set; }
     }
 }

@@ -1,9 +1,7 @@
 ﻿@using Help_Desk_2.Utilities;
-@using Help_Desk_2.Models;
 @{
  //   Response.Write("The view page last view: " + Session["lastView"] + "/" + Session["UserID"] + "/" + Session["UserDisplayName"]);
 }
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -86,7 +84,7 @@
                             <li>@Html.SecureActionLink("Manage Tickets", "Admin", "Ticket", "ManageTickets")</li>
                             <li><hr /></li>
                             <li>@Html.ActionLink("My Profile", "Index", "UserProfile")</li>
-                            <li>@Html.ActionLink("My Subscriptions", "Subs", "UserProfile")</li>
+                            <li>@Html.ActionLink("My Subscriptions", "Subscriptions", "UserProfile")</li>
 
                             
                             <li><hr /></li>

@@ -291,6 +291,8 @@ namespace Help_Desk_2.Controllers
                 /***** Add File ************/
                 AllSorts.saveAttachments(ticket.ID, db, ticket.deleteField);
 
+                AllSorts.saveWordLists(Request.Form.GetValues("inkeywords"), Request.Form.GetValues("inexpertareas"), db, ticket);
+
                 if (ticket.sanityCheck != null && ticket.dateL1Release == null)
                 {
                     ticket.dateL1Release = DateTime.Now;

@@ -51,7 +51,33 @@ namespace Help_Desk_2.Models
         [Display(Name = "Created by")]
         public string displayName { get { return firstName + " " + surName; } }
 
+        //FAQ Substriptions
+        [NotMapped]
+        [Display(Name = "Keywords", Prompt = "Select keywords from list")]
+        public IEnumerable<WordList> faqKeywords
+        {
+            get
+            {
+                return faqsubs.Where(x => x.type == 1);
+            }
+            set { faqKeywords = value; }
+        }
+
+        [NotMapped]
+        [Display(Name = "Expert Areas", Prompt = "Select expert areas from list")]
+        public IEnumerable<WordList> faqExpertAreas
+        {
+            get
+            {
+                return faqsubs.Where(x => x.type == 2);
+            }
+            set { faqExpertAreas = value; }
+        }
+
         public virtual ICollection<Ticket> tickets { get; set; }
 
+        public virtual ICollection<WordList> faqsubs { get; set;  }
+
+        public virtual ICollection<WordList> kbsubs { get; set; }
     }
 }
