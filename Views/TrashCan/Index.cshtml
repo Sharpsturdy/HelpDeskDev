@@ -16,8 +16,7 @@
             
             @{
                
-                var tDels = db.Tickets.Where(x => x.deleted).OrderByDescending(x => x.dateComposed);
-                if (tDels.Count() > 0)
+                if (ViewBag.tickets != null)
                 {
                     <table class="table table-bordered table-hover table-condensed table-view">
                         <thead>
@@ -28,13 +27,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in tDels)
+                            @foreach (var item in ViewBag.tickets)
                             {
                                 <tr onclick="$(location).attr('href', '@Url.Action("Details", "Ticket", new { @id = item.ID })')">
 
-                                    <td>@Html.DisplayFor(hitem => item.dateComposed)</td>
+                                    <td>@String.Format("{0:d}", item.creationDate)</td>
                                     <td>item.Originator.displayName</td>
-                                    <td>@Html.DisplayFor(hitem => item.headerText)</td>
+                                    <td>@item.headerText</td>
 
                                 </tr>
                             }
@@ -56,12 +55,10 @@
             <p>Some content in menu 2.</p>
         </div>
 
-        <div id="news" class="tab-pane fade out">
+        <div id="news" class="tab-pane">
             @{
-               
-
-                var nDels = db.News.Where(x => x.deleted).OrderByDescending(x => x.creationDate);
-                if (nDels.Count() > 0)
+                
+                if (ViewBag.news != null)
                 {
                     <table class="table table-bordered table-hover table-condensed table-view">
                         <thead>
@@ -72,13 +69,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in nDels)
+                            @foreach (var item in ViewBag.news)
                             {
                                 <tr onclick="$(location).attr('href', '@Url.Action("Details", "News", new { @id = item.ID })')">
 
-                                    <td>@Html.DisplayFor(hitem => item.creationDate)</td>
+                                    <td>@String.Format("{0:d}", item.creationDate)</td>
                                     <td>@item.Originator.displayName</td>
-                                    <td>@Html.DisplayFor(hitem => item.title)</td>
+                                    <td>@item.title</td>
 
                                 </tr>
                             }

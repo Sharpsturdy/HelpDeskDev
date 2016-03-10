@@ -21,7 +21,7 @@ namespace Help_Desk_2.Controllers
         public ActionResult Index(int? page)
         {
             var news = from row in db.News
-                       where row.published
+                       where row.published & !row.deleted
                        orderby row.sticky descending, row.publishedDate descending
                        select row;
             
@@ -51,6 +51,7 @@ namespace Help_Desk_2.Controllers
         public ActionResult Admin(string searchType, string searchStr, int? page)
         {
             var news = from m in db.News
+                       where !m.deleted
                        select m;
 
             if (String.IsNullOrEmpty(searchType))
@@ -156,26 +157,43 @@ namespace Help_Desk_2.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [CustomAuthorise(Roles = "AdminUsers")]
-        public ActionResult Edit([Bind(Include = "ID,originatorID,title,body,sticky,published,publishedDate,creationDate")] News news)
+        public ActionResult Edit([Bind(Include = "ID,originatorID,title,body,sticky,published,publishedDate,creationDate,deleted")] News news)
         {
             if (ModelState.IsValid)
             {
+                var submittedValues = Request.Form.AllKeys;
+                
                 db.Entry(news).State = EntityState.Modified;
                 
                 if (news.published && news.publishedDate == null) {
                     news.publishedDate = DateTime.Now;
                 }
 
+                if (submittedValues.Contains("btnDelete"))
+                {
+                    news.deleted = true;
+                    AllSorts.displayMessage = "News article deleted successfully!";
+                } else if (submittedValues.Contains("btnUnDelete"))
+                {
+                    news.deleted = false;
+                    AllSorts.displayMessage = "News article undeleted successfully!";
+                }
+                else
+                {
+                    AllSorts.displayMessage = "News article updated successfully!";
+                }
                 db.SaveChanges();
-                AllSorts.displayMessage = "News article updated successfully!";
 
-                if (Request.Form.AllKeys.Contains("btnSave"))
+                if (submittedValues.Contains("btnSave"))
                 {
                     //Do some Stuff for this Button
                     return RedirectToAction("Edit/" + news.ID);
                 }
                 
                 return RedirectToAction("Admin");
+            } else
+            {
+                AllSorts.displayMessage = "0#General update error";
             }
             
             ViewBag.mode = 1;

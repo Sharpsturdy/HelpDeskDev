@@ -17,7 +17,7 @@
     {
         ViewBag.Title = "News: " + Model.title;
         ViewBag.displayName = Model.Originator.displayName;
-        ViewBag.Status = Model.status + (Model.sticky ? " / Sticky" : "");
+        ViewBag.Status = Model.status + ((Model.sticky & Model.published) ? " / Sticky" : "");
         ViewBag.CreationDate = Html.DisplayFor(model => model.creationDate);
     }
 
@@ -51,6 +51,8 @@
             @Html.HiddenFor(model => model.ID)
             @Html.HiddenFor(model => model.originatorID)
             @Html.HiddenFor(model => model.creationDate)
+            @Html.HiddenFor(model => model.deleted)
+                    
         }
         <div class="container-form news">
             @if (ViewBag.mode < 2)
@@ -114,6 +116,12 @@
                 <div class="btn-group btn-group-custom" style="padding-bottom:15px; padding-top:15px">
                     <input type="submit" name="btnSave" value="Save" class="btn btn-primary" />
                     <input type="submit" name="btnSClose" value="Save & Close" class="btn btn-primary" />
+                    @if (Model.deleted) {
+                        <input type="submit" name="btnUnDelete" value="Undelete" class="btn btn-primary" />
+                    }
+                    else {
+                        <input type="submit" name="btnDelete" value="Delete" class="btn btn-primary" />
+                    }
                     <a href="@ViewBag.prevURL" name="actionBtn" class="btn btn-primary">Cancel</a>
                 </div>
             </div>

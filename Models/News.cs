@@ -53,6 +53,9 @@ namespace Help_Desk_2.Models
         {
             get
             {
+                if (deleted)
+                    return "Deleted";
+
                 if (published)
                     return "Published";
                 else
