@@ -42,9 +42,11 @@ namespace Help_Desk_2.Controllers
         // GET: UserProfile/Create
         public ActionResult Index()
         {
-            UserData ud = new UserData();
-            UserProfile userProfile = ud.getUserProfile();
-                        
+            //UserData ud = new UserData();
+            //UserProfile userProfile = ud.getUserProfile();
+
+            UserProfile userProfile = db.UserProfiles.Find(new Guid(AllSorts.getUserID()));
+
             return View(userProfile);
 
         }
@@ -52,12 +54,24 @@ namespace Help_Desk_2.Controllers
         // GET: UserProfile/Create
         public ActionResult Subscriptions()
         {
-            UserData ud = new UserData();
-            UserProfile userProfile = ud.getUserProfile();
+            UserProfile userProfile = db.UserProfiles.Find(new Guid(AllSorts.getUserID()));
 
+            if (Request.HttpMethod == "POST")
+            {
+                
+
+                db.Entry(userProfile).State = EntityState.Modified;                
+                AllSorts.saveWordLists(Request.Form.GetValues("infaqkeywords"), Request.Form.GetValues("infaqexpertareas"), db, userProfile);
+                AllSorts.saveWordLists(Request.Form.GetValues("inkbkeywords"), Request.Form.GetValues("inkbexpertareas"), db, userProfile, true);
+                db.SaveChanges();
+
+                AllSorts.displayMessage = "Subscriptions updated!";
+            }
             return View(userProfile);
 
         }
+
+        
 
         // POST: UserProfile/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 

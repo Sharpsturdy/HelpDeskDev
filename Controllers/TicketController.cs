@@ -9,6 +9,7 @@ using Help_Desk_2.Models;
 using Help_Desk_2.Utilities;
 using MvcPaging;
 using Help_Desk_2.BackgroundJobs;
+using System.Collections.Generic;
 
 namespace Help_Desk_2.Controllers
 {
@@ -45,6 +46,65 @@ namespace Help_Desk_2.Controllers
             return View("Index", tickets.ToPagedList(currentPageIndex, AllSorts.pageSize));
         }
 
+        public ActionResult Reports(string p1, int? p0)
+        {
+            var t3 = db.Database.SqlQuery<spTicket>("GetTicketsByStatus").Where(t => t.monNum > 0);
+
+            if (!String.IsNullOrEmpty(p1))
+            {
+                t3 = t3.Where(t => t.monNum == int.Parse(p1));
+            }
+
+            int[] tmp = new int[] { 0, 0, 0, 0, 0, 0, 0 };
+
+            foreach (var t in t3)
+            {
+                switch (t.status)
+                {
+                    case "Submitted":
+                        tmp[0] += t.total;
+                        break;
+                    case "Accepted":
+                        tmp[1] += t.total;
+                        break;
+                    case "Assigned":
+                        tmp[2] += t.total;
+                        break;
+                    case "Returned":
+                        tmp[3] += t.total;
+                        break;
+                    case "Completed":
+                        tmp[4] += t.total;
+                        break;
+                    case "Rejected":
+                        tmp[5] += t.total;
+                        break;
+                    case "Deleted":
+                        tmp[6] += t.total;
+                        break;
+                }
+            }
+
+            ViewBag.chart1 = tmp;
+
+            var t2 = db.Database.SqlQuery<spTicket>("GetTicketsByOriginator").Where(t => t.monNum > 0);
+            if (!String.IsNullOrEmpty(p1))
+            {
+                t2 = t2.Where(t => t.monNum == int.Parse(p1));
+            }
+            ViewBag.chart2Labels = t2.Select(t => t.displayName).ToList<string>();
+            ViewBag.chart2Data = t2.Select(t => t.total).ToList<int>();
+
+            ViewBag.p1 = new SelectList(new List<SelectListItem>
+                {
+                    //new SelectListItem {Value = "", Text = "Unpublished" },
+                    new SelectListItem {Value = "1", Text = "January" },
+                    new SelectListItem {Value = "2", Text = "February" },
+                    new SelectListItem {Value = "3", Text = "March" }
+                }, "Value", "Text");
+
+            return View();
+        }
 
         //List all my tickets draft/open/closed
         public ActionResult Assigned(int? page)
@@ -214,7 +274,7 @@ namespace Help_Desk_2.Controllers
 
             ViewBag.mode = 0;
             //ViewBag.responsibleID = new SelectList(db.UserProfiles, "userID", "displayName", ticket.responsibleID);
-            AllSorts.displayMessage = "0#General error updating ticket";
+            AllSorts.displayMessage = "0#Unable to save ticket due to highlighted error(s) below";
             return View("TicketOne", ticket);
         }
 
@@ -392,7 +452,7 @@ namespace Help_Desk_2.Controllers
                 return RedirectToAction("Index");
             } else {
                 ViewBag.mode = 1;
-                AllSorts.displayMessage = "0#General error updating ticket!";
+                AllSorts.displayMessage = "0#Unable to save ticket due to highlighted error(s) below";
                 ticket = db.Tickets.Find(ticket.ID);
                 //ViewBag.responsibleID = new SelectList(AllSorts.AllUsers, "userID", "displayName", ticket.responsibleID);
                 return View("TicketOne", ticket );

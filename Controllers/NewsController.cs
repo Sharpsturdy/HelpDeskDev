@@ -120,7 +120,7 @@ namespace Help_Desk_2.Controllers
                 }
                 db.News.Add(news);
                 db.SaveChanges();
-
+                AllSorts.displayMessage = "News article saved successfully!";
                 if(Request.Form.AllKeys.Contains("btnSave"))
                 {
                     return RedirectToAction("Edit/" + news.ID);
@@ -165,14 +165,16 @@ namespace Help_Desk_2.Controllers
                 if (news.published && news.publishedDate == null) {
                     news.publishedDate = DateTime.Now;
                 }
+
+                db.SaveChanges();
+                AllSorts.displayMessage = "News article updated successfully!";
+
                 if (Request.Form.AllKeys.Contains("btnSave"))
                 {
                     //Do some Stuff for this Button
                     return RedirectToAction("Edit/" + news.ID);
                 }
-
-                db.SaveChanges();
-
+                
                 return RedirectToAction("Admin");
             }
             

@@ -3,8 +3,17 @@
 
 @{
     ViewBag.Title = "My Subscriptions";
+    ViewBag.addAttachCode = "1"; //Activate attach code 
 }
 
+@section cssCustomTop {
+    @Styles.Render("~/Content/Select2/css/select2.min.css")
+    @Styles.Render("~/Content/Select2/css/select2-bootstrap.min.css")
+}
+
+@section scriptsCustom {
+    <script src="~/Content/Select2/js/select2.min.js"></script>
+}
 <div class="container"><h2>@ViewBag.Title</h2></div>
 
 <hr class="title" />
@@ -20,31 +29,55 @@
         @Html.HiddenFor(model => model.principalName)
         
         <div class="container">
-                <div class="panel panel-info">
+            <div class="panel panel-info">
                     <div class="panel-heading">FAQ Subscriptions</div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            @Html.LabelFor(model => model.faqKeywords, htmlAttributes: new { @class = "control-label" })
+                            <div>
+                                @Html.DropDownList("infaqkeywords", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 1), "ID", "Text", Model.faqKeywords.Select(x => x.ID)), new { @class = "select2-editor", multiple = "multiple" })
+                                @Html.ValidationMessageFor(model => model.faqKeywords, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            @Html.LabelFor(model => model.faqExpertAreas, htmlAttributes: new { @class = "control-label" })
+                            <div>
+                                @Html.DropDownList("infaqexpertareas", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 2), "ID", "Text", Model.faqExpertAreas.Select(x => x.ID)), new { @class = "select2-editor", multiple = "multiple" })
+                                @Html.ValidationMessageFor(model => model.faqExpertAreas, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+            <div class="panel panel-info">
+                <div class="panel-heading">Knowledge Base Subscriptions</div>
+                <div class="row">
                     <div class="col-sm-6">
-                        @Html.LabelFor(model => model.faqKeywords, htmlAttributes: new { @class = "control-label" })
+                        @Html.LabelFor(model => model.kbKeywords, htmlAttributes: new { @class = "control-label" })
                         <div>
-                            @Html.DropDownList("infaqkeywords", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 1), "ID", "Text", Model.faqKeywords.Select(x => x.ID)), new { @class = "select2-editor", multiple = "multiple" })
-                            @Html.ValidationMessageFor(model => model.faqKeyWords, "", new { @class = "text-danger" })
+                            @Html.DropDownList("inkbkeywords", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 1), "ID", "Text", Model.kbKeywords.Select(x => x.ID)), new { @class = "select2-editor", multiple = "multiple" })
+                            @Html.ValidationMessageFor(model => model.kbKeywords, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
                     <div class="col-sm-6">
-                        @Html.LabelFor(model => model.faqExpertAreas, htmlAttributes: new { @class = "control-label" })
+                        @Html.LabelFor(model => model.kbExpertAreas, htmlAttributes: new { @class = "control-label" })
                         <div>
-                            @Html.DropDownList("infaqexpertareas", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 2), "ID", "Text", Model.faqExpertAreas.Select(x => x.ID)), new { @class = "select2-editor", multiple = "multiple" })
-                            @Html.ValidationMessageFor(model => model.faqExpertAreas, "", new { @class = "text-danger" })
+                            @Html.DropDownList("inkbexpertareas", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 2), "ID", "Text", Model.kbExpertAreas.Select(x => x.ID)), new { @class = "select2-editor", multiple = "multiple" })
+                            @Html.ValidationMessageFor(model => model.kbExpertAreas, "", new { @class = "text-danger" })
                         </div>
                     </div>
                 </div>
-                
+            </div>
                 <div>
                     <div class="btn-group btn-group-custom">
                         <input type="submit" value="Save" class="btn btn-primary" />
                     </div>
                 </div>
             </div>
+
+
         </div>
 }
 

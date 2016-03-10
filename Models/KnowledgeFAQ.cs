@@ -17,6 +17,7 @@ namespace Help_Desk_2.Models
 
         [Display(Name = "Created on:"), DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:d}")]
         [DataType(DataType.DateTime)]
+        [Index]
         public DateTime dateComposed { get; set; }
 
         [Display(Name = "Expiries on:"), DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:d}")]
@@ -28,6 +29,7 @@ namespace Help_Desk_2.Models
         public DateTime? dateSubmitted { get; set; }
 
         [Required]
+        [Index]
         [Display(Name = "Brief description")]
         [StringLength(150, ErrorMessage = "Your brief description exceeds the maximum characters allowed")]
         public string headerText { get; set; }
@@ -51,6 +53,9 @@ namespace Help_Desk_2.Models
 
         [DefaultValue(false)]
         public bool deleted { get; set; }
+
+        [DefaultValue(false)]
+        public bool processed { get; set; }
 
         [Display(Name = "Links")]
         public string links { get; set; }

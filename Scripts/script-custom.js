@@ -82,6 +82,10 @@
         }
     });
 
+    $("li.litab a").click(function () {
+        alert('this.outerHTML');
+    });
+
 });
 
 

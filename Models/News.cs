@@ -14,7 +14,7 @@ namespace Help_Desk_2.Models
 
         public int ID { get; set;  }
 
-        [Required]
+        [Required, Index]
         [StringLength(150, ErrorMessage = "Your article title exceeds the maximum length allowed")]
         [Display(Name = "Article Title")]
         public string title { get; set; }
@@ -29,7 +29,7 @@ namespace Help_Desk_2.Models
         [DefaultValue(false)]
         public bool sticky { get; set; }
 
-        [Display(Name = "Published")]
+        [Index, Display(Name = "Published")]
         [DefaultValue(false)]
         public bool published { get; set; }
 

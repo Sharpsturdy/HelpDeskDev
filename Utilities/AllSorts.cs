@@ -186,6 +186,59 @@ namespace Help_Desk_2.Utilities
 
         }
 
+        public static void saveWordLists(string[] kwtmp, string[] eatmp, HelpDeskContext db, UserProfile user, bool isKB = false)
+        {
+
+            if (kwtmp == null) kwtmp = new string[] { "0" };
+
+            if (eatmp == null) eatmp = new string[] { "0" };
+
+            string[] orgList = null;
+            //Get exisiting wordlist  (keywords + expertAreas)             
+            if (isKB)
+            {
+                db.Entry(user).Collection(x => x.kbsubs).Load();
+                orgList = user.kbsubs.Select(x => "" + x.ID).ToArray<string>();
+            } else { 
+                db.Entry(user).Collection(x => x.faqsubs).Load();
+                orgList = user.faqsubs.Select(x => "" + x.ID).ToArray<string>();
+            }
+            
+            string[] kwords = kwtmp.Union(eatmp).ToArray();
+
+            //New keywords to be added 
+            string[] newKeywords = kwords.Where(x => !orgList.Contains(x)).ToArray();
+
+            string[] delKeywords = orgList.Where(x => !kwords.Contains(x)).ToArray();
+
+            foreach (var w in newKeywords)
+            {
+                WordList wd = db.WordLists.Find(int.Parse(w));
+
+                if (wd != null)
+                {
+                    if (isKB)
+                        user.kbsubs.Add(wd);
+                    else
+                        user.faqsubs.Add(wd);
+                }
+            }
+
+            foreach (var w in delKeywords)
+            {
+                WordList wd = db.WordLists.Find(int.Parse(w));
+
+                if (wd != null)
+                {
+                    if (isKB)
+                        user.kbsubs.Remove(wd);
+                    else
+                        user.faqsubs.Remove(wd);
+                }
+            }
+
+        }
+
         public static void saveGSLists(HelpDeskContext db, string[] intmp, int type)
         {
 

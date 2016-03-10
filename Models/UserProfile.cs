@@ -74,6 +74,29 @@ namespace Help_Desk_2.Models
             set { faqExpertAreas = value; }
         }
 
+        //KB Substriptions
+        [NotMapped]
+        [Display(Name = "Keywords", Prompt = "Select keywords from list")]
+        public IEnumerable<WordList> kbKeywords
+        {
+            get
+            {
+                return kbsubs.Where(x => x.type == 1);
+            }
+            set { kbKeywords = value; }
+        }
+
+        [NotMapped]
+        [Display(Name = "Expert Areas", Prompt = "Select expert areas from list")]
+        public IEnumerable<WordList> kbExpertAreas
+        {
+            get
+            {
+                return kbsubs.Where(x => x.type == 2);
+            }
+            set { kbExpertAreas = value; }
+        }
+
         public virtual ICollection<Ticket> tickets { get; set; }
 
         public virtual ICollection<WordList> faqsubs { get; set;  }

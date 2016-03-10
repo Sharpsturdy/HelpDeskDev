@@ -123,11 +123,12 @@ namespace Help_Desk_2.Controllers
             {
                 UserData ud = new UserData();
                 UserProfile userProfile = ud.getUserProfile();
+                var submittedValues = Request.Form.AllKeys;
 
                 faq.dateComposed = DateTime.Now;
                 faq.originatorID = userProfile.userID;
 
-                if (Request.Form.AllKeys.Contains("btnApprove"))
+                if (submittedValues.Contains("btnApprove"))
                 {
 
                     faq.published = true;
@@ -139,7 +140,7 @@ namespace Help_Desk_2.Controllers
                     AllSorts.displayMessage = "New FAQ created and apprved successfully!";
 
                 }
-                else if (Request.Form.AllKeys.Contains("btnUnApprove"))
+                else if (submittedValues.Contains("btnUnApprove"))
                 {
                     faq.published = false;
                 }
@@ -156,7 +157,7 @@ namespace Help_Desk_2.Controllers
 
                 db.SaveChanges();
                 //Better to send mail post save in case there errors
-                if (Request.Form.AllKeys.Contains("btnSubmit"))
+                if (submittedValues.Contains("btnSubmit"))
                 {
 
                     //Send email to ticket admins to let them know of this new ticket submission
@@ -164,7 +165,7 @@ namespace Help_Desk_2.Controllers
                     Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendFAQKBNotification("Submitted",faq.ID));
                 }
 
-                if (Request.Form.AllKeys.Contains("btnSave")) // || Request.Form.AllKeys.Contains("btnApprove") || Request.Form.AllKeys.Contains("btnUnApprove"))
+                if (submittedValues.Contains("btnSave")) // || submittedValues.Contains("btnApprove") || submittedValues.Contains("btnUnApprove"))
                 {
                     AllSorts.displayMessage = "New FAQ created successfully!";
                     return RedirectToAction("Edit/" + faq.ID);
@@ -290,20 +291,27 @@ namespace Help_Desk_2.Controllers
             {
 
                 db.Entry(faq).State = EntityState.Modified;
+                var submittedValues = Request.Form.AllKeys;
 
-                if (Request.Form.AllKeys.Contains("btnApprove"))
+                if (submittedValues.Contains("btnApprove"))
                 {
                     faq.published = true;
 
                     //If being approved from expired then calculate expiry date from now instead of composed date
+                    AllSorts.displayMessage = "FAQ approved successfully!";
                     faq.expiryDate = (faq.status == Statuses.Expired ? DateTime.Now : faq.dateComposed).AddDays(AllSorts.getExpiryDays(true));
                    
-                } else if(Request.Form.AllKeys.Contains("btnUnApprove"))
+                } else if(submittedValues.Contains("btnUnApprove"))
                 {
                     faq.published = false;
-                } else if(Request.Form.AllKeys.Contains("btnConvert"))
+                    AllSorts.displayMessage = "FAQ unapproved successfully!";
+
+                }
+                else if(submittedValues.Contains("btnConvert"))
                 {
                     faq.suggest = false;
+                    AllSorts.displayMessage = "FAQ Suggestion converted successfully!";
+
                 }
 
                 if (!faq.suggest)
@@ -318,20 +326,24 @@ namespace Help_Desk_2.Controllers
                 }
 
                 //Better to send mail post save in case there errors
-                if (Request.Form.AllKeys.Contains("btnSubmit"))
+                if (submittedValues.Contains("btnSubmit"))
                 {
 
                     //Send email to ticket admins to let them know of this new ticket submission
                     Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendFAQKBNotification("Submitted", faq.ID));
                 }
-                else if (Request.Form.AllKeys.Contains("btnApprove"))
+                else if (submittedValues.Contains("btnApprove"))
                 {
                     //Send Email to originator to inform of approval
                     Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendFAQKBNotification("Approved", faq.ID));
 
                 }
-                if (Request.Form.AllKeys.Contains("btnSave") || Request.Form.AllKeys.Contains("btnApprove") || Request.Form.AllKeys.Contains("btnUnApprove"))
+                else if (submittedValues.Contains("btnSave") || submittedValues.Contains("btnApprove") || submittedValues.Contains("btnUnApprove"))
                 {
+                    if (string.IsNullOrEmpty(AllSorts.displayMessage))
+                    {
+                        AllSorts.displayMessage = "FAQ updated successfully!";
+                    }
                     return RedirectToAction("Edit/" + faq.ID);
                 }
 
@@ -347,26 +359,6 @@ namespace Help_Desk_2.Controllers
             return View(faq.suggest ? "Suggest" : "FAQOne", faq);
         }
 
-        // GET: FAQs/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: FAQs/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        
     }
 }

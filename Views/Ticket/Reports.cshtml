@@ -1,0 +1,92 @@
+﻿@using Help_Desk_2.DataAccessLayer
+@using Help_Desk_2.Models;
+@using System.Data.SqlClient;
+
+@{
+        ViewBag.Title = "Ticket Reports";   
+
+}
+
+@section cssCustomTop {
+<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/dojo/1.8.9/dijit/themes/tundra/tundra.css" media="screen">
+}
+
+@section scriptsCustomTop {
+        <script src="http://ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojo/dojo.js"></script>
+        <script type="text/javascript">dojo.require('dojo.fx.easing')</script>
+        <script type="text/javascript">dojo.require('dojox.charting.widget.Chart2D')</script>
+        <script type="text/javascript">
+            var chartData = new Array();
+            @*/*var myArray = [];
+
+            @ foreach (var d in Model)
+            {
+                @ :myArray.push("@d");
+            }
+
+            //alert(myArray);
+            //chartData[0] = myArray;
+            //alert(chartData[0]);
+                *@
+            chartData[0] = [@String.Join(",", ViewBag.chart1)];
+            var chart2Labels = []; //[{ value: 1, text: "ViewBag.chart2Labels[0]" }, { value: 2, text: "ViewBag.chart2Labels[1]" }];
+
+            var i = 0;
+            @foreach(var t in ViewBag.chart2Labels)
+            {
+                @:chart2Labels[i++] = { value: i, text: "@t" };
+            }
+            //alert(tmp);
+            //Html.Raw("chartData[1] = [" + Model[0] + ","+ Model[1] + "," + Model[2] + "," + Model[3] + "," + Model[4] + "," + Model[5] + "," + Model[6] + "];")
+            var chart2Data = new Array();
+            chart2Data[0] = [@String.Join(",", ViewBag.chart2Data)];;
+        </script>
+        @Scripts.Render(new string[] { "~/Scripts/charts.js" });        
+
+}
+<header>
+    <h2 class="title">@ViewBag.Title</h2>
+</header>
+
+<div class="container-view">
+    <ul class="nav nav-tabs">
+        <li class="litab active"><a data-toggle="tab" href="#tickets">Status</a></li>
+        <li class="litab"><a data-toggle="tab" href="#faqs">Originator</a></li>
+        <li class="litab"><a data-toggle="tab" href="#kbs">Process Times</a></li>        
+    </ul>
+
+    <div class="tab-content">
+        <div id="tickets" class="tab-pane active">
+            <h3>Graphs here!</h3>
+            <div id="chart1" style="width: 100%; height: 400px;"></div>
+            <div id="legend1"></div>
+        </div>
+        <div id="faqs" class="tab-pane">
+            <h3>Graphs here!</h3>
+            <div id="chart2" style="width: 600px; height: 400px;"></div>
+            <div id="legend2"></div>
+        </div>
+        <div id="kbs" class="tab-pane">
+            <h3>Graphs here!</h3>
+            <div id="chart3" style="width: 100%; height: 400px;"></div>
+            <div id="legend3"></div>
+        </div>
+
+        <div id="news" class="tab-pane fade out">
+        </div>
+    </div>
+    <div>
+        <form class="form-inline" action="Reports">
+
+            <div class="form-group">
+                <label for="searchType">Filter by: </label>
+                @Html.DropDownList("p1", null, new { @class = "form-control" })
+
+            </div>
+
+
+            <button type="submit" class="btn btn-default">Go</button>
+        </form>
+    </div>
+            
+</div>
