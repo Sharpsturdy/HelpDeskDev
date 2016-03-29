@@ -36,7 +36,7 @@ namespace Help_Desk_2.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Index([Bind(Include = "ID,TicketSeeder,TicketHeader,TicketExpiryDays,KBFAQsExpiryDays")] GlobalSettings globalSettings)
+        public ActionResult Index([Bind(Include = "ID,TicketSeeder,TicketHeader,TicketHeaderEnabled,TicketExpiryDays,FAQsExpiryDays,KBExpiryDays")] GlobalSettings globalSettings)
         {
             
             if (ModelState.IsValid)

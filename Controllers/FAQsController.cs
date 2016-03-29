@@ -124,6 +124,7 @@ namespace Help_Desk_2.Controllers
                 UserData ud = new UserData();
                 UserProfile userProfile = ud.getUserProfile();
                 var submittedValues = Request.Form.AllKeys;
+                string outMsg = "New FAQ article created successfully";
 
                 faq.dateComposed = DateTime.Now;
                 faq.originatorID = userProfile.userID;
@@ -132,12 +133,12 @@ namespace Help_Desk_2.Controllers
                 {
 
                     faq.published = true;
-                    faq.expiryDate = faq.dateComposed.AddDays(AllSorts.getExpiryDays(true));
+                    faq.expiryDate = faq.dateComposed.AddDays(AllSorts.getExpiryDays(1));
 
                     if (faq.dateSubmitted == null)
                         faq.dateSubmitted = DateTime.Now;
 
-                    AllSorts.displayMessage = "New FAQ created and apprved successfully!";
+                    outMsg = "New FAQ created and approved successfully!";
 
                 }
                 else if (submittedValues.Contains("btnUnApprove"))
@@ -161,13 +162,15 @@ namespace Help_Desk_2.Controllers
                 {
 
                     //Send email to ticket admins to let them know of this new ticket submission
-                    AllSorts.displayMessage = "New FAQ created and submitted successfully!";
+                    outMsg = "New FAQ created and submitted successfully!";
                     Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendFAQKBNotification("Submitted",faq.ID));
                 }
 
+                AllSorts.displayMessage = outMsg;
+
                 if (submittedValues.Contains("btnSave")) // || submittedValues.Contains("btnApprove") || submittedValues.Contains("btnUnApprove"))
                 {
-                    AllSorts.displayMessage = "New FAQ created successfully!";
+                    
                     return RedirectToAction("Edit/" + faq.ID);
                 }
 
@@ -175,6 +178,10 @@ namespace Help_Desk_2.Controllers
                     return Redirect((string)Session["lastView"]);
 
                 return RedirectToAction("Index");
+            }
+            else
+            {
+                AllSorts.displayMessage = "0#General error creating FAQ Article";
             }
 
             ViewBag.mode = 0;
@@ -292,25 +299,26 @@ namespace Help_Desk_2.Controllers
 
                 db.Entry(faq).State = EntityState.Modified;
                 var submittedValues = Request.Form.AllKeys;
+                string outMsg = "FAQ article updated successfully";
 
                 if (submittedValues.Contains("btnApprove"))
                 {
                     faq.published = true;
 
                     //If being approved from expired then calculate expiry date from now instead of composed date
-                    AllSorts.displayMessage = "FAQ approved successfully!";
-                    faq.expiryDate = (faq.status == Statuses.Expired ? DateTime.Now : faq.dateComposed).AddDays(AllSorts.getExpiryDays(true));
+                    outMsg = "FAQ approved successfully!";
+                    faq.expiryDate = (faq.status == Statuses.Expired ? DateTime.Now : faq.dateComposed).AddDays(AllSorts.getExpiryDays(1));
                    
                 } else if(submittedValues.Contains("btnUnApprove"))
                 {
                     faq.published = false;
-                    AllSorts.displayMessage = "FAQ unapproved successfully!";
+                    outMsg = "FAQ unapproved successfully!";
 
                 }
                 else if(submittedValues.Contains("btnConvert"))
                 {
                     faq.suggest = false;
-                    AllSorts.displayMessage = "FAQ Suggestion converted successfully!";
+                    outMsg = "FAQ Suggestion converted successfully!";
 
                 }
 
@@ -331,6 +339,8 @@ namespace Help_Desk_2.Controllers
 
                     //Send email to ticket admins to let them know of this new ticket submission
                     Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendFAQKBNotification("Submitted", faq.ID));
+                    outMsg = "FAQ submitted successfully!";
+
                 }
                 else if (submittedValues.Contains("btnApprove"))
                 {
@@ -338,12 +348,11 @@ namespace Help_Desk_2.Controllers
                     Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendFAQKBNotification("Approved", faq.ID));
 
                 }
-                else if (submittedValues.Contains("btnSave") || submittedValues.Contains("btnApprove") || submittedValues.Contains("btnUnApprove"))
+                AllSorts.displayMessage = outMsg;
+
+                if (submittedValues.Contains("btnSave")) //|| submittedValues.Contains("btnApprove") || submittedValues.Contains("btnUnApprove"))
                 {
-                    if (string.IsNullOrEmpty(AllSorts.displayMessage))
-                    {
-                        AllSorts.displayMessage = "FAQ updated successfully!";
-                    }
+                   
                     return RedirectToAction("Edit/" + faq.ID);
                 }
 
@@ -353,6 +362,10 @@ namespace Help_Desk_2.Controllers
                 return RedirectToAction("Index");
                 //return string.IsNullOrEmpty((string) Session["lastView"]) ? Redirect((string) Session["lastView"]): RedirectToAction("Index");
                
+            }
+            else
+            {
+                AllSorts.displayMessage = "0#General error updating FAQ Article";
             }
 
             ViewBag.mode = 1;

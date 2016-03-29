@@ -54,6 +54,15 @@
 @section scriptsCustom {
     <script src="~/Content/Select2/js/select2.min.js"></script>
 }
+
+@{  //Ticket message
+var tMsg = AllSorts.getNewTicketMessage;
+
+if (!string.IsNullOrEmpty(tMsg))
+{
+        <div class="panel panel-default panel-ticket-message">@Html.Raw(tMsg)</div>
+    }
+}
 <header class="container-custom-top">
 <h2>@ViewBag.Title <span class="summary-top pull-right">@ViewBag.Status</span></h2>
 @if (ViewBag.mode > 0)
@@ -65,7 +74,7 @@
 <hr class="title"/>
 
 @using (Html.BeginForm(ViewBag.mode == 0 ? "New" : "Edit", "Ticket", FormMethod.Post,
-new { enctype = "multipart/form-data", id="frmTicket" }))
+new { enctype = "multipart/form-data", id = "frmTicket" }))
 {
 @Html.AntiForgeryToken()
 
@@ -82,6 +91,8 @@ new { enctype = "multipart/form-data", id="frmTicket" }))
      @Html.HiddenFor(model => model.dateSubmitted)
      @Html.HiddenFor(model => model.dateCompleted)
 }
+
+   
     <div class="container-form ticket">
 
         <div class="panel panel-info">

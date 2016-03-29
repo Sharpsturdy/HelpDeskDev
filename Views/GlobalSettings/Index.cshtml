@@ -31,74 +31,73 @@
         {
             @Html.HiddenFor(model => model.ID)
         }
-        <div class="form-group odd">
-            @Html.Label("Ticket Administrators", htmlAttributes: new { @class = "control-label col-md-6" })
-            @Html.LabelFor(model => model.TicketSeeder, htmlAttributes: new { @class = "control-label col-md-6" })
-           
-        </div>
-
-        <div class="form-group even">
-            <div class="col-md-6">
-                @*Html.EditorFor(model => model.AdminEmail, new { htmlAttributes = new { @class = "form-control" } })*@
+        <div class="form-group">
+            <div class="col-sm-9">
+                @Html.Label("Ticket Administrators", htmlAttributes: new { @class = "control-label" })
                 @Html.DropDownList("adminemails", null, htmlAttributes: new { @class = "select2-editor", multiple = "multiple" })
-                @*Html.ValidationMessageFor(model => model.AdminEmails, "", new { @class = "text-danger" })*@
             </div>
-           
-            <div class="col-md-6">
+
+            <div class="col-sm-3">
+                @Html.LabelFor(model => model.TicketSeeder, htmlAttributes: new { @class = "control-label" })
                 @Html.EditorFor(model => model.TicketSeeder, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.TicketSeeder, "", new { @class = "text-danger" })
             </div>
-        </div>
 
-        <div class="form-group odd">
-            @Html.Label("FAQ Approver(s)", htmlAttributes: new { @class = "control-label col-md-6" })
-            @Html.Label("Knowledgebase Approver(s)", htmlAttributes: new { @class = "control-label col-md-6" })
+            
+         </div>
 
-        </div>
-
-        <div class="form-group even">
-            <div class="col-md-6">    
-
-                @Html.DropDownList("faqapprovers", null, htmlAttributes: new { @class = "select2-editor", multiple = "multiple" })
-
+        <div class="form-group">
+            <div class="col-sm-4">
+                 @Html.LabelFor(model => model.TicketHeader, htmlAttributes: new { @class = "control-label" })
             </div>
-           <div class="col-md-6">
-               
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.TicketHeaderEnabled)
+                @Html.LabelFor(model => model.TicketHeaderEnabled, htmlAttributes: new { @class = "control-label" })
+            </div>
+
+            <div class="col-sm-12">
+                @Html.EditorFor(model => model.TicketHeader, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TicketHeader, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-6">    
+                @Html.Label("FAQ Approver(s)", htmlAttributes: new { @class = "control-label" })
+                @Html.DropDownList("faqapprovers", null, htmlAttributes: new { @class = "select2-editor", multiple = "multiple" })
+            </div>
+           <div class="col-sm-6">
+               @Html.Label("Knowledgebase Approver(s)", htmlAttributes: new { @class = "control-label" })
                @Html.DropDownList("kbapprovers", null, htmlAttributes: new { @class = "select2-editor", multiple = "multiple" })
             </div>
         </div>
 
-        <div class="form-group odd">
-            @Html.LabelFor(model => model.TicketHeader, htmlAttributes: new { @class = "control-label col-md-6" })
-            <div class="col-md-6">
-            <div class="col-md-6">@Html.LabelFor(model => model.TicketExpiryDays, htmlAttributes: new { @class = "control-label" })</div>
-            <div class="col-md-6">@Html.LabelFor(model => model.KBFAQsExpiryDays, htmlAttributes: new { @class = "control-label" })</div> 
-            </div>           
+        <div class="form-group">
+            <div class="col-sm-6">
+                @*Html.LabelFor(model => model.TicketExpiryDays, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.TicketExpiryDays, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TicketExpiryDays, "", new { @class = "text-danger" })*@
+                @Html.LabelFor(model => model.FAQsExpiryDays, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.FAQsExpiryDays, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.FAQsExpiryDays, "", new { @class = "text-danger" })
+                
+            </div>
+            <div class="col-sm-6">
+                @Html.LabelFor(model => model.KBExpiryDays, htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.KBExpiryDays, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.KBExpiryDays, "", new { @class = "text-danger" })
+            </div> 
+                   
         </div>
 
-        <div class="form-group even">
-            <div class="col-md-6">
-                @Html.EditorFor(model => model.TicketHeader, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.TicketHeader, "", new { @class = "text-danger" })
-            </div>
-           <div class="col-md-6">
-               <div class="col-md-6">
-                   @Html.EditorFor(model => model.TicketExpiryDays, new { htmlAttributes = new { @class = "form-control" } })
-                   @Html.ValidationMessageFor(model => model.TicketExpiryDays, "", new { @class = "text-danger" })
-               </div>
-               <div class="col-md-6">
-                   @Html.EditorFor(model => model.KBFAQsExpiryDays, new { htmlAttributes = new { @class = "form-control" } })
-                   @Html.ValidationMessageFor(model => model.KBFAQsExpiryDays, "", new { @class = "text-danger" })
-               </div>
-            </div>
-        </div>
+        
 
         <div class="form-group">
             <div class="col-md-12">
                 <input type="submit" value="Save" class="btn btn-default" />
             </div>
         </div>
-
+        <hr/>
         <div class="form-group odd">
             <h3 class="control-label col-md-6">Keywords&nbsp; @Html.ActionLink("Manage", "Keywords", null, new { @class = "btn btn-default" })</h3>
             <h3 class="control-label col-md-6">Expert Areas &nbsp; @Html.ActionLink("Manage", "ExpertAreas", null, new { @class = "btn btn-default" })</h3>

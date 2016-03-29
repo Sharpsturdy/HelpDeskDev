@@ -9,9 +9,9 @@
         ViewBag.Title = "New News Article";
         ViewBag.Status = "Unpublished";
         ViewBag.CreationDate = String.Format("{0:d}", DateTime.Now);
-        
+
         ViewBag.displayName = AllSorts.getUserDisplayName();
-        
+
     }
     else
     {
@@ -29,11 +29,26 @@
 
     }
 
-    ViewBag.prevURL = string.IsNullOrEmpty((string)Session["lastView"]) ? Request.UrlReferrer.PathAndQuery : Session["lastView"];
+    try
+    {
+        ViewBag.prevURL = string.IsNullOrEmpty((string)Session["lastView"]) ? Request.UrlReferrer.PathAndQuery : Session["lastView"];
+    }
+    catch (Exception e)
+    {
+        ViewBag.prevURL = Url.Action("Index", "Home");
+    }
 }
+@section cssCustomTop {
+    @Styles.Render("~/Content/bootstrap-datepicker3.min.css")
+}
+
 <header>
     <h2>@ViewBag.Title <span class="summary-top pull-right">@ViewBag.Status</span></h2>
-    <p class="text-muted">Created by @ViewBag.displayName on @ViewBag.CreationDate</p>
+    @if (ViewBag.mode > 0)
+    {
+        <p class="text-muted">Created by @ViewBag.displayName on @ViewBag.CreationDate</p>
+    }
+    
 </header>
 
 <hr class="title" />
@@ -101,22 +116,23 @@
                 </span>
 
                 <span>
-                    
+
                     @Html.LabelFor(model => model.publishedDate, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.publishedDate)
-                </span>
+                    @Html.EditorFor(model => model.publishedDate, new { htmlAttributes = new { @type="text" , @class = "form-control datepicker1", @style = "width:auto; display: table-cell; margin-left: 10px; padding-left:6px" } })
+                </span>                  
+               
 
                 <span>
                     @Html.EditorFor(model => model.sticky)
                     @Html.LabelFor(model => model.sticky, htmlAttributes: new { @class = "control-label" })
                 </span>
             </div>
-
+           
             <div>
                 <div class="btn-group btn-group-custom" style="padding-bottom:15px; padding-top:15px">
                     <input type="submit" name="btnSave" value="Save" class="btn btn-primary" />
                     <input type="submit" name="btnSClose" value="Save & Close" class="btn btn-primary" />
-                    @if (Model.deleted) {
+                    @if (Model !=null && Model.deleted) {
                         <input type="submit" name="btnUnDelete" value="Undelete" class="btn btn-primary" />
                     }
                     else {
@@ -130,8 +146,7 @@
     </div>
 }
 
-
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/bootstrap-datepicker.min.js")
 }

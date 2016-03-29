@@ -62,7 +62,7 @@
             <ul class="nav navbar-nav">
                 <li>@Html.ActionLink("Home", "Index", "Home")</li>
                 <li>@Html.ActionLink("FAQs", "Index","FAQs")</li>
-                <li>@Html.SecureActionLink("Knowledge base", "Index", "KnowledgeBase", "SuperFunctions")</li>
+                <li>@*Html.SecureActionLink("Knowledge base", "Index", "KnowledgeBase", "SuperFunctions")</li>*@
                 <li>@Html.ActionLink("Latest news","Index", "News")</li>
             </ul>
             <p class="nav navbar-text navbar-right">@Html.ActionLink(AllSorts.getUserDisplayName(), "Index", "UserProfile")</p>
@@ -83,7 +83,7 @@
                                     <li>@Html.ActionLink("Raise new ticket", "New", "Ticket")</li>
                                     <li>@Html.ActionLink("View my open tickets", "Index", "Ticket", null, htmlAttributes: new { @title = "Draft & Open" })</li>
                                     <li>@Html.ActionLink("View all my tickets", "List", "Ticket", null, htmlAttributes: new { @title = "Draft & Open & Closed" })</li>
-                                    <li>@Html.SecureActionLink("My Assigned Tickets", "Assigned", "Ticket", "ManageTickets")</li>
+                                    <li>@*Html.SecureActionLink("My Assigned Tickets", "Assigned", "Ticket", "ManageTickets")</li>*@
                                     <li>@Html.SecureActionLink("Manage Tickets", "Admin", "Ticket", "ManageTickets")</li>
                                     <li>@Html.SecureActionLink("Ticket Reports", "Reports", "Ticket", "ManageTickets")</li>
                                 </ul>
@@ -139,19 +139,29 @@
                         @if (AllSorts.UserCan("ManageAll"))
                         {
                             <div class="panel panel-default panel-custom">
-                                <div class="panel-heading">Ticket Stations</div>
+                                <div class="panel-heading">News Admin</div>
                                 <div class="panel-body">
                                     <ul class="nav nav-pills nav-stacked">
+                                        <li>@Html.ActionLink("New News Article", "New", "News")</li>
                                         <li>@Html.ActionLink("Manage News Articles", "Admin", "News")</li>
                                     </ul>
                                 </div>
                             </div>
 
                             <div class="panel panel-default panel-custom">
-                                <div class="panel-heading">Ticket Stations</div>
+                                <div class="panel-heading">Global Settings</div>
                                 <div class="panel-body">
                                     <ul class="nav nav-pills nav-stacked">
                                         <li>@Html.ActionLink("Global Settings", "", "GlobalSettings")</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="panel panel-default panel-custom">
+                                <div class="panel-heading">Trash Can</div>
+                                <div class="panel-body">
+                                    <ul class="nav nav-pills nav-stacked">
+                                        <li>@Html.ActionLink("Recycle Bin", "", "TrashCan")</li>
                                     </ul>
                                 </div>
                             </div>
@@ -170,7 +180,7 @@
                 </div>
                 <div class="col-md-9 col-sm-8 col-sm-height">
                     <div class="inside-full-height content-column"> 
-                        @if(!string.IsNullOrEmpty(AllSorts.displayMessage)) {
+                        @if(!string.IsNullOrEmpty(AllSorts.displayMessage) && string.IsNullOrEmpty(ViewBag.isErrorPage)) {
                             var msg = AllSorts.displayMessage;
                             AllSorts.displayMessage = ""; //Blank message to avoid being displayed again
                             var st = "success";

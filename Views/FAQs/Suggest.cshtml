@@ -32,7 +32,10 @@
 }
 <header>
     <h2>@ViewBag.Title <span class="summary-top pull-right">@ViewBag.Status</span></h2>
-    <p class="text-muted">Created by @ViewBag.displayName on @ViewBag.CreationDate</p>
+    @if (ViewBag.mode > 0)
+    {
+        <p class="text-muted">Created by @ViewBag.displayName on @ViewBag.CreationDate</p>
+    }
 </header>
 
 <hr class="title" />

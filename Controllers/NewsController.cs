@@ -126,6 +126,10 @@ namespace Help_Desk_2.Controllers
                 {
                     return RedirectToAction("Edit/" + news.ID);
                 }
+
+                if (!string.IsNullOrEmpty((string)Session["lastView"]))
+                    return Redirect((string)Session["lastView"]);
+
                 return RedirectToAction("Admin");
             }
 
@@ -189,7 +193,9 @@ namespace Help_Desk_2.Controllers
                     //Do some Stuff for this Button
                     return RedirectToAction("Edit/" + news.ID);
                 }
-                
+                if (!string.IsNullOrEmpty((string)Session["lastView"]))
+                    return Redirect((string)Session["lastView"]);
+
                 return RedirectToAction("Admin");
             } else
             {

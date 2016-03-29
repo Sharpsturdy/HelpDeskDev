@@ -326,6 +326,10 @@ textarea.form-control {
 	padding-right: 20px;
 }
 
+.table-view {
+    margin-top: 15px;
+}
+
 .table-view tbody tr:hover {
     cursor: pointer;
 }
@@ -434,3 +438,10 @@ textarea.form-control {
 }
 
 header > h2 { margin-top: 0}
+
+.content-column .panel-ticket-message {
+	border: 1px solid #DAA3A3;
+    background-color: #F7D9D9;
+    padding: 5px 10px;
+    color: #A24545;
+}

@@ -1,47 +1,85 @@
-﻿@model IEnumerable<Help_Desk_2.Models.UserProfile>
+﻿@model IPagedList<Help_Desk_2.Models.UserProfile>
 
 @{
     ViewBag.Title = "User Profile List";
 }
 
-<h2>Index</h2>
+<h2>@ViewBag.Title</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-                
-        <th>
-            @Html.DisplayNameFor(model => model.firstName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.surName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.emailAddress)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.contactNumber)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr onclick="$(location).attr('href', '@Url.Action("Details", "UserProfile", new { @id = item.userID })')">
-        
-        <td>
-            @Html.DisplayFor(modelItem => item.firstName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.surName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.emailAddress)
-        </td>
-        
-       
-    </tr>
+@{
+    var db = new Help_Desk_2.DataAccessLayer.HelpDeskContext();
+    var query = "SELECT * From UserProfile ORDER BY surName";
+    //var data = db.Database.SqlQuery<Help_Desk_2.Models.UserProfile>(query);
+    var data = db.UserProfiles;
+    //db.Database.SqlQuery()
+    var grid = new WebGrid(data);
 }
 
+<div id="grid">
+    
+    @grid.GetHtml(
+        columns: grid.Columns(
+            grid.Column("FirstName", "First Name", @<text>@item.Value.firstName</text>, canSort: false),
+            grid.Column("LastName", "Last Name", @<text>@item.Value.surName</text>, canSort: false),
+            grid.Column("LastLogin", "Last Login", @<text>@item.Value.LastSignOn.ToString()</text>, canSort: false)
+        )
+    )
+    .ToString()
+</div>
+<hr/>
+
+<table class="table table-bordered table-hover table-condensed table-view">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email Address</th>
+            <th>Login ID</th>
+            <th>Last Login</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr onclick="$(location).attr('href', '@Url.Action("Details", "UserProfile", new { @id = item.userID })')">
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.displayName)                    
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.emailAddress)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.loginName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.lastSignOn)
+                </td>
+                <td>
+                @*<button type="submit" class="btn btn-default" name="btnDelete" value="@item.userID">Delete</button>*@
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                            @*Html.Hidden(item.userID.ToString())*@
+                            <input type="hidden" name="userID" value="@item.userID.ToString()" />
+                            <input type="submit" value="Delete" class="btn btn-default" />
+                        
+                    }
+                </td>
+
+
+            </tr>
+        }
+    </tbody>
 </table>
+<div class="pager">
+    @Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount).Options(o => o.AddRouteValue("searchType", @Request.QueryString["searchType"])
+        .AddRouteValue("searchStr", @Request.QueryString["searchStr"])
+        .DisplayFirstAndLastPage()
+        .SetFirstPageText("First")
+        .SetLastPageText("Last")
+        .SetPreviousPageText("Prev")
+        .SetNextPageText("Next"))
+
+    <div class="text-muted">Displaying @Model.ItemStart - @Model.ItemEnd of @Model.TotalItemCount</div>
+</div>

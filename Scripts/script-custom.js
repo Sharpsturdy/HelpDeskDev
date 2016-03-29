@@ -55,14 +55,23 @@
 
         refreshLinks();
     });
+    try { //Wrap is try/catch because datepicker script is not always loaded
+        $(".datepicker1").datepicker({
+            format: 'dd/mm/yyyy',
+            startDate: 'd',
+            autoclose: true,
+            todayHighlight: true
+        });
+    } catch (e) { }
 
     //Multi-select fields
-    $(".select2-editor").select2({
-        placeholder: "Select value(s) from the list",
-        width: "100%",
-        theme: "bootstrap"
-    });
-      
+    try { //Wrap is try/catch because select2 script is not always loaded
+        $(".select2-editor").select2({
+            placeholder: "Select value(s) from the list",
+            width: "100%",
+            theme: "bootstrap"
+        });
+    } catch(e) {}  
 
     $("#frmTicket").submit(function () {
 
@@ -85,6 +94,8 @@
     $("li.litab a").click(function () {
         alert('this.outerHTML');
     });
+
+    //alert('workig well');
 
 });
 

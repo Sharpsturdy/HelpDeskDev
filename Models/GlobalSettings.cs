@@ -52,8 +52,16 @@ namespace Help_Desk_2.Models
         public int TicketExpiryDays { get; set; }
 
         [Required]
-        [Display(Name = "FAQs/Knowledge Base Expiry Days")]
-        public int KBFAQsExpiryDays { get; set; }
+        [Display(Name = "FAQs Expiry Days")]
+        public int FAQsExpiryDays { get; set; }
+
+        [Required]
+        [Display(Name = "Knowledgebase Expiry Days")]
+        public int KBExpiryDays { get; set; }
+
+        [Display(Name = "Enabled")]
+        [DefaultValue(false)]
+        public bool TicketHeaderEnabled { get; set; }
 
     }
 }

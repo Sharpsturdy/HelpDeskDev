@@ -2,6 +2,7 @@
 using Help_Desk_2.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.DirectoryServices.AccountManagement;
 using System.Linq;
 using System.Web;
@@ -57,12 +58,18 @@ namespace Help_Desk_2.Utilities
                                     loginName = loginName,
                                     principalName = userPrincipal.UserPrincipalName,
                                     surName = userPrincipal.Surname,
+                                    lastSignOn = DateTime.Now
                                     // not using d ud.displayName,
 
                                 };
                                 db.UserProfiles.Add(userProfile);
                                 db.SaveChanges();
                                 userProfile = db.UserProfiles.Find(userPrincipal.Guid);
+                            } else
+                            {
+                                db.Entry(userProfile).State = EntityState.Modified;
+                                userProfile.lastSignOn = DateTime.Now;
+                                db.SaveChanges();
                             }
 
                         }

@@ -11,6 +11,7 @@ using Help_Desk_2.Models;
 using System.DirectoryServices.AccountManagement;
 using System.Security.Principal;
 using Help_Desk_2.Utilities;
+using MvcPaging;
 
 namespace Help_Desk_2.Controllers
 {
@@ -19,9 +20,36 @@ namespace Help_Desk_2.Controllers
         private HelpDeskContext db = new HelpDeskContext();
 
         // GET: UserProfile
-        public ActionResult List()
+        public ActionResult List(int? page)
         {
-            return View(db.UserProfiles.ToList());
+            int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
+
+            var lastGoodDate = DateTime.Now.AddDays(-30);
+            return View(db.UserProfiles.Where(u => !u.deleted && u.lastSignOn < lastGoodDate)
+                    .OrderByDescending(k => k.lastSignOn)
+                    .OrderBy(k => k.surName)
+                    .OrderBy(k => k.firstName)
+                    .ToPagedList(currentPageIndex, AllSorts.pageSize));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult List([Bind(Include = "userID")] UserProfile user)
+        {
+            if (ModelState.IsValid)
+            {
+                UserProfile u = db.UserProfiles.Find(user.userID);
+                if (u != null)
+                {
+                    //db.UserProfiles.Remove(u); Problem with hard delete if attached to other records so do soft delete
+                    db.Entry(u).State = EntityState.Modified;
+                    u.deleted = true;
+                    db.SaveChanges();
+
+                    AllSorts.displayMessage = "User profile for '" + u.displayName +"' has been deleted successfully";
+                }
+            }
+            return RedirectToAction("List");
         }
 
         // GET: UserProfile/Details/5
@@ -57,8 +85,7 @@ namespace Help_Desk_2.Controllers
             UserProfile userProfile = db.UserProfiles.Find(new Guid(AllSorts.getUserID()));
 
             if (Request.HttpMethod == "POST")
-            {
-                
+            {                
 
                 db.Entry(userProfile).State = EntityState.Modified;                
                 AllSorts.saveWordLists(Request.Form.GetValues("infaqkeywords"), Request.Form.GetValues("infaqexpertareas"), db, userProfile);
@@ -69,27 +96,7 @@ namespace Help_Desk_2.Controllers
             }
             return View(userProfile);
 
-        }
-
-        
-
-        // POST: UserProfile/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Indexn([Bind(Include = "userID,loginName,principalName,firstName,surName,emailAddress,contactNumber")] UserProfile userProfile)
-        {
-            if (ModelState.IsValid)
-            {
-                userProfile.userID = Guid.NewGuid();
-                db.UserProfiles.Add(userProfile);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            return View(userProfile);
-        }
+        }        
 
         // GET: UserProfile/Edit/5
         public ActionResult Edit(Guid? id)
@@ -118,7 +125,12 @@ namespace Help_Desk_2.Controllers
             {
                 db.Entry(userProfile).State = EntityState.Modified;
                 db.SaveChanges();
+                Session.Add("UserDisplayName", userProfile.displayName);//Update display name
+                AllSorts.displayMessage = "User Profile updated successfully!";
                 return RedirectToAction("Index");
+            } else
+            {
+                AllSorts.displayMessage = "0#General error updating User Profile.";
             }
             return View(userProfile);
         }

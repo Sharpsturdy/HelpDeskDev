@@ -1,0 +1,90 @@
+﻿@model Help_Desk_2.Models.UserProfile
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>UserProfile</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.loginName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.loginName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.principalName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.principalName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.firstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.firstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.surName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.surName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.emailAddress)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.emailAddress)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.contactNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.contactNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.isResponsible)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.isResponsible)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.isFaqApprover)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.isFaqApprover)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.isKbApprover)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.isKbApprover)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.userID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

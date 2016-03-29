@@ -122,28 +122,32 @@ namespace Help_Desk_2.Controllers
         {
             if (ModelState.IsValid)
             {
-                UserData ud = new UserData();
-                UserProfile userProfile = ud.getUserProfile();
+                var submittedValues = Request.Form.AllKeys;
 
                 kb.dateComposed = DateTime.Now;
-                kb.originatorID = userProfile.userID;
+                kb.originatorID = new Guid(AllSorts.getUserID());
 
-                if (Request.Form.AllKeys.Contains("btnApprove"))
+                string outMsg = "New KB Article created successfully";
+
+                if (submittedValues.Contains("btnApprove"))
                 {
                     kb.published = true;
-                    kb.expiryDate = kb.dateComposed.AddDays(AllSorts.getExpiryDays(true));
+                    kb.expiryDate = kb.dateComposed.AddDays(AllSorts.getExpiryDays(2));
 
                     if (kb.dateSubmitted == null)
                         kb.dateSubmitted = DateTime.Now;
 
+                    outMsg =  "New KB Article created and approved successfully";
+
                 }
-                else if (Request.Form.AllKeys.Contains("btnUnApprove"))
+                else if (submittedValues.Contains("btnUnApprove"))
                 {
                     kb.published = false;
                 }
-                else if (Request.Form.AllKeys.Contains("btnSubmit"))
+                else if (submittedValues.Contains("btnSubmit"))
                 {
                     kb.dateSubmitted = DateTime.Now;
+                    outMsg = "New KB Article created and submitted successfully";
                 }
 
                 kb = db.KnowledgeFAQs.Add(kb);
@@ -158,14 +162,15 @@ namespace Help_Desk_2.Controllers
                 db.SaveChanges();
 
                 //Better to send mail post save in case there errors
-                if (Request.Form.AllKeys.Contains("btnSubmit"))
+                if (submittedValues.Contains("btnSubmit"))
                 {
 
                     //Send email to ticket admins to let them know of this new ticket submission
                     Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendFAQKBNotification("Submitted", kb.ID));
                 }
 
-                if (Request.Form.AllKeys.Contains("btnSave")) // || Request.Form.AllKeys.Contains("btnApprove") || Request.Form.AllKeys.Contains("btnUnApprove"))
+                AllSorts.displayMessage = outMsg;
+                if (submittedValues.Contains("btnSave")) // || submittedValues.Contains("btnApprove") || submittedValues.Contains("btnUnApprove"))
                 {
                     return RedirectToAction("Edit/" + kb.ID);
                 }
@@ -174,6 +179,9 @@ namespace Help_Desk_2.Controllers
                     return Redirect((string)Session["lastView"]);
 
                 return RedirectToAction("Index");
+            } else
+            {
+                AllSorts.displayMessage = "0#General error creating KB Article";
             }
 
             ViewBag.mode = 0;
@@ -205,19 +213,23 @@ namespace Help_Desk_2.Controllers
         {
             if (ModelState.IsValid)
             {
-
+                var submittedValues = Request.Form.AllKeys;
                 db.Entry(kb).State = EntityState.Modified;
+                string outMsg = "KB Article updated successfully";
 
-                if (Request.Form.AllKeys.Contains("btnApprove"))
+                if (submittedValues.Contains("btnApprove"))
                 {
                     kb.published = true;
 
                     //If being approved from expired then calculate expiry date from now instead of composed date
-                    kb.expiryDate = (kb.status == Statuses.Expired ? DateTime.Now : kb.dateComposed).AddDays(AllSorts.getExpiryDays(true));                    
+                    kb.expiryDate = (kb.status == Statuses.Expired ? DateTime.Now : kb.dateComposed).AddDays(AllSorts.getExpiryDays(2));
+
+                    outMsg = "KB Article approved successfully";
                 }
-                else if (Request.Form.AllKeys.Contains("btnUnApprove"))
+                else if (submittedValues.Contains("btnUnApprove"))
                 {
                     kb.published = false;
+                    outMsg = "KB Article unapproved successfully";
                 }
 
                 /***** Add File ************/
@@ -229,20 +241,22 @@ namespace Help_Desk_2.Controllers
                 db.SaveChanges();
 
                 //Better to send mail post save in case there errors
-                if (Request.Form.AllKeys.Contains("btnSubmit"))
+                if (submittedValues.Contains("btnSubmit"))
                 {
 
                     //Send email to ticket admins to let them know of this new ticket submission
                     Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendTicketNotification("Submitted",kb.ID));
+                    outMsg = "KB Article submitted successfully";
                 }
-                else if (Request.Form.AllKeys.Contains("btnApprove"))
+                else if (submittedValues.Contains("btnApprove"))
                 {
                     //Send Email to originator to inform of approval
                     Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendFAQKBNotification("Approved", kb.ID));
 
                 }
 
-                if (Request.Form.AllKeys.Contains("btnSave")) // || Request.Form.AllKeys.Contains("btnApprove") || Request.Form.AllKeys.Contains("btnUnApprove"))
+                AllSorts.displayMessage = outMsg;
+                if (submittedValues.Contains("btnSave")) // || submittedValues.Contains("btnApprove") || submittedValues.Contains("btnUnApprove"))
                 {
                     return RedirectToAction("Edit/" + kb.ID);
                 }
@@ -252,7 +266,10 @@ namespace Help_Desk_2.Controllers
 
                 return RedirectToAction("Index");
             }
-
+            else
+            {
+                AllSorts.displayMessage = "0#General error updating KB Article";
+            }
             ViewBag.mode = 1;
             return View("KBOne", kb);
         }

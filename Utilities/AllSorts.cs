@@ -84,7 +84,7 @@ namespace Help_Desk_2.Utilities
             set { HttpContext.Current.Session["message"] = value; }
         }
 
-        public static string appAdmins {  get { return "Administrators,AppGroup2,AppGroup1";  } }
+        //public static string appAdmins { get { return "Administrators,AppGroup2,AppGroup1"; } }
 
         private static HelpDeskContext db { get { return new HelpDeskContext(); } }
 
@@ -95,12 +95,12 @@ namespace Help_Desk_2.Utilities
 
         public static IEnumerable<UserProfile> AllUsers
         {
-            get { return db.UserProfiles.OrderBy(u => (u.firstName + u.surName)); }
+            get { return db.UserProfiles.Where(u => !u.deleted).OrderBy(u => (u.firstName + u.surName)); }
         }
 
         public static void saveWordLists(string[] kwtmp, string[] eatmp, HelpDeskContext db, KnowledgeFAQ kbfaq)
         {
-            
+
             if (kwtmp == null) kwtmp = new string[] { "0" };
 
             if (eatmp == null) eatmp = new string[] { "0" };
@@ -129,7 +129,7 @@ namespace Help_Desk_2.Utilities
 
                 if (wd != null)
                     kbfaq.wordList.Add(wd);
-                
+
             }
 
             foreach (var w in delKeywords)
@@ -199,11 +199,11 @@ namespace Help_Desk_2.Utilities
             {
                 db.Entry(user).Collection(x => x.kbsubs).Load();
                 orgList = user.kbsubs.Select(x => "" + x.ID).ToArray<string>();
-            } else { 
+            } else {
                 db.Entry(user).Collection(x => x.faqsubs).Load();
                 orgList = user.faqsubs.Select(x => "" + x.ID).ToArray<string>();
             }
-            
+
             string[] kwords = kwtmp.Union(eatmp).ToArray();
 
             //New keywords to be added 
@@ -248,13 +248,13 @@ namespace Help_Desk_2.Utilities
             string[] orgList = null;
             if (type == 1)
             {
-                orgList = db.UserProfiles.Where(x => x.isFaqApprover).Select(x => "" + x.userID).ToArray<string>();
+                orgList = db.UserProfiles.Where(x => !x.deleted && x.isFaqApprover).Select(x => "" + x.userID).ToArray<string>();
             } else if (type == 2)
             {
-                orgList = db.UserProfiles.Where(x => x.isKbApprover).Select(x => "" + x.userID).ToArray<string>();
+                orgList = db.UserProfiles.Where(x => !x.deleted && x.isKbApprover).Select(x => "" + x.userID).ToArray<string>();
             } else if (type == 3)
             {
-                orgList = db.UserProfiles.Where(x => x.isResponsible).Select(x => "" + x.userID).ToArray<string>();
+                orgList = db.UserProfiles.Where(x => !x.deleted && x.isResponsible).Select(x => "" + x.userID).ToArray<string>();
             }
 
             //displayMessage += string.Join(",", orgList) + "//" + string.Join(",", kwords) + "#";
@@ -301,7 +301,7 @@ namespace Help_Desk_2.Utilities
             }
         }
 
-        public static int getExpiryDays(bool kb = false)
+        public static int getExpiryDays(int type = 0)
         {
             GlobalSettings globalSettings = db.GlobalSettingss.FirstOrDefault<GlobalSettings>();
 
@@ -311,16 +311,32 @@ namespace Help_Desk_2.Utilities
                 return 0;
             } else
             {
-                return kb ? globalSettings.KBFAQsExpiryDays : globalSettings.TicketExpiryDays;
+                if (type == 0) return globalSettings.TicketExpiryDays;
+
+                if (type == 1) return globalSettings.FAQsExpiryDays;
+
+                if (type == 2) return globalSettings.TicketExpiryDays;
+
+                return 0;
             }
         }
 
-        public static int pageSize {  get { return 5; } }
+        public static int pageSize {
+            get {
+                string ps = ConfigurationManager.AppSettings["PageSize"];
+                int psNum = 0;
+                if (!int.TryParse(ps, out psNum))
+                {
+                    return 10; //Default
+                }
+                return psNum;
+
+            } }
 
         public static void setNavProperties(dynamic ViewBag, bool isSinglePage = false)
         {
             HttpContext ctx = HttpContext.Current;
-            if(isSinglePage)
+            if (isSinglePage)
             {
                 try
                 {
@@ -346,7 +362,7 @@ namespace Help_Desk_2.Utilities
                 return false;
             }
 
-            foreach ( string grp in appSettings.Split(','))
+            foreach (string grp in appSettings.Split(','))
             {
                 if (user.IsInRole(grp.Trim()))
                     return true;
@@ -358,6 +374,7 @@ namespace Help_Desk_2.Utilities
         public static bool UserCan(string ActionName)
         {
             var user = HttpContext.Current.User.Identity.Name;
+            if (true) return true;
             if (ActionName == "ManageAll")
             {
                 return userHasRole("AdminUsers");
@@ -390,11 +407,11 @@ namespace Help_Desk_2.Utilities
             if (string.IsNullOrEmpty(sessValue))
                 return null;
 
-            if (string.IsNullOrEmpty((string) HttpContext.Current.Session[sessValue]))
+            if (string.IsNullOrEmpty((string)HttpContext.Current.Session[sessValue]))
             {
                 UserData ud = new UserData();
                 UserProfile up = ud.getUserProfile();
-                if (sessValue == "UserID") { 
+                if (sessValue == "UserID") {
                     return up.userID.ToString();
                 } else if (sessValue == "UserDisplayName")
                 {
@@ -433,6 +450,21 @@ namespace Help_Desk_2.Utilities
             } catch (Exception ex)
             {
 
+            }
+        }
+
+        public static string getNewTicketMessage {
+            get {
+
+                GlobalSettings globalSettings = db.GlobalSettingss.FirstOrDefault<GlobalSettings>();
+
+                if (globalSettings == null || globalSettings.ID == null || !globalSettings.TicketHeaderEnabled)
+                {
+
+                    return "";
+                }
+
+                return globalSettings.TicketHeader;
             }
         }
 

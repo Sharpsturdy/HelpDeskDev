@@ -31,8 +31,8 @@
                             {
                                 <tr onclick="$(location).attr('href', '@Url.Action("Details", "Ticket", new { @id = item.ID })')">
 
-                                    <td>@String.Format("{0:d}", item.creationDate)</td>
-                                    <td>item.Originator.displayName</td>
+                                    <td>@String.Format("{0:d}", item.dateComposed)</td>
+                                    <td>@item.Originator.displayName</td>
                                     <td>@item.headerText</td>
 
                                 </tr>

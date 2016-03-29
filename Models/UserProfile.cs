@@ -12,38 +12,46 @@ namespace Help_Desk_2.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public Guid userID { get; set;  }
+        public Guid userID { get; set; }
 
         [MinLength(1)]
-        public string loginName { get; set;  }
+        public string loginName { get; set; }
 
-        public string principalName { get; set;  }
+        public string principalName { get; set; }
 
         [Display(Name = "First name")]
         [StringLength(50, ErrorMessage = "Field cannot exceed 50 characters")]
-        public string firstName { get; set;  }
+        public string firstName { get; set; }
 
         [Display(Name = "Last name")]
         [StringLength(50, ErrorMessage = "Field cannot exceed 50 characters")]
-        public string surName { get; set;  }
+        public string surName { get; set; }
 
         [Display(Name = "Email Address")]
-        [DataType(DataType.EmailAddress,ErrorMessage = "Enter a valid email address")]
-        public string emailAddress { get; set;  }
+        [DataType(DataType.EmailAddress, ErrorMessage = "Enter a valid email address")]
+        public string emailAddress { get; set; }
 
         [Display(Name = "Contact No.")]
         [StringLength(20, ErrorMessage = "Field cannot exceed 20 characters")]
         [DataType(DataType.PhoneNumber)]
-        public string contactNumber { get; set;  }
+        public string contactNumber { get; set; }
 
         [DefaultValue(false)]
-        public bool isResponsible { get; set;  }
+        public bool isResponsible { get; set; }
 
         [DefaultValue(false)]
         public bool isFaqApprover { get; set; }
 
         [DefaultValue(false)]
         public bool isKbApprover { get; set; }
+
+        [Display(Name = "Date of Last Login")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:d}")]
+        [DataType(DataType.DateTime)]
+        public DateTime? lastSignOn { get; set; }
+
+        [DefaultValue(false)]
+        public bool deleted { get; set; }
 
         //public int preferedLanguage { get; set;  }
 
