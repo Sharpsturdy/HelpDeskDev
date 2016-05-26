@@ -47,15 +47,96 @@
     </ul>
 </div>
 
-<div class="col-sm-12" style="border: 1px solid #ddd;">
-    <h3>My Subscriptions</h3>
-    <ul>
-        <li>Vestibulum eget leo non est blandit iaculis non id elit.</li>
-        <li> Duis ac nunc volutpat, fermentum neque vel, molestie arcu.</li>
-        <li>Nam eget tortor feugiat, ultricies velit eget, faucibus dui.</li>
-        <li>Morbi feugiat sem a feugiat sollicitudin</li>
-    </ul>
-</div>
+    <div class="col-sm-12" style="border: 1px solid #ddd;">
+        <h3>My Subscriptions</h3>
+        
+        <table class="table table-bordered table-hover table-condensed table-view table-faqsubs">
+            <thead>
+                <tr><th colspan="2">FAQs</th></tr>
+                <tr><th>Keywords</th><th>Expert Areas</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        @*If any keywrds exist show here as list*@
+                        @if(ViewBag.faqsubskw == null)
+                        {
+                            <em>No keywords subscriptions yet</em>
+                        }
+                        else
+                        {
+                            <ul class="subs faqs keywords">
+                                @foreach(var sub in ViewBag.faqsubskw)
+                                {
+                                    <li>@sub</li>
+                                }
+                            </ul>
+                        }
+                    </td>
+                    <td>
+                        @*If any expertareas exist show here as list*@
+                        @if (ViewBag.faqsubsea == null)
+                        {
+                            <em>No expert area subscriptions yet</em>
+                        }
+                        else
+                        {
+                            <ul class="subs faqs expertareas">
+                                @foreach (var sub in ViewBag.faqsubsea)
+                                {
+                                    <li>@sub</li>
+                                }
+                            </ul>
+                        }
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="table table-bordered table-hover table-condensed table-view table-kbsubs">
+            <thead>
+                <tr><th colspan="2">Knowledgebase</th></tr>
+                <tr><th>Keywords</th><th>Expert Areas</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        @*If any keywrds exist show here as list*@
+                        @if (ViewBag.kbsubskw == null)
+                        {
+                            <em>No keywords subscriptions yet</em>
+                        }
+                        else
+                        {
+                            <ul class="subs kb keywords">
+                                @foreach (var sub in ViewBag.kbsubskw)
+                                {
+                                    <li>@sub</li>
+                                }
+                            </ul>
+                        }
+                    </td>
+                    <td>
+                        @*If any expertareas exist show here as list*@
+                        @if (ViewBag.kbsubsea == null)
+                        {
+                            <em>No expert area subscriptions yet</em>
+                        }
+                        else
+                        {
+                        <ul class="subs kb expertareas">
+                            @foreach (var sub in ViewBag.kbsubsea)
+                            {
+                                <li>@sub</li>
+                            }
+                        </ul>
+                        }
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
 </div>
 <div class="row" style="display:none">
     <div class="col-md-4">

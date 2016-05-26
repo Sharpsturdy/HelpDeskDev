@@ -93,6 +93,15 @@ namespace Help_Desk_2.Utilities
             get { return db.WordLists.OrderBy(x => x.text); }
         }
 
+        public static IEnumerable<WordList> keywords
+        {
+            get { return FullWordList.Where(x => x.type == 1 && !x.deleted); }
+        }
+
+        public static IEnumerable<WordList> expertareas
+        {
+            get { return FullWordList.Where(x => x.type == 2 && !x.deleted); }
+        }
         public static IEnumerable<UserProfile> AllUsers
         {
             get { return db.UserProfiles.Where(u => !u.deleted).OrderBy(u => (u.firstName + u.surName)); }
@@ -364,8 +373,13 @@ namespace Help_Desk_2.Utilities
 
             foreach (string grp in appSettings.Split(','))
             {
-                if (user.IsInRole(grp.Trim()))
-                    return true;
+                try {
+                    if (user.IsInRole(grp.Trim()))
+                        return true;
+                } catch (Exception ge)
+                {
+                    return false; //Group may not exist! So fail safe
+                }
             }
 
             return false;
@@ -374,7 +388,6 @@ namespace Help_Desk_2.Utilities
         public static bool UserCan(string ActionName)
         {
             var user = HttpContext.Current.User.Identity.Name;
-            if (true) return true;
             if (ActionName == "ManageAll")
             {
                 return userHasRole("AdminUsers");
@@ -396,7 +409,8 @@ namespace Help_Desk_2.Utilities
             else if (ActionName.StartsWith("Create"))
             {
                 return AllSorts.userHasRole(ActionName);
-            } else if (ActionName == "SuperFunctions")
+            }
+            else if (ActionName == "SuperFunctions")
             {
                 return userHasRole("AdminUsers") || userHasRole("SuperUsers");
             }

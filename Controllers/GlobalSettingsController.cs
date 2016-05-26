@@ -6,6 +6,7 @@ using Help_Desk_2.DataAccessLayer;
 using Help_Desk_2.Models;
 using Help_Desk_2.Utilities;
 using MvcPaging;
+using System.Net;
 
 namespace Help_Desk_2.Controllers
 {
@@ -17,10 +18,7 @@ namespace Help_Desk_2.Controllers
         // GET: GlobalSettings, get first record
         public ActionResult Index()
         {
-           /* if (!AllSorts.isAppAdmin())
-            {
-                return RedirectToAction("Unauthorized", "Home"); // ult("~/Home/Unauthorized");
-            }*/
+           
             GlobalSettings gs = db.GlobalSettingss.FirstOrDefault<GlobalSettings>();
            
             //if (gs == null) { }
@@ -71,7 +69,7 @@ namespace Help_Desk_2.Controllers
         {
             int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
 
-            return View(db.WordLists.Where(k => k.type == 1)
+            return View("Keywords",db.WordLists.Where(k => k.type == 1 && !k.deleted)
                     .OrderBy(k => k.text)
                     .ToPagedList(currentPageIndex, AllSorts.pageSize));
            // return View(db.WordLists.Where(k => k.type == 1).ToList());
@@ -89,12 +87,22 @@ namespace Help_Desk_2.Controllers
             return RedirectToAction("Keywords");
         }
 
+        public ActionResult KeywordsDeleted(int? page)
+        {
+            int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
+
+            return View("Keywords", db.WordLists.Where(k => k.type == 1 && k.deleted)
+                    .OrderBy(k => k.text)
+                    .ToPagedList(currentPageIndex, AllSorts.pageSize));
+            // return View(db.WordLists.Where(k => k.type == 1).ToList());
+        }
+
         /********* Expert Area Section ****************/
         public ActionResult ExpertAreas(int? page)
         {
             int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
 
-            return View(db.WordLists.Where(k => k.type == 2)
+            return View("ExpertAreas",db.WordLists.Where(k => k.type == 2 && !k.deleted)
                     .OrderBy(k => k.text)
                     .ToPagedList(currentPageIndex, AllSorts.pageSize));
         }
@@ -111,6 +119,87 @@ namespace Help_Desk_2.Controllers
             }
             return RedirectToAction("ExpertAreas");
         }
+
+        /********* Expert Area Section ****************/
+        public ActionResult ExpertAreasDeleted(int? page)
+        {
+            int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
+
+            return View("ExpertAreas", db.WordLists.Where(k => k.type == 2 && k.deleted)
+                    .OrderBy(k => k.text)
+                    .ToPagedList(currentPageIndex, AllSorts.pageSize));
+        }
+
+        // GET: DummyWordLists/Edit/5
+        public ActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            WordList wordList = db.WordLists.Find(id);
+            if (wordList == null)
+            {
+                return HttpNotFound();
+            }
+            return View(wordList);
+        }
+
+        // POST: WordLists/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "ID,text,type,deleted")] WordList wordList)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(wordList).State = EntityState.Modified;
+                db.SaveChanges();
+                AllSorts.displayMessage = (wordList.type == 1 ? "Keyword" : "Expert Area") + " updated successfully!";
+                return RedirectToAction(wordList.type ==1 ? "Keywords":"ExpertAreas");
+            }
+            return View(wordList);
+        }
+
+        // GET: WordLists/Delete/5
+        public ActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            WordList wordList = db.WordLists.Find(id);
+            string type = wordList.type ==1 ? "Keyword":"Expert Area";
+            
+            db.Entry(wordList).State = EntityState.Modified;
+            wordList.deleted = true;
+
+            db.SaveChanges();
+            AllSorts.displayMessage = type + " '" + wordList.text + "' has been deleted successfully!";
+            return RedirectToAction(type.Replace(" ","") + "s");
+        }
+
+
+        // GET: WordLists/UnDelete/5
+        public ActionResult UnDelete(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            WordList wordList = db.WordLists.Find(id);
+            string type = wordList.type == 1 ? "Keyword" : "Expert Area";
+
+            db.Entry(wordList).State = EntityState.Modified;
+            wordList.deleted = false;
+
+            db.SaveChanges();
+            AllSorts.displayMessage = type + " '" + wordList.text + "' has been restored successfully!";
+            return RedirectToAction(type.Replace(" ", "") + "sDeleted");
+        }
+
+
         /*
         // GET: GlobalSettings/Create
         public ActionResult Create()

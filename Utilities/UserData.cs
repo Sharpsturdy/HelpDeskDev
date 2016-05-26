@@ -25,59 +25,85 @@ namespace Help_Desk_2.Utilities
                     var user = HttpContext.Current.User;
                     string loginName = user.Identity.Name;
 
-                    PrincipalContext ctx;
-
-                    if (loginName.IndexOf(@"\") > 0)
+                    PrincipalContext ctx =null;
+                    try {
+                        if (loginName.IndexOf(@"\") > 0)
+                        {
+                            ctx = new PrincipalContext(ContextType.Domain, loginName.Substring(0, loginName.IndexOf(@"\")));
+                        }
+                        else
+                        {
+                            ctx = new PrincipalContext(ContextType.Domain);
+                        }
+                    } catch(Exception pe)
                     {
-                        ctx = new PrincipalContext(ContextType.Domain, loginName.Substring(0, loginName.IndexOf(@"\")));
-                    }
-
-                    else
-                    {
-                        ctx = new PrincipalContext(ContextType.Domain);
+                        //AllSorts.displayMessage = "PE: " + pe.Message;
+                        try {
+                            ctx = new PrincipalContext(ContextType.Machine,null);
+                            loginName = loginName.Substring(loginName.IndexOf(@"\")+1);
+                          //  AllSorts.displayMessage += "Login Name: " + loginName;
+                        } catch (Exception me)
+                        {
+                            AllSorts.displayMessage = "ME: " + me.Message;
+                        }
                     }
 
                     var userPrincipal = UserPrincipal.FindByIdentity(ctx, loginName);
-
+                    /*AllSorts.displayMessage += ". UP" + userPrincipal.UserPrincipalName +
+                        "<br>Surname" + userPrincipal.Surname +
+                        "<br>Surname" + userPrincipal.DisplayName + "<br>" + userPrincipal.DistinguishedName +
+                        "<br>" + userPrincipal.EmailAddress + "<br>" + userPrincipal.GivenName +
+                        "<br>" + userPrincipal.Name + "<br>" + userPrincipal.SamAccountName + "<br>" +
+                        "<br>" + userPrincipal.Sid.Value;
+                        */
                     try
                     {
-                        if (user != null)
+                        
+                        HelpDeskContext db = new HelpDeskContext();
+
+                        //Grab current user from profile
+                        if (userPrincipal.Guid != null)
                         {
-                            HelpDeskContext db = new HelpDeskContext();
-
-                            //Grab current user from profile
                             userProfile = db.UserProfiles.Find(userPrincipal.Guid);
-
-                            if (userProfile == null) // If user has no profile add it
-                            {
-                                //Add profile to database then populate userProfile object from database
-                                userProfile = new UserProfile
-                                {
-                                    userID = (Guid)userPrincipal.Guid,
-                                    firstName = userPrincipal.GivenName,
-                                    loginName = loginName,
-                                    principalName = userPrincipal.UserPrincipalName,
-                                    surName = userPrincipal.Surname,
-                                    lastSignOn = DateTime.Now
-                                    // not using d ud.displayName,
-
-                                };
-                                db.UserProfiles.Add(userProfile);
-                                db.SaveChanges();
-                                userProfile = db.UserProfiles.Find(userPrincipal.Guid);
-                            } else
-                            {
-                                db.Entry(userProfile).State = EntityState.Modified;
-                                userProfile.lastSignOn = DateTime.Now;
-                                db.SaveChanges();
-                            }
-
+                            //AllSorts.displayMessage += "GUID : " + userPrincipal.Guid.ToString();
                         }
+                        else {
+                            //Try Using userpprincipal name
+                            var ups = db.UserProfiles.Where(u => u.principalName == userPrincipal.SamAccountName);
+                            if (ups.Count() > 0) { userProfile = ups.First(); }
+
+                            //AllSorts.displayMessage += "Looking for local user? : ";// + userProfile.ToString();
+                        }
+                        if (userProfile == null) // If user has no profile add it
+                        {
+                            AllSorts.displayMessage += " User Profile is null";
+                            //Add profile to database then populate userProfile object from database
+                            userProfile = new UserProfile
+                            {
+                                userID = userPrincipal.Guid== null ? Guid.NewGuid() : (Guid)userPrincipal.Guid,
+                                firstName = "",
+                                loginName = loginName,
+                                principalName = userPrincipal.SamAccountName,
+                                surName = userPrincipal.DisplayName,
+                                lastSignOn = DateTime.Now
+                                // not using d ud.displayName,
+
+                            };
+                            db.UserProfiles.Add(userProfile);
+                            db.SaveChanges();
+                            userProfile = db.UserProfiles.Find(userProfile.userID);
+                        } else
+                        {
+                            db.Entry(userProfile).State = EntityState.Modified;
+                            userProfile.lastSignOn = DateTime.Now;
+                            db.SaveChanges();
+                        }
+                                                    
                     }
                     catch (Exception ex)
                     {
                         //if (Globals.debug) Globals.form1Err += "Part2 Error: " + ex.Message;
-                        
+                        //AllSorts.displayMessage += ex.Message;
                         userProfile = new UserProfile();
                         userProfile.firstName = "";
                         userProfile.surName = "Anonymous";
@@ -103,79 +129,7 @@ namespace Help_Desk_2.Utilities
             {
                 return db.UserProfiles.Find(new Guid((string)HttpContext.Current.Session["UserID"]));
             }
-
-            
-            /*
-            if (userProfile != null )
-            {
-                return userProfile;
-            }
-            bool isLoggedIn = (HttpContext.Current.User != null && HttpContext.Current.User.Identity.IsAuthenticated);
-            if (isLoggedIn)
-            {
-                var user = HttpContext.Current.User;
-                string loginName = user.Identity.Name;
-
-                PrincipalContext ctx;
-
-                if (loginName.IndexOf(@"\") > 0)
-                {
-                    ctx = new PrincipalContext(ContextType.Domain, loginName.Substring(0, loginName.IndexOf(@"\"))); 
-                }
-
-                else
-                {+
-                    ctx = new PrincipalContext(ContextType.Domain);
-                }
-
-                var userPrincipal = UserPrincipal.FindByIdentity(ctx, loginName);
-
-                try
-                {
-                    if (user != null)
-                    {
-                        HelpDeskContext db = new HelpDeskContext();
-
-                        //Grab current user from profile
-                        userProfile = db.UserProfiles.Find(userPrincipal.Guid);
-
-                        if (userProfile == null) // If user has no profile add it
-                        {
-                            //Add profile to database then populate userProfile object from database
-                            userProfile = new UserProfile
-                            {
-                                userID = (Guid)userPrincipal.Guid,
-                                firstName = userPrincipal.GivenName,
-                                loginName = loginName,
-                                principalName = userPrincipal.UserPrincipalName,
-                                surName = userPrincipal.Surname,
-                                // not using d ud.displayName,
-
-                            };
-                            db.UserProfiles.Add(userProfile);
-                            db.SaveChanges();
-                            userProfile = db.UserProfiles.Find(userPrincipal.Guid);
-                        }
-                        
-                    }
-                }
-                catch (Exception ex)
-                {
-                    //if (Globals.debug) Globals.form1Err += "Part2 Error: " + ex.Message;
-                    errorMsg = ex.Message;
-                    userProfile = new UserProfile();
-                    userProfile.firstName = "";
-                    userProfile.surName = "Anonymous";
-                }
-
-            } else {
-                userProfile = new UserProfile();
-                userProfile.firstName = "";
-                userProfile.surName = "Anonymous";
-            }
-
-            return userProfile;
-            */
+                                  
         }
     }
 }

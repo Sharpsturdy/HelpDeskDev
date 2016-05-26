@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using Help_Desk_2.DataAccessLayer;
 using Help_Desk_2.Models;
+using System.Configuration;
 
 namespace Help_Desk_2.BackgroundJobs
 {
@@ -21,9 +22,26 @@ namespace Help_Desk_2.BackgroundJobs
 
         private HelpDeskContext db;
 
+        private string From;
+
+        public Emailer()
+        {
+            db = new HelpDeskContext();
+        
+            string tmp = ConfigurationManager.AppSettings["FromAddress"];
+            if (tmp.Trim() == "")
+            {
+                From = "helpdesk@renold.com";
+            } else
+            {
+                From = tmp.Trim();
+            }
+        }
+
         public void sendNotification()
         {
             dynamic email = new Email("KB");
+            email.From = From;
             email.To = "pelias@avexacomputing.net";
             
             email.Send();
@@ -37,6 +55,7 @@ namespace Help_Desk_2.BackgroundJobs
             if (tik == null) return;
 
             dynamic email = new Email("Ticket");
+            email.From = From;
             email.type = mailType;
             email.title = tik.headerText;
             email.id = "" + tik.ID;
@@ -87,6 +106,7 @@ namespace Help_Desk_2.BackgroundJobs
             if (kf == null) return;
            
             dynamic email = new Email(kf.type == 1 ? "FAQ":"KB");
+            email.From = From;
             email.type = mailType;
             email.title = kf.headerText;
             email.id = "" + kf.ID;
@@ -142,9 +162,6 @@ namespace Help_Desk_2.BackgroundJobs
         }
 
 
-        public Emailer()
-        {
-            db = new HelpDeskContext();
-        }
+       
     }
 }

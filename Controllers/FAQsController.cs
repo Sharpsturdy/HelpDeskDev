@@ -156,17 +156,19 @@ namespace Help_Desk_2.Controllers
                 /***** Save keyowrds/expertareas *********/
                 AllSorts.saveWordLists(Request.Form.GetValues("inkeywords"), Request.Form.GetValues("inexpertareas"), db, faq);
 
-                db.SaveChanges();
+                
                 //Better to send mail post save in case there errors
                 if (submittedValues.Contains("btnSubmit"))
                 {
-
+                    if (faq.dateSubmitted == null)
+                        faq.dateSubmitted = DateTime.Now;
                     //Send email to ticket admins to let them know of this new ticket submission
                     outMsg = "New FAQ created and submitted successfully!";
                     Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendFAQKBNotification("Submitted",faq.ID));
                 }
 
                 AllSorts.displayMessage = outMsg;
+                db.SaveChanges();
 
                 if (submittedValues.Contains("btnSave")) // || submittedValues.Contains("btnApprove") || submittedValues.Contains("btnUnApprove"))
                 {
@@ -330,13 +332,15 @@ namespace Help_Desk_2.Controllers
                     /***** Save keyowrds/expertareas *********/
                     AllSorts.saveWordLists(Request.Form.GetValues("inkeywords"), Request.Form.GetValues("inexpertareas"), db, faq);
 
-                    db.SaveChanges();
+                   // db.SaveChanges();
                 }
 
                 //Better to send mail post save in case there errors
                 if (submittedValues.Contains("btnSubmit"))
                 {
 
+                    if (faq.dateSubmitted == null)
+                        faq.dateSubmitted = DateTime.Now; 
                     //Send email to ticket admins to let them know of this new ticket submission
                     Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendFAQKBNotification("Submitted", faq.ID));
                     outMsg = "FAQ submitted successfully!";
@@ -348,6 +352,8 @@ namespace Help_Desk_2.Controllers
                     Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendFAQKBNotification("Approved", faq.ID));
 
                 }
+
+                db.SaveChanges();
                 AllSorts.displayMessage = outMsg;
 
                 if (submittedValues.Contains("btnSave")) //|| submittedValues.Contains("btnApprove") || submittedValues.Contains("btnUnApprove"))

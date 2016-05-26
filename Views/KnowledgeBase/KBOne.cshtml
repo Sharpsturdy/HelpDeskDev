@@ -105,12 +105,12 @@
                 <div class="panel-body1">                    
                     @if (ViewBag.mode == 0)
                     {
-                        @Html.DropDownList("inkeywords", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 1), "ID", "Text"), new { @class = "select2-editor", multiple = "multiple" })
+                        @Html.DropDownList("inkeywords", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 1 && !x.deleted), "ID", "Text"), new { @class = "select2-editor", multiple = "multiple" })
                     }
                     else if (ViewBag.mode == 1)
                     {
 
-                        @Html.DropDownList("inkeywords", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 1), "ID", "Text", Model.keywords.Select(x => x.ID)), new { @class = "select2-editor", multiple = "multiple" })
+                        @Html.DropDownList("inkeywords", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 1 && !x.deleted), "ID", "Text", Model.keywords.Select(x => x.ID)), new { @class = "select2-editor", multiple = "multiple" })
 
                     } else
                     {
@@ -125,12 +125,12 @@
                 <div class="panel-body1">
                     @if (ViewBag.mode == 0)
                     {
-                       @Html.DropDownList("inexpertareas", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 2), "ID", "Text"), new { @class = "select2-editor", multiple = "multiple" })
+                       @Html.DropDownList("inexpertareas", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 2 && !x.deleted), "ID", "Text"), new { @class = "select2-editor", multiple = "multiple" })
                     }
                     else if (ViewBag.mode == 1)
                     {
 
-                        @Html.DropDownList("inexpertareas", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 2), "ID", "Text",Model.expertAreas.Select(x => x.ID)), new { @class = "select2-editor", multiple = "multiple" })
+                        @Html.DropDownList("inexpertareas", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 2 && !x.deleted), "ID", "Text",Model.expertAreas.Select(x => x.ID)), new { @class = "select2-editor", multiple = "multiple" })
                     } else
                     {
                         @String.Join(", ", Model.expertAreas.Select(x => x.text))

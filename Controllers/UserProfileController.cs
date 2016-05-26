@@ -52,7 +52,7 @@ namespace Help_Desk_2.Controllers
             return RedirectToAction("List");
         }
 
-        // GET: UserProfile/Details/5
+        /*** GET: UserProfile/Details/5
         public ActionResult Details(Guid? id)
         {
             if (id == null)
@@ -66,6 +66,7 @@ namespace Help_Desk_2.Controllers
             }
             return View(userProfile);
         }
+        ****************/
 
         // GET: UserProfile/Create
         public ActionResult Index()
@@ -98,7 +99,7 @@ namespace Help_Desk_2.Controllers
 
         }        
 
-        // GET: UserProfile/Edit/5
+        /*************** GET: UserProfile/Edit/5
         public ActionResult Edit(Guid? id)
         {
             if (id == null)
@@ -146,7 +147,7 @@ namespace Help_Desk_2.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-
+        *****************/
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -159,61 +160,4 @@ namespace Help_Desk_2.Controllers
 
     }
 
-    public class OLD_UserData {
-
-        public string loginName { get; set; }
-
-        public string displayName { get; set;  }
-
-        public string userPN { get; set; }
-
-        public Guid guid { get; set;  }
-
-        public string firstName { get; set;  }
-
-        public string lastName { get; set; }
-
-        private HelpDeskContext db = new HelpDeskContext();
-
-        public OLD_UserData()
-        {
-            var user = HttpContext.Current.User;
-            loginName = user.Identity.Name;
-
-            PrincipalContext ctx;
-
-            if (loginName.IndexOf(@"\") > 0)
-            {
-                ctx = new PrincipalContext(ContextType.Domain, loginName.Substring(0, loginName.IndexOf(@"\"))); //"vmwin2008svr1"); //
-            }
-            else
-            {
-                ctx = new PrincipalContext(ContextType.Domain);
-            }
-
-            var userPrincipal = UserPrincipal.FindByIdentity(ctx,loginName);
-
-            try
-            {
-                if (user != null)
-                {
-                    displayName = userPrincipal.DisplayName;
-                    userPN = userPrincipal.UserPrincipalName;
-                    guid = (Guid) userPrincipal.Guid;
-                    firstName = userPrincipal.GivenName;
-                    lastName = userPrincipal.Surname;
-                }
-
-                //var WinUser = new WindowsIdentity(userPN);
-                
-            }
-            catch (Exception ex)
-            {
-                //if (Globals.debug) Globals.form1Err += "Part2 Error: " + ex.Message;
-            }
-
-            
-
-        }
-    }
 }

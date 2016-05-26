@@ -33,7 +33,7 @@ namespace Help_Desk_2.Models
         {
             get
             {
-                return AllSorts.FullWordList.Where(x => x.type == 1).Select(x => x.text).ToList<string>();
+                return AllSorts.keywords.Select(x => x.text).ToList<string>();
             }
         } 
         
@@ -43,7 +43,7 @@ namespace Help_Desk_2.Models
         {
             get
             {
-                return AllSorts.FullWordList.Where(x => x.type == 2).Select(x => x.text).ToList<string>();
+                return AllSorts.expertareas.Select(x => x.text).ToList<string>();
             }
         }  
 

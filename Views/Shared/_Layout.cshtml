@@ -62,7 +62,7 @@
             <ul class="nav navbar-nav">
                 <li>@Html.ActionLink("Home", "Index", "Home")</li>
                 <li>@Html.ActionLink("FAQs", "Index","FAQs")</li>
-                <li>@*Html.SecureActionLink("Knowledge base", "Index", "KnowledgeBase", "SuperFunctions")</li>*@
+                <li>@Html.SecureActionLink("Knowledge base", "Index", "KnowledgeBase", "SuperFunctions")</li>
                 <li>@Html.ActionLink("Latest news","Index", "News")</li>
             </ul>
             <p class="nav navbar-text navbar-right">@Html.ActionLink(AllSorts.getUserDisplayName(), "Index", "UserProfile")</p>
@@ -83,7 +83,7 @@
                                     <li>@Html.ActionLink("Raise new ticket", "New", "Ticket")</li>
                                     <li>@Html.ActionLink("View my open tickets", "Index", "Ticket", null, htmlAttributes: new { @title = "Draft & Open" })</li>
                                     <li>@Html.ActionLink("View all my tickets", "List", "Ticket", null, htmlAttributes: new { @title = "Draft & Open & Closed" })</li>
-                                    <li>@*Html.SecureActionLink("My Assigned Tickets", "Assigned", "Ticket", "ManageTickets")</li>*@
+                                    <li>@Html.SecureActionLink("My Assigned Tickets", "Assigned", "Ticket", "ManageTickets")</li>
                                     <li>@Html.SecureActionLink("Manage Tickets", "Admin", "Ticket", "ManageTickets")</li>
                                     <li>@Html.SecureActionLink("Ticket Reports", "Reports", "Ticket", "ManageTickets")</li>
                                 </ul>
@@ -96,6 +96,7 @@
                                 <ul class="nav nav-pills nav-stacked">
                                     <li>@Html.ActionLink("My Profile", "Index", "UserProfile")</li>
                                     <li>@Html.ActionLink("My Subscriptions", "Subscriptions", "UserProfile")</li>
+                                    <li>@Html.SecureActionLink("Manage Profiles", "List", "UserProfile", "ManageAll")</li>
                                 </ul>
                             </div>
                         </div>

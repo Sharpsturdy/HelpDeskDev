@@ -170,6 +170,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="BackgroundJobs\Emailer.cs" />
     <Compile Include="BackgroundJobs\Mailer.cs" />
+    <Compile Include="Controllers\DummyWordListsController.cs" />
     <Compile Include="Controllers\KnowledgeBaseController.cs" />
     <Compile Include="Controllers\FAQsController.cs" />
     <Compile Include="Controllers\FilesController.cs" />
@@ -361,6 +362,7 @@
     <Content Include="Content\bootstrap-datepicker.standalone.css.map" />
     <Content Include="Content\bootstrap-datepicker.min.css.map" />
     <Content Include="Content\bootstrap-datepicker.css.map" />
+    <None Include="Properties\PublishProfiles\avx01.pubxml" />
     <None Include="Properties\PublishProfiles\azure vm.pubxml" />
     <None Include="Properties\PublishProfiles\dev web deploy.pubxml" />
     <None Include="Properties\PublishProfiles\hlpdsk02 - Web Deploy %282%29.pubxml" />
@@ -619,6 +621,12 @@
     <Content Include="Views\UserProfilesTest\Details.cshtml" />
     <Content Include="Views\UserProfilesTest\Edit.cshtml" />
     <Content Include="Views\UserProfilesTest\Index.cshtml" />
+    <Content Include="Views\DummyWordLists\Create.cshtml" />
+    <Content Include="Views\DummyWordLists\Delete.cshtml" />
+    <Content Include="Views\DummyWordLists\Details.cshtml" />
+    <Content Include="Views\DummyWordLists\Edit.cshtml" />
+    <Content Include="Views\DummyWordLists\Index.cshtml" />
+    <Content Include="Views\GlobalSettings\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Files\" />

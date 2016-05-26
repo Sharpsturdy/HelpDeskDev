@@ -1,4 +1,4 @@
-﻿From: Eng Helpdesk System <patrice.elias@gmail.com>
+﻿From: @Html.Raw(ViewBag.From)
 To: @ViewBag.To
 @if (ViewBag.CC != "") { Html.Raw("CC: " + ViewBag.CC); }
 Subject: @ViewBag.Subject
@@ -24,6 +24,6 @@ Content-Type: text/html; charset=utf-8
             <p>You can access this article at @Html.Raw(ViewBag.link)</p>
         }
         <p><b>System Message</b></p>
-      
+        
     </body>
 </html>
