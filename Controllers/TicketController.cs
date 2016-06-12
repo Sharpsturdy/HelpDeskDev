@@ -368,7 +368,7 @@ namespace Help_Desk_2.Controllers
                 else if (submittedValues.Contains("btnSubmit"))
                 {
                     ticket.dateSubmitted = DateTime.Now;
-                    ticket.expiryDate = ticket.dateSubmitted.Value.AddDays(AllSorts.getExpiryDays());
+                    //ticket.expiryDate = ticket.dateSubmitted.Value.AddDays(AllSorts.getExpiryDays());
 
                     //Send email to ticket admins to let them know of this new ticket submission
                     Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendTicketNotification("Submitted", ticket.ID));

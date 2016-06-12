@@ -83,6 +83,7 @@ namespace Help_Desk_2.Controllers
         // GET: UserProfile/Create
         public ActionResult Subscriptions()
         {
+            
             UserProfile userProfile = db.UserProfiles.Find(new Guid(AllSorts.getUserID()));
 
             if (Request.HttpMethod == "POST")
@@ -94,6 +95,9 @@ namespace Help_Desk_2.Controllers
                 db.SaveChanges();
 
                 AllSorts.displayMessage = "Subscriptions updated!";
+            } else
+            {
+                AllSorts.displayMessage = "Just displaying or not sved!" + Request.HttpMethod;
             }
             return View(userProfile);
 

@@ -38,7 +38,7 @@ namespace Help_Desk_2.BackgroundJobs
             }
         }
 
-        public void sendNotification()
+        public void sendNotification1()
         {
             dynamic email = new Email("KB");
             email.From = From;
@@ -47,7 +47,13 @@ namespace Help_Desk_2.BackgroundJobs
             email.Send();
         }
 
-
+        public void sendNotification()
+        {
+            dynamic email = new Email("Test");
+            email.To = "pelias@avexacomputing.net";
+            email.Message = "DB.GetRandomLolcatLink()";
+            email.Send();
+        }
         public void sendTicketNotification(string mailType, int id)
         {
             Ticket tik  = db.Tickets.Find(id); //Get Ticket

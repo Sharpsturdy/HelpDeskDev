@@ -13,6 +13,13 @@ namespace Help_Desk_2.Controllers
     {
         private HelpDeskContext db = new HelpDeskContext();
 
+        public void TestEmail()
+        {
+            //RecurringJob.AddOrUpdate("ContentNotification", () => Mailer.sendNotification(), "*/5 * * * *");
+            Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendNotification());
+
+        }
+
         public ActionResult Index()
         {
             ViewBag.news = (from row in db.News

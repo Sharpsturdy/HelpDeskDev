@@ -23,7 +23,7 @@ namespace Help_Desk_2.BackgroundJobs
             if(mailType == "SubmitTicket")
             {
                 //HelpDeskContext db = new HelpDeskContext();
-                string sendTo = "webmaster@mispo.org,patrice@aloehealthsecrets.com";//string.Join(",", db.UserProfiles.Where(x => x.isResponsible).Select(x => x.emailAddress).ToArray<string>());
+                string sendTo = "patrice@aloehealthsecrets.com";//string.Join(",", db.UserProfiles.Where(x => x.isResponsible).Select(x => x.emailAddress).ToArray<string>());
                 dynamic email = new Email("General");
                 email.To = sendTo;
                 email.CC = copyTo;
