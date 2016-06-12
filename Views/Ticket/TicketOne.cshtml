@@ -17,7 +17,7 @@
     {
         ViewBag.Title = "Ticket: " + Model.displayID;
         ViewBag.status = Html.DisplayFor(model => model.status);
-        ViewBag.displayName = "Changed"; // Model.Originator.displayName;
+        ViewBag.displayName = Model.Originator.displayName;
         ViewBag.Status = Model.status;
         ViewBag.CreationDate = Html.DisplayFor(model => model.dateComposed);
 

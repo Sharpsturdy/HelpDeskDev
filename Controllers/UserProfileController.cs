@@ -95,10 +95,8 @@ namespace Help_Desk_2.Controllers
                 db.SaveChanges();
 
                 AllSorts.displayMessage = "Subscriptions updated!";
-            } else
-            {
-                AllSorts.displayMessage = "Just displaying or not sved!" + Request.HttpMethod;
-            }
+            } 
+
             return View(userProfile);
 
         }        
@@ -118,6 +116,7 @@ namespace Help_Desk_2.Controllers
             }
             return View(userProfile);
         }
+        ************/
 
         // POST: UserProfile/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -140,7 +139,7 @@ namespace Help_Desk_2.Controllers
             return View(userProfile);
         }
 
-        
+        /************
         // POST: UserProfile/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

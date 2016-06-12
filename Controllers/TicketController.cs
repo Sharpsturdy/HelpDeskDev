@@ -227,7 +227,7 @@ namespace Help_Desk_2.Controllers
                 if (submittedValues.Contains("btnSubmit"))
                 {
                     ticket.dateSubmitted = DateTime.Now;
-                    ticket.expiryDate = ticket.dateSubmitted.Value.AddDays(AllSorts.getExpiryDays());                    
+                    //ticket.expiryDate = ticket.dateSubmitted.Value.AddDays(AllSorts.getExpiryDays());                    
                 }
                 
                 ticket = db.Tickets.Add(ticket);
