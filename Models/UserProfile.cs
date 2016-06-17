@@ -31,10 +31,11 @@ namespace Help_Desk_2.Models
         [DataType(DataType.EmailAddress, ErrorMessage = "Enter a valid email address")]
         public string emailAddress { get; set; }
 
-        [Display(Name = "Contact No.")]
+        /*[Display(Name = "Contact No.")]
         [StringLength(20, ErrorMessage = "Field cannot exceed 20 characters")]
         [DataType(DataType.PhoneNumber)]
         public string contactNumber { get; set; }
+        */
 
         [DefaultValue(false)]
         public bool isResponsible { get; set; }
@@ -54,10 +55,9 @@ namespace Help_Desk_2.Models
         public bool deleted { get; set; }
 
         //public int preferedLanguage { get; set;  }
-
-        [NotMapped]
+                
         [Display(Name = "Created by")]
-        public string displayName { get { return firstName + " " + surName; } }
+        public string displayName { get; set; }//{ get { return firstName + " " + surName; } }
 
         //FAQ Substriptions
         [NotMapped]
@@ -107,8 +107,10 @@ namespace Help_Desk_2.Models
 
         public virtual ICollection<Ticket> tickets { get; set; }
 
+        [InverseProperty("FAQSubs")]
         public virtual ICollection<WordList> faqsubs { get; set;  }
 
+        [InverseProperty("KBSubs")]
         public virtual ICollection<WordList> kbsubs { get; set; }
     }
 }

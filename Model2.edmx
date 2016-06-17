@@ -1,0 +1,979 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Model2.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Attachment">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="parentID" Type="int" />
+          <Property Name="commonID" Type="int" />
+          <Property Name="fileName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="filePath" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AuditTrail">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="refID" Type="int" Nullable="false" />
+          <Property Name="timeStamp" Type="datetime" Nullable="false" />
+          <Property Name="userID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="text" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="GlobalSettings">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="TicketSeeder" Type="int" Nullable="false" />
+          <Property Name="TicketHeader" Type="nvarchar(max)" />
+          <Property Name="TicketExpiryDays" Type="int" Nullable="false" />
+          <Property Name="FAQsExpiryDays" Type="int" Nullable="false" />
+          <Property Name="KBExpiryDays" Type="int" Nullable="false" />
+          <Property Name="TicketHeaderEnabled" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="KnowledgeFAQ">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="dateComposed" Type="datetime" Nullable="false" />
+          <Property Name="expiryDate" Type="datetime" />
+          <Property Name="dateSubmitted" Type="datetime" />
+          <Property Name="headerText" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="description" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="originatorID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="suggest" Type="bit" Nullable="false" />
+          <Property Name="published" Type="bit" Nullable="false" />
+          <Property Name="deleted" Type="bit" Nullable="false" />
+          <Property Name="processed" Type="bit" Nullable="false" />
+          <Property Name="links" Type="nvarchar(max)" />
+          <Property Name="type" Type="tinyint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="News">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="title" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="body" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="sticky" Type="bit" Nullable="false" />
+          <Property Name="published" Type="bit" Nullable="false" />
+          <Property Name="deleted" Type="bit" Nullable="false" />
+          <Property Name="publishedDate" Type="datetime" />
+          <Property Name="originatorID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="creationDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Ticket">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ticketID" Type="int" Nullable="false" />
+          <Property Name="originatorID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="responsibleID" Type="uniqueidentifier" />
+          <Property Name="dateComposed" Type="datetime" Nullable="false" />
+          <Property Name="expiryDate" Type="datetime" />
+          <Property Name="dateCompleted" Type="datetime" />
+          <Property Name="deleted" Type="bit" Nullable="false" />
+          <Property Name="onhold" Type="bit" Nullable="false" />
+          <Property Name="returned" Type="bit" Nullable="false" />
+          <Property Name="headerText" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="description" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="links" Type="nvarchar(max)" />
+          <Property Name="dateSubmitted" Type="datetime" />
+          <Property Name="dateL1Release" Type="datetime" />
+          <Property Name="dateL2Release" Type="datetime" />
+          <Property Name="reason" Type="nvarchar(max)" />
+          <Property Name="adminComments" Type="nvarchar(max)" />
+          <Property Name="sanityCheck" Type="int" />
+          <Property Name="summary" Type="nvarchar" MaxLength="250" />
+          <Property Name="report" Type="nvarchar(max)" />
+          <Property Name="UserProfile_userID" Type="uniqueidentifier" />
+        </EntityType>
+        <EntityType Name="TicketWordList">
+          <Key>
+            <PropertyRef Name="Ticket_ID" />
+            <PropertyRef Name="WordList_ID" />
+          </Key>
+          <Property Name="Ticket_ID" Type="int" Nullable="false" />
+          <Property Name="WordList_ID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserProfile">
+          <Key>
+            <PropertyRef Name="userID" />
+          </Key>
+          <Property Name="userID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="loginName" Type="nvarchar(max)" />
+          <Property Name="principalName" Type="nvarchar(max)" />
+          <Property Name="firstName" Type="nvarchar" MaxLength="50" />
+          <Property Name="surName" Type="nvarchar" MaxLength="50" />
+          <Property Name="emailAddress" Type="nvarchar(max)" />
+          <Property Name="contactNumber" Type="nvarchar" MaxLength="20" />
+          <Property Name="isResponsible" Type="bit" Nullable="false" />
+          <Property Name="isFaqApprover" Type="bit" Nullable="false" />
+          <Property Name="isKbApprover" Type="bit" Nullable="false" />
+          <Property Name="lastSignOn" Type="datetime" />
+          <Property Name="deleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserProfileWordList">
+          <Key>
+            <PropertyRef Name="UserProfile_userID" />
+            <PropertyRef Name="WordList_ID" />
+          </Key>
+          <Property Name="UserProfile_userID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="WordList_ID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserProfileWordList1">
+          <Key>
+            <PropertyRef Name="UserProfile_userID" />
+            <PropertyRef Name="WordList_ID" />
+          </Key>
+          <Property Name="UserProfile_userID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="WordList_ID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="WordList">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="text" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="type" Type="int" Nullable="false" />
+          <Property Name="deleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="WordListKnowledgeFAQ">
+          <Key>
+            <PropertyRef Name="WordList_ID" />
+            <PropertyRef Name="KnowledgeFAQ_ID" />
+          </Key>
+          <Property Name="WordList_ID" Type="int" Nullable="false" />
+          <Property Name="KnowledgeFAQ_ID" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_dbo_Attachment_dbo_KnowledgeFAQ_commonID">
+          <End Role="KnowledgeFAQ" Type="Self.KnowledgeFAQ" Multiplicity="0..1" />
+          <End Role="Attachment" Type="Self.Attachment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="KnowledgeFAQ">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Attachment">
+              <PropertyRef Name="commonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_Attachment_dbo_Ticket_parentID">
+          <End Role="Ticket" Type="Self.Ticket" Multiplicity="0..1" />
+          <End Role="Attachment" Type="Self.Attachment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Ticket">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Attachment">
+              <PropertyRef Name="parentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AuditTrail_dbo_Ticket_refID">
+          <End Role="Ticket" Type="Self.Ticket" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AuditTrail" Type="Self.AuditTrail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Ticket">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="AuditTrail">
+              <PropertyRef Name="refID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_KnowledgeFAQ_dbo_UserProfile_originatorID">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="KnowledgeFAQ" Type="Self.KnowledgeFAQ" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="userID" />
+            </Principal>
+            <Dependent Role="KnowledgeFAQ">
+              <PropertyRef Name="originatorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_News_dbo_UserProfile_originatorID">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="News" Type="Self.News" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="userID" />
+            </Principal>
+            <Dependent Role="News">
+              <PropertyRef Name="originatorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_Ticket_dbo_UserProfile_originatorID">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Ticket" Type="Self.Ticket" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="userID" />
+            </Principal>
+            <Dependent Role="Ticket">
+              <PropertyRef Name="originatorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_Ticket_dbo_UserProfile_responsibleID">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="0..1" />
+          <End Role="Ticket" Type="Self.Ticket" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="userID" />
+            </Principal>
+            <Dependent Role="Ticket">
+              <PropertyRef Name="responsibleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_Ticket_dbo_UserProfile_UserProfile_userID">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="0..1" />
+          <End Role="Ticket" Type="Self.Ticket" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="userID" />
+            </Principal>
+            <Dependent Role="Ticket">
+              <PropertyRef Name="UserProfile_userID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_TicketWordList_dbo_Ticket_Ticket_ID">
+          <End Role="Ticket" Type="Self.Ticket" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TicketWordList" Type="Self.TicketWordList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Ticket">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TicketWordList">
+              <PropertyRef Name="Ticket_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_TicketWordList_dbo_WordList_WordList_ID">
+          <End Role="WordList" Type="Self.WordList" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TicketWordList" Type="Self.TicketWordList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WordList">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TicketWordList">
+              <PropertyRef Name="WordList_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_UserProfileWordList_dbo_UserProfile_UserProfile_userID">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="UserProfileWordList" Type="Self.UserProfileWordList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="userID" />
+            </Principal>
+            <Dependent Role="UserProfileWordList">
+              <PropertyRef Name="UserProfile_userID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_UserProfileWordList_dbo_WordList_WordList_ID">
+          <End Role="WordList" Type="Self.WordList" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="UserProfileWordList" Type="Self.UserProfileWordList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WordList">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UserProfileWordList">
+              <PropertyRef Name="WordList_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_UserProfileWordList1_dbo_UserProfile_UserProfile_userID">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="UserProfileWordList1" Type="Self.UserProfileWordList1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="userID" />
+            </Principal>
+            <Dependent Role="UserProfileWordList1">
+              <PropertyRef Name="UserProfile_userID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_UserProfileWordList1_dbo_WordList_WordList_ID">
+          <End Role="WordList" Type="Self.WordList" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="UserProfileWordList1" Type="Self.UserProfileWordList1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WordList">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UserProfileWordList1">
+              <PropertyRef Name="WordList_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_WordListKnowledgeFAQ_dbo_KnowledgeFAQ_KnowledgeFAQ_ID">
+          <End Role="KnowledgeFAQ" Type="Self.KnowledgeFAQ" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="WordListKnowledgeFAQ" Type="Self.WordListKnowledgeFAQ" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="KnowledgeFAQ">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="WordListKnowledgeFAQ">
+              <PropertyRef Name="KnowledgeFAQ_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_WordListKnowledgeFAQ_dbo_WordList_WordList_ID">
+          <End Role="WordList" Type="Self.WordList" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="WordListKnowledgeFAQ" Type="Self.WordListKnowledgeFAQ" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WordList">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="WordListKnowledgeFAQ">
+              <PropertyRef Name="WordList_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="faqSubs" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <EntityContainer Name="Model2StoreContainer">
+          <EntitySet Name="Attachment" EntityType="Self.Attachment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AuditTrail" EntityType="Self.AuditTrail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GlobalSettings" EntityType="Self.GlobalSettings" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="KnowledgeFAQ" EntityType="Self.KnowledgeFAQ" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="News" EntityType="Self.News" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Ticket" EntityType="Self.Ticket" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TicketWordList" EntityType="Self.TicketWordList" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserProfile" EntityType="Self.UserProfile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserProfileWordList" EntityType="Self.UserProfileWordList" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserProfileWordList1" EntityType="Self.UserProfileWordList1" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WordList" EntityType="Self.WordList" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WordListKnowledgeFAQ" EntityType="Self.WordListKnowledgeFAQ" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_dbo_Attachment_dbo_KnowledgeFAQ_commonID" Association="Self.FK_dbo_Attachment_dbo_KnowledgeFAQ_commonID">
+            <End Role="KnowledgeFAQ" EntitySet="KnowledgeFAQ" />
+            <End Role="Attachment" EntitySet="Attachment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_Attachment_dbo_Ticket_parentID" Association="Self.FK_dbo_Attachment_dbo_Ticket_parentID">
+            <End Role="Ticket" EntitySet="Ticket" />
+            <End Role="Attachment" EntitySet="Attachment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AuditTrail_dbo_Ticket_refID" Association="Self.FK_dbo_AuditTrail_dbo_Ticket_refID">
+            <End Role="Ticket" EntitySet="Ticket" />
+            <End Role="AuditTrail" EntitySet="AuditTrail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_KnowledgeFAQ_dbo_UserProfile_originatorID" Association="Self.FK_dbo_KnowledgeFAQ_dbo_UserProfile_originatorID">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="KnowledgeFAQ" EntitySet="KnowledgeFAQ" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_News_dbo_UserProfile_originatorID" Association="Self.FK_dbo_News_dbo_UserProfile_originatorID">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="News" EntitySet="News" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_Ticket_dbo_UserProfile_originatorID" Association="Self.FK_dbo_Ticket_dbo_UserProfile_originatorID">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="Ticket" EntitySet="Ticket" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_Ticket_dbo_UserProfile_responsibleID" Association="Self.FK_dbo_Ticket_dbo_UserProfile_responsibleID">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="Ticket" EntitySet="Ticket" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_Ticket_dbo_UserProfile_UserProfile_userID" Association="Self.FK_dbo_Ticket_dbo_UserProfile_UserProfile_userID">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="Ticket" EntitySet="Ticket" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_TicketWordList_dbo_Ticket_Ticket_ID" Association="Self.FK_dbo_TicketWordList_dbo_Ticket_Ticket_ID">
+            <End Role="Ticket" EntitySet="Ticket" />
+            <End Role="TicketWordList" EntitySet="TicketWordList" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_TicketWordList_dbo_WordList_WordList_ID" Association="Self.FK_dbo_TicketWordList_dbo_WordList_WordList_ID">
+            <End Role="WordList" EntitySet="WordList" />
+            <End Role="TicketWordList" EntitySet="TicketWordList" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_UserProfileWordList_dbo_UserProfile_UserProfile_userID" Association="Self.FK_dbo_UserProfileWordList_dbo_UserProfile_UserProfile_userID">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="UserProfileWordList" EntitySet="UserProfileWordList" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_UserProfileWordList_dbo_WordList_WordList_ID" Association="Self.FK_dbo_UserProfileWordList_dbo_WordList_WordList_ID">
+            <End Role="WordList" EntitySet="WordList" />
+            <End Role="UserProfileWordList" EntitySet="UserProfileWordList" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_UserProfileWordList1_dbo_UserProfile_UserProfile_userID" Association="Self.FK_dbo_UserProfileWordList1_dbo_UserProfile_UserProfile_userID">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="UserProfileWordList1" EntitySet="UserProfileWordList1" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_UserProfileWordList1_dbo_WordList_WordList_ID" Association="Self.FK_dbo_UserProfileWordList1_dbo_WordList_WordList_ID">
+            <End Role="WordList" EntitySet="WordList" />
+            <End Role="UserProfileWordList1" EntitySet="UserProfileWordList1" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_WordListKnowledgeFAQ_dbo_KnowledgeFAQ_KnowledgeFAQ_ID" Association="Self.FK_dbo_WordListKnowledgeFAQ_dbo_KnowledgeFAQ_KnowledgeFAQ_ID">
+            <End Role="KnowledgeFAQ" EntitySet="KnowledgeFAQ" />
+            <End Role="WordListKnowledgeFAQ" EntitySet="WordListKnowledgeFAQ" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_WordListKnowledgeFAQ_dbo_WordList_WordList_ID" Association="Self.FK_dbo_WordListKnowledgeFAQ_dbo_WordList_WordList_ID">
+            <End Role="WordList" EntitySet="WordList" />
+            <End Role="WordListKnowledgeFAQ" EntitySet="WordListKnowledgeFAQ" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="Model2" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="Model2Container" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Attachment" EntityType="Model2.Attachment" />
+          <EntitySet Name="AuditTrail" EntityType="Model2.AuditTrail" />
+          <EntitySet Name="GlobalSettings" EntityType="Model2.GlobalSettings" />
+          <EntitySet Name="KnowledgeFAQ" EntityType="Model2.KnowledgeFAQ" />
+          <EntitySet Name="News" EntityType="Model2.News" />
+          <EntitySet Name="Ticket" EntityType="Model2.Ticket" />
+          <EntitySet Name="UserProfile" EntityType="Model2.UserProfile" />
+          <EntitySet Name="WordList" EntityType="Model2.WordList" />
+          <AssociationSet Name="FK_dbo_Attachment_dbo_KnowledgeFAQ_commonID" Association="Model2.FK_dbo_Attachment_dbo_KnowledgeFAQ_commonID">
+            <End Role="KnowledgeFAQ" EntitySet="KnowledgeFAQ" />
+            <End Role="Attachment" EntitySet="Attachment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_Attachment_dbo_Ticket_parentID" Association="Model2.FK_dbo_Attachment_dbo_Ticket_parentID">
+            <End Role="Ticket" EntitySet="Ticket" />
+            <End Role="Attachment" EntitySet="Attachment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AuditTrail_dbo_Ticket_refID" Association="Model2.FK_dbo_AuditTrail_dbo_Ticket_refID">
+            <End Role="Ticket" EntitySet="Ticket" />
+            <End Role="AuditTrail" EntitySet="AuditTrail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_KnowledgeFAQ_dbo_UserProfile_originatorID" Association="Model2.FK_dbo_KnowledgeFAQ_dbo_UserProfile_originatorID">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="KnowledgeFAQ" EntitySet="KnowledgeFAQ" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_News_dbo_UserProfile_originatorID" Association="Model2.FK_dbo_News_dbo_UserProfile_originatorID">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="News" EntitySet="News" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_Ticket_dbo_UserProfile_originatorID" Association="Model2.FK_dbo_Ticket_dbo_UserProfile_originatorID">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="Ticket" EntitySet="Ticket" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_Ticket_dbo_UserProfile_responsibleID" Association="Model2.FK_dbo_Ticket_dbo_UserProfile_responsibleID">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="Ticket" EntitySet="Ticket" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_Ticket_dbo_UserProfile_UserProfile_userID" Association="Model2.FK_dbo_Ticket_dbo_UserProfile_UserProfile_userID">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="Ticket" EntitySet="Ticket" />
+          </AssociationSet>
+          <AssociationSet Name="TicketWordList" Association="Model2.TicketWordList">
+            <End Role="Ticket" EntitySet="Ticket" />
+            <End Role="WordList" EntitySet="WordList" />
+          </AssociationSet>
+          <AssociationSet Name="UserProfileWordList" Association="Model2.UserProfileWordList">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="WordList" EntitySet="WordList" />
+          </AssociationSet>
+          <AssociationSet Name="UserProfileWordList1" Association="Model2.UserProfileWordList1">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="WordList" EntitySet="WordList" />
+          </AssociationSet>
+          <AssociationSet Name="WordListKnowledgeFAQ" Association="Model2.WordListKnowledgeFAQ">
+            <End Role="KnowledgeFAQ" EntitySet="KnowledgeFAQ" />
+            <End Role="WordList" EntitySet="WordList" />
+          </AssociationSet>
+          <FunctionImport Name="faqSubs" ReturnType="Collection(Model2.faqSubs_Result)" />
+        </EntityContainer>
+        <EntityType Name="Attachment">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="parentID" Type="Int32" />
+          <Property Name="commonID" Type="Int32" />
+          <Property Name="fileName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="filePath" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="KnowledgeFAQ" Relationship="Model2.FK_dbo_Attachment_dbo_KnowledgeFAQ_commonID" FromRole="Attachment" ToRole="KnowledgeFAQ" />
+          <NavigationProperty Name="Ticket" Relationship="Model2.FK_dbo_Attachment_dbo_Ticket_parentID" FromRole="Attachment" ToRole="Ticket" />
+        </EntityType>
+        <EntityType Name="AuditTrail">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="refID" Type="Int32" Nullable="false" />
+          <Property Name="timeStamp" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="userID" Type="Guid" Nullable="false" />
+          <Property Name="text" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Ticket" Relationship="Model2.FK_dbo_AuditTrail_dbo_Ticket_refID" FromRole="AuditTrail" ToRole="Ticket" />
+        </EntityType>
+        <EntityType Name="GlobalSettings">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Guid" Nullable="false" />
+          <Property Name="TicketSeeder" Type="Int32" Nullable="false" />
+          <Property Name="TicketHeader" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TicketExpiryDays" Type="Int32" Nullable="false" />
+          <Property Name="FAQsExpiryDays" Type="Int32" Nullable="false" />
+          <Property Name="KBExpiryDays" Type="Int32" Nullable="false" />
+          <Property Name="TicketHeaderEnabled" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="KnowledgeFAQ">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="dateComposed" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="expiryDate" Type="DateTime" Precision="3" />
+          <Property Name="dateSubmitted" Type="DateTime" Precision="3" />
+          <Property Name="headerText" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="description" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="originatorID" Type="Guid" Nullable="false" />
+          <Property Name="suggest" Type="Boolean" Nullable="false" />
+          <Property Name="published" Type="Boolean" Nullable="false" />
+          <Property Name="deleted" Type="Boolean" Nullable="false" />
+          <Property Name="processed" Type="Boolean" Nullable="false" />
+          <Property Name="links" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="type" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="Attachment" Relationship="Model2.FK_dbo_Attachment_dbo_KnowledgeFAQ_commonID" FromRole="KnowledgeFAQ" ToRole="Attachment" />
+          <NavigationProperty Name="UserProfile" Relationship="Model2.FK_dbo_KnowledgeFAQ_dbo_UserProfile_originatorID" FromRole="KnowledgeFAQ" ToRole="UserProfile" />
+          <NavigationProperty Name="WordList" Relationship="Model2.WordListKnowledgeFAQ" FromRole="KnowledgeFAQ" ToRole="WordList" />
+        </EntityType>
+        <EntityType Name="News">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="title" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="body" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="sticky" Type="Boolean" Nullable="false" />
+          <Property Name="published" Type="Boolean" Nullable="false" />
+          <Property Name="deleted" Type="Boolean" Nullable="false" />
+          <Property Name="publishedDate" Type="DateTime" Precision="3" />
+          <Property Name="originatorID" Type="Guid" Nullable="false" />
+          <Property Name="creationDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="UserProfile" Relationship="Model2.FK_dbo_News_dbo_UserProfile_originatorID" FromRole="News" ToRole="UserProfile" />
+        </EntityType>
+        <EntityType Name="Ticket">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ticketID" Type="Int32" Nullable="false" />
+          <Property Name="originatorID" Type="Guid" Nullable="false" />
+          <Property Name="responsibleID" Type="Guid" />
+          <Property Name="dateComposed" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="expiryDate" Type="DateTime" Precision="3" />
+          <Property Name="dateCompleted" Type="DateTime" Precision="3" />
+          <Property Name="deleted" Type="Boolean" Nullable="false" />
+          <Property Name="onhold" Type="Boolean" Nullable="false" />
+          <Property Name="returned" Type="Boolean" Nullable="false" />
+          <Property Name="headerText" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="description" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="links" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="dateSubmitted" Type="DateTime" Precision="3" />
+          <Property Name="dateL1Release" Type="DateTime" Precision="3" />
+          <Property Name="dateL2Release" Type="DateTime" Precision="3" />
+          <Property Name="reason" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="adminComments" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="sanityCheck" Type="Int32" />
+          <Property Name="summary" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="report" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="UserProfile_userID" Type="Guid" />
+          <NavigationProperty Name="Attachment" Relationship="Model2.FK_dbo_Attachment_dbo_Ticket_parentID" FromRole="Ticket" ToRole="Attachment" />
+          <NavigationProperty Name="AuditTrail" Relationship="Model2.FK_dbo_AuditTrail_dbo_Ticket_refID" FromRole="Ticket" ToRole="AuditTrail" />
+          <NavigationProperty Name="UserProfile" Relationship="Model2.FK_dbo_Ticket_dbo_UserProfile_originatorID" FromRole="Ticket" ToRole="UserProfile" />
+          <NavigationProperty Name="UserProfile1" Relationship="Model2.FK_dbo_Ticket_dbo_UserProfile_responsibleID" FromRole="Ticket" ToRole="UserProfile" />
+          <NavigationProperty Name="UserProfile2" Relationship="Model2.FK_dbo_Ticket_dbo_UserProfile_UserProfile_userID" FromRole="Ticket" ToRole="UserProfile" />
+          <NavigationProperty Name="WordList" Relationship="Model2.TicketWordList" FromRole="Ticket" ToRole="WordList" />
+        </EntityType>
+        <EntityType Name="UserProfile">
+          <Key>
+            <PropertyRef Name="userID" />
+          </Key>
+          <Property Name="userID" Type="Guid" Nullable="false" />
+          <Property Name="loginName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="principalName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="firstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="surName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="emailAddress" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="contactNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="isResponsible" Type="Boolean" Nullable="false" />
+          <Property Name="isFaqApprover" Type="Boolean" Nullable="false" />
+          <Property Name="isKbApprover" Type="Boolean" Nullable="false" />
+          <Property Name="lastSignOn" Type="DateTime" Precision="3" />
+          <Property Name="deleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="KnowledgeFAQ" Relationship="Model2.FK_dbo_KnowledgeFAQ_dbo_UserProfile_originatorID" FromRole="UserProfile" ToRole="KnowledgeFAQ" />
+          <NavigationProperty Name="News" Relationship="Model2.FK_dbo_News_dbo_UserProfile_originatorID" FromRole="UserProfile" ToRole="News" />
+          <NavigationProperty Name="Ticket" Relationship="Model2.FK_dbo_Ticket_dbo_UserProfile_originatorID" FromRole="UserProfile" ToRole="Ticket" />
+          <NavigationProperty Name="Ticket1" Relationship="Model2.FK_dbo_Ticket_dbo_UserProfile_responsibleID" FromRole="UserProfile" ToRole="Ticket" />
+          <NavigationProperty Name="Ticket2" Relationship="Model2.FK_dbo_Ticket_dbo_UserProfile_UserProfile_userID" FromRole="UserProfile" ToRole="Ticket" />
+          <NavigationProperty Name="WordList" Relationship="Model2.UserProfileWordList" FromRole="UserProfile" ToRole="WordList" />
+          <NavigationProperty Name="WordList1" Relationship="Model2.UserProfileWordList1" FromRole="UserProfile" ToRole="WordList" />
+        </EntityType>
+        <EntityType Name="WordList">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="text" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="type" Type="Int32" Nullable="false" />
+          <Property Name="deleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Ticket" Relationship="Model2.TicketWordList" FromRole="WordList" ToRole="Ticket" />
+          <NavigationProperty Name="UserProfile" Relationship="Model2.UserProfileWordList" FromRole="WordList" ToRole="UserProfile" />
+          <NavigationProperty Name="UserProfile1" Relationship="Model2.UserProfileWordList1" FromRole="WordList" ToRole="UserProfile" />
+          <NavigationProperty Name="KnowledgeFAQ" Relationship="Model2.WordListKnowledgeFAQ" FromRole="WordList" ToRole="KnowledgeFAQ" />
+        </EntityType>
+        <Association Name="FK_dbo_Attachment_dbo_KnowledgeFAQ_commonID">
+          <End Type="Model2.KnowledgeFAQ" Role="KnowledgeFAQ" Multiplicity="0..1" />
+          <End Type="Model2.Attachment" Role="Attachment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="KnowledgeFAQ">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Attachment">
+              <PropertyRef Name="commonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_Attachment_dbo_Ticket_parentID">
+          <End Type="Model2.Ticket" Role="Ticket" Multiplicity="0..1" />
+          <End Type="Model2.Attachment" Role="Attachment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Ticket">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Attachment">
+              <PropertyRef Name="parentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AuditTrail_dbo_Ticket_refID">
+          <End Type="Model2.Ticket" Role="Ticket" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="Model2.AuditTrail" Role="AuditTrail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Ticket">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="AuditTrail">
+              <PropertyRef Name="refID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_KnowledgeFAQ_dbo_UserProfile_originatorID">
+          <End Type="Model2.UserProfile" Role="UserProfile" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="Model2.KnowledgeFAQ" Role="KnowledgeFAQ" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="userID" />
+            </Principal>
+            <Dependent Role="KnowledgeFAQ">
+              <PropertyRef Name="originatorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_News_dbo_UserProfile_originatorID">
+          <End Type="Model2.UserProfile" Role="UserProfile" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="Model2.News" Role="News" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="userID" />
+            </Principal>
+            <Dependent Role="News">
+              <PropertyRef Name="originatorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_Ticket_dbo_UserProfile_originatorID">
+          <End Type="Model2.UserProfile" Role="UserProfile" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="Model2.Ticket" Role="Ticket" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="userID" />
+            </Principal>
+            <Dependent Role="Ticket">
+              <PropertyRef Name="originatorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_Ticket_dbo_UserProfile_responsibleID">
+          <End Type="Model2.UserProfile" Role="UserProfile" Multiplicity="0..1" />
+          <End Type="Model2.Ticket" Role="Ticket" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="userID" />
+            </Principal>
+            <Dependent Role="Ticket">
+              <PropertyRef Name="responsibleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_Ticket_dbo_UserProfile_UserProfile_userID">
+          <End Type="Model2.UserProfile" Role="UserProfile" Multiplicity="0..1" />
+          <End Type="Model2.Ticket" Role="Ticket" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="userID" />
+            </Principal>
+            <Dependent Role="Ticket">
+              <PropertyRef Name="UserProfile_userID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="TicketWordList">
+          <End Type="Model2.Ticket" Role="Ticket" Multiplicity="*" />
+          <End Type="Model2.WordList" Role="WordList" Multiplicity="*" />
+        </Association>
+        <Association Name="UserProfileWordList">
+          <End Type="Model2.UserProfile" Role="UserProfile" Multiplicity="*" />
+          <End Type="Model2.WordList" Role="WordList" Multiplicity="*" />
+        </Association>
+        <Association Name="UserProfileWordList1">
+          <End Type="Model2.UserProfile" Role="UserProfile" Multiplicity="*" />
+          <End Type="Model2.WordList" Role="WordList" Multiplicity="*" />
+        </Association>
+        <Association Name="WordListKnowledgeFAQ">
+          <End Type="Model2.KnowledgeFAQ" Role="KnowledgeFAQ" Multiplicity="*" />
+          <End Type="Model2.WordList" Role="WordList" Multiplicity="*" />
+        </Association>
+        <ComplexType Name="faqSubs_Result">
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="loginName" Nullable="true" />
+          <Property Type="String" Name="emailAddress" Nullable="true" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs" Space="C-S">
+        <Alias Key="Model" Value="Model2" />
+        <Alias Key="Target" Value="Model2.Store" />
+        <EntityContainerMapping CdmEntityContainer="Model2Container" StorageEntityContainer="Model2StoreContainer">
+          <EntitySetMapping Name="Attachment">
+            <EntityTypeMapping TypeName="Model2.Attachment">
+              <MappingFragment StoreEntitySet="Attachment">
+                <ScalarProperty Name="filePath" ColumnName="filePath" />
+                <ScalarProperty Name="fileName" ColumnName="fileName" />
+                <ScalarProperty Name="commonID" ColumnName="commonID" />
+                <ScalarProperty Name="parentID" ColumnName="parentID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AuditTrail">
+            <EntityTypeMapping TypeName="Model2.AuditTrail">
+              <MappingFragment StoreEntitySet="AuditTrail">
+                <ScalarProperty Name="text" ColumnName="text" />
+                <ScalarProperty Name="userID" ColumnName="userID" />
+                <ScalarProperty Name="timeStamp" ColumnName="timeStamp" />
+                <ScalarProperty Name="refID" ColumnName="refID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GlobalSettings">
+            <EntityTypeMapping TypeName="Model2.GlobalSettings">
+              <MappingFragment StoreEntitySet="GlobalSettings">
+                <ScalarProperty Name="TicketHeaderEnabled" ColumnName="TicketHeaderEnabled" />
+                <ScalarProperty Name="KBExpiryDays" ColumnName="KBExpiryDays" />
+                <ScalarProperty Name="FAQsExpiryDays" ColumnName="FAQsExpiryDays" />
+                <ScalarProperty Name="TicketExpiryDays" ColumnName="TicketExpiryDays" />
+                <ScalarProperty Name="TicketHeader" ColumnName="TicketHeader" />
+                <ScalarProperty Name="TicketSeeder" ColumnName="TicketSeeder" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="KnowledgeFAQ">
+            <EntityTypeMapping TypeName="Model2.KnowledgeFAQ">
+              <MappingFragment StoreEntitySet="KnowledgeFAQ">
+                <ScalarProperty Name="type" ColumnName="type" />
+                <ScalarProperty Name="links" ColumnName="links" />
+                <ScalarProperty Name="processed" ColumnName="processed" />
+                <ScalarProperty Name="deleted" ColumnName="deleted" />
+                <ScalarProperty Name="published" ColumnName="published" />
+                <ScalarProperty Name="suggest" ColumnName="suggest" />
+                <ScalarProperty Name="originatorID" ColumnName="originatorID" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="headerText" ColumnName="headerText" />
+                <ScalarProperty Name="dateSubmitted" ColumnName="dateSubmitted" />
+                <ScalarProperty Name="expiryDate" ColumnName="expiryDate" />
+                <ScalarProperty Name="dateComposed" ColumnName="dateComposed" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="News">
+            <EntityTypeMapping TypeName="Model2.News">
+              <MappingFragment StoreEntitySet="News">
+                <ScalarProperty Name="creationDate" ColumnName="creationDate" />
+                <ScalarProperty Name="originatorID" ColumnName="originatorID" />
+                <ScalarProperty Name="publishedDate" ColumnName="publishedDate" />
+                <ScalarProperty Name="deleted" ColumnName="deleted" />
+                <ScalarProperty Name="published" ColumnName="published" />
+                <ScalarProperty Name="sticky" ColumnName="sticky" />
+                <ScalarProperty Name="body" ColumnName="body" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Ticket">
+            <EntityTypeMapping TypeName="Model2.Ticket">
+              <MappingFragment StoreEntitySet="Ticket">
+                <ScalarProperty Name="UserProfile_userID" ColumnName="UserProfile_userID" />
+                <ScalarProperty Name="report" ColumnName="report" />
+                <ScalarProperty Name="summary" ColumnName="summary" />
+                <ScalarProperty Name="sanityCheck" ColumnName="sanityCheck" />
+                <ScalarProperty Name="adminComments" ColumnName="adminComments" />
+                <ScalarProperty Name="reason" ColumnName="reason" />
+                <ScalarProperty Name="dateL2Release" ColumnName="dateL2Release" />
+                <ScalarProperty Name="dateL1Release" ColumnName="dateL1Release" />
+                <ScalarProperty Name="dateSubmitted" ColumnName="dateSubmitted" />
+                <ScalarProperty Name="links" ColumnName="links" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="headerText" ColumnName="headerText" />
+                <ScalarProperty Name="returned" ColumnName="returned" />
+                <ScalarProperty Name="onhold" ColumnName="onhold" />
+                <ScalarProperty Name="deleted" ColumnName="deleted" />
+                <ScalarProperty Name="dateCompleted" ColumnName="dateCompleted" />
+                <ScalarProperty Name="expiryDate" ColumnName="expiryDate" />
+                <ScalarProperty Name="dateComposed" ColumnName="dateComposed" />
+                <ScalarProperty Name="responsibleID" ColumnName="responsibleID" />
+                <ScalarProperty Name="originatorID" ColumnName="originatorID" />
+                <ScalarProperty Name="ticketID" ColumnName="ticketID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserProfile">
+            <EntityTypeMapping TypeName="Model2.UserProfile">
+              <MappingFragment StoreEntitySet="UserProfile">
+                <ScalarProperty Name="deleted" ColumnName="deleted" />
+                <ScalarProperty Name="lastSignOn" ColumnName="lastSignOn" />
+                <ScalarProperty Name="isKbApprover" ColumnName="isKbApprover" />
+                <ScalarProperty Name="isFaqApprover" ColumnName="isFaqApprover" />
+                <ScalarProperty Name="isResponsible" ColumnName="isResponsible" />
+                <ScalarProperty Name="contactNumber" ColumnName="contactNumber" />
+                <ScalarProperty Name="emailAddress" ColumnName="emailAddress" />
+                <ScalarProperty Name="surName" ColumnName="surName" />
+                <ScalarProperty Name="firstName" ColumnName="firstName" />
+                <ScalarProperty Name="principalName" ColumnName="principalName" />
+                <ScalarProperty Name="loginName" ColumnName="loginName" />
+                <ScalarProperty Name="userID" ColumnName="userID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WordList">
+            <EntityTypeMapping TypeName="Model2.WordList">
+              <MappingFragment StoreEntitySet="WordList">
+                <ScalarProperty Name="deleted" ColumnName="deleted" />
+                <ScalarProperty Name="type" ColumnName="type" />
+                <ScalarProperty Name="text" ColumnName="text" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="TicketWordList" TypeName="Model2.TicketWordList" StoreEntitySet="TicketWordList">
+            <EndProperty Name="WordList">
+              <ScalarProperty Name="ID" ColumnName="WordList_ID" />
+            </EndProperty>
+            <EndProperty Name="Ticket">
+              <ScalarProperty Name="ID" ColumnName="Ticket_ID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="UserProfileWordList" TypeName="Model2.UserProfileWordList" StoreEntitySet="UserProfileWordList">
+            <EndProperty Name="WordList">
+              <ScalarProperty Name="ID" ColumnName="WordList_ID" />
+            </EndProperty>
+            <EndProperty Name="UserProfile">
+              <ScalarProperty Name="userID" ColumnName="UserProfile_userID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="UserProfileWordList1" TypeName="Model2.UserProfileWordList1" StoreEntitySet="UserProfileWordList1">
+            <EndProperty Name="WordList">
+              <ScalarProperty Name="ID" ColumnName="WordList_ID" />
+            </EndProperty>
+            <EndProperty Name="UserProfile">
+              <ScalarProperty Name="userID" ColumnName="UserProfile_userID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="WordListKnowledgeFAQ" TypeName="Model2.WordListKnowledgeFAQ" StoreEntitySet="WordListKnowledgeFAQ">
+            <EndProperty Name="WordList">
+              <ScalarProperty Name="ID" ColumnName="WordList_ID" />
+            </EndProperty>
+            <EndProperty Name="KnowledgeFAQ">
+              <ScalarProperty Name="ID" ColumnName="KnowledgeFAQ_ID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <FunctionImportMapping FunctionImportName="faqSubs" FunctionName="Model2.Store.faqSubs">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Model2.faqSubs_Result">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="loginName" ColumnName="loginName" />
+                <ScalarProperty Name="emailAddress" ColumnName="emailAddress" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

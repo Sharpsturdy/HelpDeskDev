@@ -191,6 +191,7 @@
     <Compile Include="Models\News.cs" />
     <Compile Include="Models\AuditTrail.cs" />
     <Compile Include="Models\spTicket.cs" />
+    <Compile Include="Subscriptions.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utilities\AllSorts.cs" />
     <Compile Include="Utilities\CustomAuthorise.cs" />
@@ -628,6 +629,8 @@
     <Content Include="Views\DummyWordLists\Edit.cshtml" />
     <Content Include="Views\DummyWordLists\Index.cshtml" />
     <Content Include="Views\GlobalSettings\Edit.cshtml" />
+    <Content Include="Views\Home\T.cshtml" />
+    <Content Include="Views\Emails\Subscriptions.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Files\" />
@@ -646,6 +649,9 @@
     <EmbeddedResource Include="Migrations\201512161337213_InitialCreate.resx">
       <DependentUpon>201512161337213_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

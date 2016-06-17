@@ -23,6 +23,7 @@ namespace Help_Desk_2.Models
 
         public virtual ICollection<Ticket> ticket { get; set; }
 
-        public virtual ICollection<UserProfile> users { get; set; }
+        public virtual ICollection<UserProfile> FAQSubs { get; set; }
+        public virtual ICollection<UserProfile> KBSubs { get; set; }
     }
 }

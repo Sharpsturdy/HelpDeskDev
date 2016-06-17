@@ -4,6 +4,7 @@ using System.Linq;
 using Help_Desk_2.DataAccessLayer;
 using Help_Desk_2.Models;
 using System.Configuration;
+using System.Collections;
 
 namespace Help_Desk_2.BackgroundJobs
 {
@@ -53,6 +54,74 @@ namespace Help_Desk_2.BackgroundJobs
             email.To = "pelias@avexacomputing.net";
             email.Message = "DB.GetRandomLolcatLink()";
             email.Send();
+        }
+
+        public void sendSubscriptions()
+        {
+            /****
+             * 1. FAQS
+             * 2. Send to each user
+             * 3. Mark FAQS as processed
+             * 
+             * 4. Repeat for KBS
+             * ********/
+
+            //1. FAQS
+            var faqsubs = db.Database.SqlQuery<Subscriptions>("dbo.faqSubs").ToList<Subscriptions>();
+
+            string userName = "", email = "", loginName = "";
+
+            ArrayList subDocs = new ArrayList();
+            foreach (var sub in faqsubs)
+            {
+                if (sub.loginName != loginName)
+                {
+                    if (loginName != "")
+                    {
+                        //Send subs for this user
+                        _sendSubsToUser("FAQs",userName, email, subDocs);
+                    }
+
+                    //Move to next user
+                    userName = sub.userName;
+                    email = sub.emailAddress;
+                    loginName = sub.loginName;
+                    subDocs.Clear(); //Reset
+                }
+                subDocs.Add(sub.ID);
+            }
+            if (userName != "")
+            {
+                //Send subs for LAST user
+                _sendSubsToUser("FAQs", userName, email, subDocs);
+
+            }
+
+        }
+
+        private void _sendSubsToUser(string type, string userName, string email, ArrayList subDocs)
+        {
+            dynamic email1 = new Email("Subscriptions");
+            email1.From = From;
+            email1.To = "patrice.elias@gmail.com";
+            email1.userName = userName;
+            email1.Type = type;
+            email1.Subject = type + " Subscriptions feed";
+
+            //Convert object list to int array
+            var tmp = subDocs.ToArray();
+            int[] scom = new int[tmp.Length];
+            int i = 0;
+            foreach (var x in tmp) { scom[i++] = (int)x; }
+
+            //Get full records restricted to matched subs
+            email1.Model = db.KnowledgeFAQs.Where(k => k.type == 1 && !k.suggest && k.published && !k.deleted && scom.Contains(k.ID))
+                    .OrderByDescending(k => k.dateComposed)
+                    .ToList<KnowledgeFAQ>();
+           
+            email1.Send();
+
+
         }
         public void sendTicketNotification(string mailType, int id)
         {

@@ -1,18 +1,19 @@
 ﻿@using Help_Desk_2.Utilities
+@using Help_Desk_2.DataAccessLayer
 @using Postal
 
 @{
     ViewBag.Title = "Home Page";
     AllSorts.setNavProperties(ViewBag); //This is a single item page 
-    /* dynamic email = new Email("KB");
-    email.To = "pelias@avexacomputing.net";
-    /*email.CC = "patrice@aloehealthsecrets.com";* /
-    email.Subject = "New Knowledgebase article submitted";
-    email.type = "Approved";
-    email.user = "Chenjerai Hunzvi";
-    email.articleTitle = "Hameno";
-    email.id = "45";
-    email.Send();*/
+                                        /* dynamic email = new Email("KB");
+                                        email.To = "pelias@avexacomputing.net";
+                                        /*email.CC = "patrice@aloehealthsecrets.com";* /
+                                        email.Subject = "New Knowledgebase article submitted";
+                                        email.type = "Approved";
+                                        email.user = "Chenjerai Hunzvi";
+                                        email.articleTitle = "Hameno";
+                                        email.id = "45";
+                                        email.Send();*/
 }
 <div class="content home">
     <div class="col-sm-12" style="border: 1px solid #ddd">
@@ -59,14 +60,14 @@
                 <tr>
                     <td>
                         @*If any keywrds exist show here as list*@
-                        @if(ViewBag.faqsubskw == null)
+                        @if (ViewBag.faqsubskw == null)
                         {
                             <em>No keywords subscriptions yet</em>
                         }
                         else
                         {
                             <ul class="subs faqs keywords">
-                                @foreach(var sub in ViewBag.faqsubskw)
+                                @foreach (var sub in ViewBag.faqsubskw)
                                 {
                                     <li>@sub</li>
                                 }
@@ -137,6 +138,6 @@
                 </tr>
             </tbody>
         </table>
-    }
+        }
     </div>
 </div>

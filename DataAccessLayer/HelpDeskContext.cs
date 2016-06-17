@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
 using System.Data.Entity.ModelConfiguration.Configuration;
 using Help_Desk_2.Models;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Data.Entity.Infrastructure;
 
 namespace Help_Desk_2.DataAccessLayer
 {
@@ -29,7 +31,12 @@ namespace Help_Desk_2.DataAccessLayer
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
         }
 
-        
+        public virtual ObjectResult<Subscriptions> faqSubs()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Subscriptions>("faqSubs");
+        }
+
+
     }
 
    

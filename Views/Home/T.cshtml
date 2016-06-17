@@ -1,0 +1,102 @@
+﻿@using Help_Desk_2.Utilities
+@using Help_Desk_2.Models
+@using Help_Desk_2.DataAccessLayer
+@using System.Collections
+@using Postal
+
+@{
+    ViewBag.Title = "Home Page";
+    AllSorts.setNavProperties(ViewBag); 
+}
+
+<table cellpadding="0" cellspacing="5" border="1">
+    @{
+
+            HelpDeskContext db = new HelpDeskContext();
+        /*partial class subdoc
+        {
+            public int id { get; set; }
+            //public string title { get; set; }
+        }*/
+        var faqsubs = db.Database.SqlQuery<Subscriptions>("dbo.faqSubs").ToList<Subscriptions>();
+        foreach (var x in faqsubs)
+        {
+            <tr><td>@x.loginName</td><td>@x.emailAddress</td><td>@x.ID</td><td>@x.userName</td></tr>
+        }
+
+        //var faqsubs = db.Database.SqlQuery<Subscriptions>("dbo.faqSubs").ToList<Subscriptions>();
+        string userName = "", email = "", loginName = "";
+        string msg = "Mailing following documents to: <br/>";
+
+        ArrayList subDocs = new ArrayList();
+        foreach (var sub in faqsubs)
+        {
+            if (sub.userName != userName)
+            {
+                if (userName != "")
+                {
+                    msg += "<br/>" + email + "/" + userName;
+                    foreach (var m in subDocs)
+                    {
+                        msg += "<br/>+++" + m; // m.id + "/" + m.title;
+                    }
+
+                }
+                userName = sub.userName;
+                email = sub.emailAddress;
+                loginName = sub.loginName;
+                subDocs.Clear(); //Reset
+            }
+            subDocs.Add(sub.ID);
+            /*
+            {
+                id = sub.ID,
+                title = sub.headerText
+            });*/
+        }
+        if (userName != "")
+        {
+            msg += "<br/>" + email + "/" + userName;
+            foreach (var m in subDocs)
+            {
+                msg += "<br/>+++" + m; // m.id + "/" + m.title;
+            }
+
+            msg += "<br/>Send email to: " + email;
+
+            dynamic email1 = new Email("Subscriptions");
+            email1.From = "helpdesk@renold.com";
+            email1.To = "patrice.elias@gmail.com";
+            email1.userName = userName;
+            email1.Type = "FAQs";
+            email1.Subject = email1.Type + " Subscriptions feed";
+
+            //var scom = new[] { 1,2,3 }; //subDocs.ToArray();
+            var tmp = subDocs.ToArray();
+            int[] scom = new int[tmp.Length];
+            int i = 0;
+            foreach (var x in tmp) { scom[i++] = (int) x; }
+
+
+            var model1 = db.KnowledgeFAQs.Where(k => k.type == 1 && !k.suggest && k.published && !k.deleted && scom.Contains(k.ID))
+                    .OrderByDescending(k => k.dateComposed)
+                    .ToList<KnowledgeFAQ>();
+            email1.Model = model1;
+
+            msg += "<br/>===================<br/>This is results of model<br/>";
+
+            foreach (var m in email1.Model)
+            {
+                msg += "<br/>ID:= " + m.ID + " TITLE:= " + m.headerText;
+
+            }
+
+            email1.Send();
+
+
+
+
+        }
+       <tr><td colspan="4">@Html.Raw(msg)</td></tr>
+    }
+</table>

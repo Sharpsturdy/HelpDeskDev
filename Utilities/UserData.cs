@@ -76,7 +76,7 @@ namespace Help_Desk_2.Utilities
                         }
                         if (userProfile == null) // If user has no profile add it
                         {
-                            AllSorts.displayMessage += " User Profile is null";
+                            AllSorts.displayMessage += "0#Please ensure that all mandatory fields are completed";
                             //Add profile to database then populate userProfile object from database
                             userProfile = new UserProfile
                             {
@@ -85,6 +85,7 @@ namespace Help_Desk_2.Utilities
                                 loginName = loginName,
                                 principalName = userPrincipal.SamAccountName,
                                 surName = userPrincipal.DisplayName,
+                                displayName = "#"+userPrincipal.DisplayName,
                                 lastSignOn = DateTime.Now
                                 // not using d ud.displayName,
 

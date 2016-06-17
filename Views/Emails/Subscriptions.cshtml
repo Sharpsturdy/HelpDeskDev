@@ -1,0 +1,33 @@
+﻿@using System.Collections.Generic;
+@using Help_Desk_2.Models
+From: @Html.Raw(ViewBag.From)
+To: @ViewBag.To
+Subject: @ViewBag.Subject
+Content-Type: text/html; charset=utf-8
+
+<html>
+    <body>
+        <p>Hi @ViewBag.userName,</p>
+        <p>Here is the latest feed from your @ViewBag.Type subscriptions</p>
+        <p></p>
+        @{
+            var baseURL = System.Configuration.ConfigurationManager.AppSettings["BaseURL"];
+            
+            var link = "";
+            foreach (KnowledgeFAQ item in ViewBag.Model)
+            {
+                link = baseURL + Url.Action("Details", ViewBag.Type, new { @id = item.ID });
+
+                <p>
+                    <a href="@link">
+                        @Html.DisplayFor(modelItem => item.headerText)
+                    </a><br/>
+                    <span style="color: #ccc; font-size:90%">@Html.DisplayFor(modelItem => item.dateComposed) / Author: @Html.DisplayFor(modelItem => item.Originator.displayName)</span>
+                </p>
+            }
+        }
+                 
+        <p></p>
+        <p><b>System Message</b></p>
+    </body>
+</html>

@@ -23,16 +23,20 @@
                 <div class="col-sm-6">
                     @Html.LabelFor(model => model.firstName, htmlAttributes: new { @class = "control-label" })
                     <div>
-                        @Html.EditorFor(model => model.firstName, new { htmlAttributes = new { @class = "form-control" } })
+                        @*Html.EditorFor(model => model.firstName, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.firstName, "", new { @class = "text-danger" })
+                            *@
+                        @Html.DisplayFor(model => model.firstName)
                     </div>
                 </div>
 
                 <div class="col-sm-6">
                     @Html.LabelFor(model => model.surName, htmlAttributes: new { @class = "control-label" })
                     <div>
-                        @Html.EditorFor(model => model.surName, new { htmlAttributes = new { @class = "form-control" } })
+                        @*Html.EditorFor(model => model.surName, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.surName, "", new { @class = "text-danger" })
+                            *@
+                        @Html.DisplayFor(model => model.surName)
                     </div>
                 </div>
             </div>

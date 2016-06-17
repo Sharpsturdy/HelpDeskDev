@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="f2d524b1367940f6b2b78f17e28fb98b" Name="Diagram1" >
+        <EntityTypeShape EntityType="Model2.Attachment" Width="1.5" PointX="8.25" PointY="6.875" />
+        <EntityTypeShape EntityType="Model2.AuditTrail" Width="1.5" PointX="5.25" PointY="9.375" />
+        <EntityTypeShape EntityType="Model2.GlobalSettings" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="false" />
+        <EntityTypeShape EntityType="Model2.KnowledgeFAQ" Width="1.5" PointX="3" PointY="2.5" />
+        <EntityTypeShape EntityType="Model2.News" Width="1.5" PointX="3" PointY="14.5" />
+        <EntityTypeShape EntityType="Model2.Ticket" Width="1.5" PointX="3" PointY="7.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model2.UserProfile" Width="1.5" PointX="0.75" PointY="7.625" />
+        <EntityTypeShape EntityType="Model2.WordList" Width="1.5" PointX="5.25" PointY="5.75" />
+        <AssociationConnector Association="Model2.FK_dbo_Attachment_dbo_KnowledgeFAQ_commonID" />
+        <AssociationConnector Association="Model2.FK_dbo_Attachment_dbo_Ticket_parentID" />
+        <AssociationConnector Association="Model2.FK_dbo_AuditTrail_dbo_Ticket_refID" />
+        <AssociationConnector Association="Model2.FK_dbo_KnowledgeFAQ_dbo_UserProfile_originatorID" />
+        <AssociationConnector Association="Model2.FK_dbo_News_dbo_UserProfile_originatorID" />
+        <AssociationConnector Association="Model2.FK_dbo_Ticket_dbo_UserProfile_originatorID" />
+        <AssociationConnector Association="Model2.FK_dbo_Ticket_dbo_UserProfile_responsibleID" />
+        <AssociationConnector Association="Model2.FK_dbo_Ticket_dbo_UserProfile_UserProfile_userID" />
+        <AssociationConnector Association="Model2.TicketWordList" />
+        <AssociationConnector Association="Model2.UserProfileWordList" />
+        <AssociationConnector Association="Model2.UserProfileWordList1" />
+        <AssociationConnector Association="Model2.WordListKnowledgeFAQ" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
