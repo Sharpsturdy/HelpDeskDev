@@ -51,8 +51,11 @@
                  @Html.LabelFor(model => model.TicketHeader, htmlAttributes: new { @class = "control-label" })
             </div>
             <div class="col-sm-8">
-                @Html.EditorFor(model => model.TicketHeaderEnabled)
-                @Html.LabelFor(model => model.TicketHeaderEnabled, htmlAttributes: new { @class = "control-label" })
+                <span>
+                    @Html.EditorFor(model => model.TicketHeaderEnabled)
+                    @Html.LabelFor(model => model.TicketHeaderEnabled, htmlAttributes: new { @class = "control-label" })
+                </span>
+                
             </div>
 
             <div class="col-sm-12">

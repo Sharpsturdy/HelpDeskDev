@@ -76,7 +76,7 @@ namespace Help_Desk_2.Utilities
                         }
                         if (userProfile == null) // If user has no profile add it
                         {
-                            AllSorts.displayMessage += "0#Please ensure that all mandatory fields are completed";
+                            //AllSorts.displayMessage += "0#Please ensure that all mandatory fields are completed";
                             //Add profile to database then populate userProfile object from database
                             userProfile = new UserProfile
                             {
@@ -85,8 +85,9 @@ namespace Help_Desk_2.Utilities
                                 loginName = loginName,
                                 principalName = userPrincipal.SamAccountName,
                                 surName = userPrincipal.DisplayName,
-                                displayName = "#"+userPrincipal.DisplayName,
-                                lastSignOn = DateTime.Now
+                                displayName = userPrincipal.DisplayName,
+                                lastSignOn = DateTime.Now,
+                                emailAddress = userPrincipal.EmailAddress != null ? userPrincipal.EmailAddress: "Enter email address"
                                 // not using d ud.displayName,
 
                             };
@@ -96,6 +97,12 @@ namespace Help_Desk_2.Utilities
                         } else
                         {
                             db.Entry(userProfile).State = EntityState.Modified;
+                            userProfile.displayName = userPrincipal.DisplayName;
+                            //Update email as well if exists
+                            if(userPrincipal.EmailAddress != null)
+                            {
+                                userProfile.emailAddress = userPrincipal.EmailAddress;
+                            }
                             userProfile.lastSignOn = DateTime.Now;
                             db.SaveChanges();
                         }
@@ -103,8 +110,7 @@ namespace Help_Desk_2.Utilities
                     }
                     catch (Exception ex)
                     {
-                        //if (Globals.debug) Globals.form1Err += "Part2 Error: " + ex.Message;
-                        //AllSorts.displayMessage += ex.Message;
+                       
                         userProfile = new UserProfile();
                         userProfile.firstName = "";
                         userProfile.surName = "Anonymous";

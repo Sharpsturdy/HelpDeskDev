@@ -52,6 +52,9 @@ namespace Help_Desk_2.Models
         public bool published { get; set; }
 
         [DefaultValue(false)]
+        public bool archived { get; set; }
+
+        [DefaultValue(false)]
         public bool deleted { get; set; }
 
         [DefaultValue(false)]
@@ -75,27 +78,23 @@ namespace Help_Desk_2.Models
 
         public byte type { get; set; } //type => 1=FAQs, 2=Knowledge Base
 
+        public int archiveID { get; set;  }
+
         [NotMapped]
         [Display(Name = "Status")]
         public Statuses? status
         {
             get
             {
-                if (dateSubmitted == null)
-                {
-                    return Statuses.Draft;
-                }
-                else if (expiryDate <= DateTime.Now)
-                {
-                    return Statuses.Expired;
-                }
-                else if (published)
-                {
-                    return Statuses.Published;
-                }
-                else {
-                    return Statuses.Submitted;
-                };
+                
+                if (deleted) return Statuses.Deleted;
+                if (archived) return Statuses.Archived;
+                if (published) return Statuses.Published;
+                
+                if (dateSubmitted != null) return Statuses.Submitted;
+
+                return Statuses.Draft;
+
             }
 
         }
@@ -106,7 +105,7 @@ namespace Help_Desk_2.Models
         [Display(Name = "Keywords", Prompt = "Select keywords from list")]
         public IEnumerable<WordList> keywords {
             get {
-                return wordList.Where(x => x.type == 1);
+                return wordList.Where(x => x.type == 1 && !x.deleted);
             }
             set { keywords = value; }
         }
@@ -117,7 +116,7 @@ namespace Help_Desk_2.Models
         {
             get
             {
-                return wordList.Where(x => x.type == 2);
+                return wordList.Where(x => x.type == 2 && !x.deleted);
             }
             set { expertAreas = value; }
         }

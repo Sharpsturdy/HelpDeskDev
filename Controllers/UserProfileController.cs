@@ -52,35 +52,42 @@ namespace Help_Desk_2.Controllers
             return RedirectToAction("List");
         }
 
-        /*** GET: UserProfile/Details/5
-        public ActionResult Details(Guid? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            UserProfile userProfile = db.UserProfiles.Find(id);
-            if (userProfile == null)
-            {
-                return HttpNotFound();
-            }
-            return View(userProfile);
-        }
-        ****************/
-
         // GET: UserProfile/Create
         public ActionResult Index()
         {
-            //UserData ud = new UserData();
-            //UserProfile userProfile = ud.getUserProfile();
-
+  
             UserProfile userProfile = db.UserProfiles.Find(new Guid(AllSorts.getUserID()));
 
             return View(userProfile);
 
         }
 
+        // POST: UserProfile/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Index([Bind(Include = "userID,loginName,principalName,emailAddress,displayName")] UserProfile userProfile)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(userProfile).State = EntityState.Modified;
+                AllSorts.saveWordLists(Request.Form.GetValues("infaqkeywords"), Request.Form.GetValues("infaqexpertareas"), db, userProfile);
+                AllSorts.saveWordLists(Request.Form.GetValues("inkbkeywords"), Request.Form.GetValues("inkbexpertareas"), db, userProfile, true);
+                db.SaveChanges();
+                Session.Add("UserDisplayName", userProfile.displayName);//Update display name
+                AllSorts.displayMessage = "Profile updated successfully!";
+
+                return RedirectToAction("Index");
+            } else
+            {
+                AllSorts.displayMessage = "0#General error updating User Profile.";
+            }
+            return View(userProfile);
+        }
+
         // GET: UserProfile/Create
+        /***** Subscrpitons merged with profile (index)
         public ActionResult Subscriptions()
         {
             
@@ -99,58 +106,9 @@ namespace Help_Desk_2.Controllers
 
             return View(userProfile);
 
-        }        
+        }              
+        */
 
-        /*************** GET: UserProfile/Edit/5
-        public ActionResult Edit(Guid? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            UserProfile userProfile = db.UserProfiles.Find(id);
-            
-            if (userProfile == null)
-            {
-                return HttpNotFound();
-            }
-            return View(userProfile);
-        }
-        ************/
-
-        // POST: UserProfile/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Index([Bind(Include = "userID,loginName,principalName,firstName,surName,emailAddress,contactNumber")] UserProfile userProfile)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(userProfile).State = EntityState.Modified;
-                db.SaveChanges();
-                Session.Add("UserDisplayName", userProfile.displayName);//Update display name
-                AllSorts.displayMessage = "User Profile updated successfully!";
-                return RedirectToAction("Index");
-            } else
-            {
-                AllSorts.displayMessage = "0#General error updating User Profile.";
-            }
-            return View(userProfile);
-        }
-
-        /************
-        // POST: UserProfile/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(Guid id)
-        {
-            UserProfile userProfile = db.UserProfiles.Find(id);
-            db.UserProfiles.Remove(userProfile);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
-        *****************/
         protected override void Dispose(bool disposing)
         {
             if (disposing)

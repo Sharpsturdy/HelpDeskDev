@@ -20,6 +20,9 @@ namespace Help_Desk_2.Models
         [ForeignKey("KnowledgeFAQ")]
         public int? commonID { get; set; }
 
+        [ForeignKey("News")]
+        public int? newsID { get; set; }
+
         //This is actually needed as file name is randomised
         [Required]
         [Display(Name = "File Name")]
@@ -33,6 +36,8 @@ namespace Help_Desk_2.Models
         public virtual Ticket Ticket { get; set; }
 
         public virtual KnowledgeFAQ KnowledgeFAQ { get; set; }
+
+        public virtual News News { get; set;  }
 
         [NotMapped]
         public double size

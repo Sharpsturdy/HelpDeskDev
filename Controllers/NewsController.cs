@@ -121,6 +121,11 @@ namespace Help_Desk_2.Controllers
                 }
                 db.News.Add(news);
                 db.SaveChanges();
+
+                /***** Add File ************/
+                AllSorts.saveAttachments(news.ID, db, null, 2);
+                db.SaveChanges();
+
                 AllSorts.displayMessage = "News article saved successfully!";
                 if(Request.Form.AllKeys.Contains("btnSave"))
                 {
@@ -161,7 +166,7 @@ namespace Help_Desk_2.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [CustomAuthorise(Roles = "AdminUsers")]
-        public ActionResult Edit([Bind(Include = "ID,originatorID,title,body,sticky,published,publishedDate,creationDate,deleted")] News news)
+        public ActionResult Edit([Bind(Include = "ID,originatorID,title,body,sticky,published,publishedDate,creationDate,deleted,deleteField")] News news)
         {
             if (ModelState.IsValid)
             {
@@ -186,6 +191,10 @@ namespace Help_Desk_2.Controllers
                 {
                     AllSorts.displayMessage = "News article updated successfully!";
                 }
+
+                /***** Add File ************/
+                AllSorts.saveAttachments(news.ID, db, news.deleteField, 2);
+
                 db.SaveChanges();
 
                 if (submittedValues.Contains("btnSave"))

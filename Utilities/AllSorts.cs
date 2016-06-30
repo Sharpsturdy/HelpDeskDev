@@ -67,7 +67,11 @@ namespace Help_Desk_2.Utilities
                         {
                             attachment.commonID = ID;
                         }
-                        else {
+                        else if (attachType == 2)
+                        {
+                            attachment.newsID = ID;
+                        }
+                        {
                             attachment.parentID = ID;
                         }
 
@@ -90,7 +94,7 @@ namespace Help_Desk_2.Utilities
 
         public static IEnumerable<WordList> FullWordList
         {
-            get { return db.WordLists.OrderBy(x => x.text); }
+            get { return db.WordLists.Where(x=> !x.deleted).OrderBy(x => x.text); }
         }
 
         public static IEnumerable<WordList> keywords

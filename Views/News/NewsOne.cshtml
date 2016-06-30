@@ -98,6 +98,50 @@
                 }
             </div>            
             
+            <!--Attachment section-->
+            <div class="panel panel-info">
+                <div class="panel-heading">@Html.DisplayName("Attachments")</div>
+                <div>
+                    @if (Model != null)
+                    {
+                        @Html.HiddenFor(model => model.deleteField)
+                        if (Model.Files != null && Model.Files.Count > 0)
+                        {
+                            <table class="table table-condensed">
+                                <tr><th>File Name</th><th>Size</th><th></th></tr>
+                                @foreach (var t in Model.Files)
+                                {
+                                    <tr>
+                                        <td class="fileID hidden">@t.ID</td>
+                                        <td>@Html.ActionLink(t.fileName, "d/" + t.ID, "Files", null, new { target = "_blank" })</td>
+                                        <td>@t.displaySize</td>
+                                        @if (ViewBag.mode < 2)
+                                        {
+                                            <td>
+                                                <div tabindex="500" class="btn btn-primary btn-custom btn-custom-undelete hidden">
+                                                    <i class="fa fa-undo"></i>
+                                                    <span class="hidden-xs">Undelete</span>
+                                                </div>
+
+                                                <div tabindex="500" class="btn btn-primary btn-custom btn-custom-delete">
+                                                    <i class="glyphicon glyphicon-trash"></i>
+                                                    <span class="hidden-xs">Delete</span>
+                                                </div>
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            </table>
+                        }
+                    }
+                    @if (ViewBag.mode < 2)
+                    {
+                        <input type="file" name="file1" class="file" data-show-upload="false" data-show-preview="false" />
+                    }
+                </div>
+            </div>
+
+
             @if (ViewBag.mode == 2)
             {
                 <div>

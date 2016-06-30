@@ -27,6 +27,7 @@ namespace Help_Desk_2.Models
         [StringLength(50, ErrorMessage = "Field cannot exceed 50 characters")]
         public string surName { get; set; }
 
+        [Required]
         [Display(Name = "Email Address")]
         [DataType(DataType.EmailAddress, ErrorMessage = "Enter a valid email address")]
         public string emailAddress { get; set; }
@@ -66,7 +67,7 @@ namespace Help_Desk_2.Models
         {
             get
             {
-                return faqsubs.Where(x => x.type == 1);
+                return faqsubs.Where(x => x.type == 1 && !x.deleted);
             }
             set { faqKeywords = value; }
         }
@@ -77,7 +78,7 @@ namespace Help_Desk_2.Models
         {
             get
             {
-                return faqsubs.Where(x => x.type == 2);
+                return faqsubs.Where(x => x.type == 2 && !x.deleted);
             }
             set { faqExpertAreas = value; }
         }
@@ -89,7 +90,7 @@ namespace Help_Desk_2.Models
         {
             get
             {
-                return kbsubs.Where(x => x.type == 1);
+                return kbsubs.Where(x => x.type == 1 && !x.deleted);
             }
             set { kbKeywords = value; }
         }
@@ -100,7 +101,7 @@ namespace Help_Desk_2.Models
         {
             get
             {
-                return kbsubs.Where(x => x.type == 2);
+                return kbsubs.Where(x => x.type == 2 && !x.deleted);
             }
             set { kbExpertAreas = value; }
         }

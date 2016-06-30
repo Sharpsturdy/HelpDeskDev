@@ -23,7 +23,7 @@ namespace Help_Desk_2.Controllers
         {
             int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
 
-            return View(db.KnowledgeFAQs.Where(k => k.type == 2 && k.published)
+            return View(db.KnowledgeFAQs.Where(k => k.type == 2 && k.published && !(k.deleted || k.archived))
                     .OrderByDescending(k => k.dateComposed)
                     .ToPagedList(currentPageIndex, AllSorts.pageSize));         
         }
@@ -33,7 +33,7 @@ namespace Help_Desk_2.Controllers
             int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
 
             string userName = AllSorts.getUserID();
-            return View("Index",db.KnowledgeFAQs.Where(k => k.type == 2 && k.dateSubmitted == null && (k.originatorID.ToString() == userName))
+            return View("Index",db.KnowledgeFAQs.Where(k => k.type == 2 && !k.deleted && k.dateSubmitted == null && (k.originatorID.ToString() == userName))
                     .OrderByDescending(k => k.dateComposed)
                     .ToPagedList(currentPageIndex, AllSorts.pageSize));            
         }
@@ -44,17 +44,17 @@ namespace Help_Desk_2.Controllers
                 return RedirectToAction("Unauthorized", "Home");
 
             var kbs = from m in db.KnowledgeFAQs
-                       where (m.type == 2 && m.dateSubmitted != null)
+                       where (m.type == 2 && !m.deleted && m.dateSubmitted != null)
                        select m;
 
             if (String.IsNullOrEmpty(searchType))
             {
                 kbs = kbs.Where(s => !s.published);
             }
-            else if (searchType == "1")
+            /*else if (searchType == "1")
             {
                 kbs = kbs.Where(s => s.expiryDate <= DateTime.Today);
-            }
+            }*/
             else if (searchType == "2")
             {
                 kbs = kbs.Where(s => s.published);
@@ -76,7 +76,7 @@ namespace Help_Desk_2.Controllers
         public ActionResult Search(string searchStr, int? page)
         {
             var kbs = from m in db.KnowledgeFAQs
-                       where (m.type == 2 && m.published)
+                       where (m.type == 2 && !m.deleted && m.published)
                        select m;
 
             if (!String.IsNullOrEmpty(searchStr))
@@ -108,17 +108,29 @@ namespace Help_Desk_2.Controllers
         }
 
         // GET: KB/New
-        public ActionResult New()
+        public ActionResult New(int? id)
         {
-            //ViewBag.originatorID = new SelectList(db.UserProfiles, "userID", "loginName");
             ViewBag.mode = 0;
-            return View("KBOne");
+            if (id == null)
+            {
+                return View("KBOne");
+            }
+            else
+            {
+                KnowledgeFAQ kb = db.KnowledgeFAQs.Find(id);
+                if (kb == null)
+                {
+                    return HttpNotFound();
+                }
+                return View("KBOne", kb);
+            }
+            
         }
 
         // POST: KB/New
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult New([Bind(Include = "type,headerText,description,links")] KnowledgeFAQ kb)
+        public ActionResult New([Bind(Include = "type,headerText,description,links,archiveID")] KnowledgeFAQ kb)
         {
             if (ModelState.IsValid)
             {
@@ -132,7 +144,8 @@ namespace Help_Desk_2.Controllers
                 if (submittedValues.Contains("btnApprove"))
                 {
                     kb.published = true;
-                    kb.expiryDate = kb.dateComposed.AddDays(AllSorts.getExpiryDays(2));
+                    //@modifed 17/06/2016 KBs never expire 
+                    //kb.expiryDate = kb.dateComposed.AddDays(AllSorts.getExpiryDays(2));
 
                     if (kb.dateSubmitted == null)
                         kb.dateSubmitted = DateTime.Now;
@@ -204,12 +217,17 @@ namespace Help_Desk_2.Controllers
             }
 
             ViewBag.mode = 1;
+            if (kb.archiveID > 0)
+            {
+                KnowledgeFAQ kba = db.KnowledgeFAQs.Find(id);
+                ViewBag.archiveTitle = kba.headerText;
+            }
             return View("KBOne", kb);
         }
 
         // POST: KB/Edit/5
         [HttpPost]
-        public ActionResult Edit([Bind(Include = "ID,originatorID,expiryDate,dateComposed,dateSubmitted,type,headerText,description,links,deleteField,published")] KnowledgeFAQ kb)
+        public ActionResult Edit([Bind(Include = "ID,originatorID,expiryDate,dateComposed,dateSubmitted,type,headerText,description,links,deleteField,published,archiveID")] KnowledgeFAQ kb)
         {
             if (ModelState.IsValid)
             {
@@ -222,7 +240,8 @@ namespace Help_Desk_2.Controllers
                     kb.published = true;
 
                     //If being approved from expired then calculate expiry date from now instead of composed date
-                    kb.expiryDate = (kb.status == Statuses.Expired ? DateTime.Now : kb.dateComposed).AddDays(AllSorts.getExpiryDays(2));
+                    //@modifed 17/06/2016 KBs never expire 
+                    //kb.expiryDate = (kb.status == Statuses.Expired ? DateTime.Now : kb.dateComposed).AddDays(AllSorts.getExpiryDays(2));
 
                     outMsg = "KB Article approved successfully";
                 }

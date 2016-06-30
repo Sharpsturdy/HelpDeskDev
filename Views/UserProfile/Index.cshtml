@@ -1,70 +1,116 @@
-﻿@model Help_Desk_2.Models.UserProfile
+﻿@using Help_Desk_2.Utilities
+@model Help_Desk_2.Models.UserProfile
 
 @{
-    ViewBag.Title = "User Profile";
+    ViewBag.Title = "My Profile";
+    ViewBag.addAttachCode = "1"; //Activate attach code
+}
+
+@section cssCustomTop {
+    @Styles.Render("~/Content/Select2/css/select2.min.css")
+    @Styles.Render("~/Content/Select2/css/select2-bootstrap.min.css")
+}
+
+@section scriptsCustom {
+    <script src="~/Content/Select2/js/select2.min.js"></script>
 }
 
 <div class="container"><h2>@ViewBag.Title</h2></div>
 
 <hr class="title" />
-@using (Html.BeginForm()) 
+
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
-       
+
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.userID)
         @Html.HiddenFor(model => model.loginName)
         @Html.HiddenFor(model => model.principalName)
-        
+        @Html.HiddenFor(model => model.displayName)
+
+        @if (!string.IsNullOrEmpty(Model.emailAddress) && string.IsNullOrEmpty(ViewBag.isErrorPage) && Model.emailAddress.IndexOf("@") < 0)
+        {
+            <div class="container alert-danger alert-custom">Please ensure that you have entered an valid email address</div>
+        }
+            
         <div class="container">
-            <div class="row">
-                <div class="col-sm-6">
-                    @Html.LabelFor(model => model.firstName, htmlAttributes: new { @class = "control-label" })
-                    <div>
-                        @*Html.EditorFor(model => model.firstName, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.firstName, "", new { @class = "text-danger" })
-                            *@
-                        @Html.DisplayFor(model => model.firstName)
-                    </div>
-                </div>
 
-                <div class="col-sm-6">
-                    @Html.LabelFor(model => model.surName, htmlAttributes: new { @class = "control-label" })
-                    <div>
-                        @*Html.EditorFor(model => model.surName, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.surName, "", new { @class = "text-danger" })
-                            *@
-                        @Html.DisplayFor(model => model.surName)
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div  class="col-sm-6">
-                    @Html.LabelFor(model => model.emailAddress, htmlAttributes: new { @class = "control-label" })
-                    <div>
-                        @Html.EditorFor(model => model.emailAddress, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.emailAddress, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-
-                <div  class="col-sm-6">
-                    @Html.LabelFor(model => model.contactNumber, htmlAttributes: new { @class = "control-label" })
-                    <div>
-                        @Html.EditorFor(model => model.contactNumber, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.contactNumber, "", new { @class = "text-danger" })
-                    </div>
+            <div class="form-group">
+                @Html.Label("Full name", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10 control-label">
+                    @Html.DisplayFor(model => model.displayName)
                 </div>
             </div>
 
+            <div class="form-group">
+                @Html.LabelFor(model => model.emailAddress, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.emailAddress, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.emailAddress, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            
+            <h3>My Subscriptions</h3>
+            <div class="panel panel-info">
+                <div class="panel-heading">FAQ Subscriptions</div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        @Html.LabelFor(model => model.faqKeywords, htmlAttributes: new { @class = "control-label" })
+                        <div>
+                            @Html.DropDownList("infaqkeywords", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 1), "ID", "Text", Model.faqKeywords.Select(x => x.ID)), new { @class = "select2-editor", multiple = "multiple" })
+                            @Html.ValidationMessageFor(model => model.faqKeywords, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        @Html.LabelFor(model => model.faqExpertAreas, htmlAttributes: new { @class = "control-label" })
+                        <div>
+                            @Html.DropDownList("infaqexpertareas", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 2), "ID", "Text", Model.faqExpertAreas.Select(x => x.ID)), new { @class = "select2-editor", multiple = "multiple" })
+                            @Html.ValidationMessageFor(model => model.faqExpertAreas, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if (AllSorts.UserCan("SuperFunctions"))
+            {
+                <div class="panel panel-info">
+                    <div class="panel-heading">Knowledge Base Subscriptions</div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            @Html.LabelFor(model => model.kbKeywords, htmlAttributes: new { @class = "control-label" })
+                            <div>
+                                @Html.DropDownList("inkbkeywords", new MultiSelectList(AllSorts.keywords, "ID", "Text", Model.kbKeywords.Select(x => x.ID)), new { @class = "select2-editor", multiple = "multiple" })
+                                @Html.ValidationMessageFor(model => model.kbKeywords, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            @Html.LabelFor(model => model.kbExpertAreas, htmlAttributes: new { @class = "control-label" })
+                            <div>
+                                @Html.DropDownList("inkbexpertareas", new MultiSelectList(AllSorts.expertareas, "ID", "Text", Model.kbExpertAreas.Select(x => x.ID)), new { @class = "select2-editor", multiple = "multiple" })
+                                @Html.ValidationMessageFor(model => model.kbExpertAreas, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                @Html.Hidden("inkbkeywords", "")
+                @Html.Hidden("inkbexpertareas", "")
+            }
             <div>
                 <div class="btn-group btn-group-custom">
                     <input type="submit" value="Save" class="btn btn-primary" />
                 </div>
             </div>
-        </div>
     </div>
+</div>
+ 
 }
 
 

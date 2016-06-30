@@ -4,13 +4,16 @@
 
 @{
     AllSorts.setNavProperties(ViewBag, true); //This is a single item page 
+
+    //Force read-only for archived articles
+    if (ViewBag.mode == 1 && Model.archived) { ViewBag.mode = 2; };
     if (ViewBag.mode == 0)
     {
 
         ViewBag.Title = "New Knowledge Base Article";
         ViewBag.Status = "Draft";
         ViewBag.CreationDate = String.Format("{0:d}", DateTime.Now);
-        
+
         ViewBag.displayName = AllSorts.getUserDisplayName();
     }
     else
@@ -38,26 +41,43 @@
     <script src="~/Content/Select2/js/select2.min.js"></script>
 }
 <header class="container-custom-top">
-    <h2>@ViewBag.Title <span class="summary-top pull-right">@ViewBag.Status</span></h2>
+    <h2>
+        @ViewBag.Title <span class="summary-top pull-right">@ViewBag.Status</span>
+    </h2>
    @if (ViewBag.mode > 0)
    {
     <p class="text-muted">Created by @ViewBag.displayName on @ViewBag.CreationDate</p>
+   }
+   else if (Model != null)
+   {
+    <p class="text-warning">This article will supercede article '@Model.headerText'</p>
    }
 </header>
 
 <hr class="title" />
 
 
-@using (Html.BeginForm(ViewBag.mode ==0? "New": "Edit", "KnowledgeBase", FormMethod.Post,
+@using (Html.BeginForm(ViewBag.mode == 0 ? "New" : "Edit", "KnowledgeBase", FormMethod.Post,
                  new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
        
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.Hidden("type", 2) <!-- KBs always have type == 2 -->
         @Html.HiddenFor(model => model.published)
+        @Html.HiddenFor(model => model.deleted)
+        @Html.HiddenFor(model => model.archived)
+        @if (Model == null)
+        {
+            @Html.HiddenFor(model => model.archiveID)
+        }
+        else
+        {
+            @Html.HiddenFor(model => model.archiveID, Model.ID)
+        }
+
         @if (ViewBag.mode == 1)
         {
             @Html.HiddenFor(model => model.ID)
@@ -90,7 +110,8 @@
                     {
                         @Html.Raw(Model.description)
                     }
-                    else {
+                    else
+                    {
                         @Html.TextAreaFor(model => model.description, new { @class = "form-control richeditor" })
                         @Html.ValidationMessageFor(model => model.description, "", new { @class = "text-danger" })
                     }
@@ -100,19 +121,20 @@
 
             <!--Keywords-->
             <div class="panel panel-info">
-                <div class="panel-heading">@Html.DisplayNameFor(model=> model.keywords)</div>
+                <div class="panel-heading">@Html.DisplayNameFor(model => model.keywords)</div>
             
                 <div class="panel-body1">                    
                     @if (ViewBag.mode == 0)
                     {
-                        @Html.DropDownList("inkeywords", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 1 && !x.deleted), "ID", "Text"), new { @class = "select2-editor", multiple = "multiple" })
+                        @Html.DropDownList("inkeywords", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 1), "ID", "Text"), new { @class = "select2-editor", multiple = "multiple" })
                     }
                     else if (ViewBag.mode == 1)
                     {
 
-                        @Html.DropDownList("inkeywords", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 1 && !x.deleted), "ID", "Text", Model.keywords.Select(x => x.ID)), new { @class = "select2-editor", multiple = "multiple" })
+                        @Html.DropDownList("inkeywords", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 1), "ID", "Text", Model.keywords.Select(x => x.ID)), new { @class = "select2-editor", multiple = "multiple" })
 
-                    } else
+                    }
+                    else
                     {
                         @String.Join(", ", Model.keywords.Select(x => x.text))
                     }
@@ -125,27 +147,26 @@
                 <div class="panel-body1">
                     @if (ViewBag.mode == 0)
                     {
-                       @Html.DropDownList("inexpertareas", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 2 && !x.deleted), "ID", "Text"), new { @class = "select2-editor", multiple = "multiple" })
+                       @Html.DropDownList("inexpertareas", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 2), "ID", "Text"), new { @class = "select2-editor", multiple = "multiple" })
                     }
                     else if (ViewBag.mode == 1)
                     {
 
-                        @Html.DropDownList("inexpertareas", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 2 && !x.deleted), "ID", "Text",Model.expertAreas.Select(x => x.ID)), new { @class = "select2-editor", multiple = "multiple" })
-                    } else
+                        @Html.DropDownList("inexpertareas", new MultiSelectList(AllSorts.FullWordList.Where(x => x.type == 2), "ID", "Text", Model.expertAreas.Select(x => x.ID)), new { @class = "select2-editor", multiple = "multiple" })
+                    }
+                    else
                     {
                         @String.Join(", ", Model.expertAreas.Select(x => x.text))
                     }
                 </div>
             </div>
-
-
-
+            
             <!--Attachment section-->
             <div class="panel panel-info">
                 <div class="panel-heading">@Html.DisplayName("Attachments")</div>
                 <div>
                     @if (Model != null)
-                {
+                    {
                         @Html.HiddenFor(model => model.deleteField)
                         if (Model.Files != null && Model.Files.Count > 0)
                         {
@@ -235,38 +256,52 @@
                     }
                 </table>
             </div>
-            
+
+            @if(ViewBag.mode != 0 && Model != null && Model.archiveID)
+            {
+                <div>
+                    <p>This article is a new version of @Html.ActionLink((string) ViewBag.archiveTitle, "Edit", new { id = Model.archiveID }, htmlAttributes: new { @title = "_blank" })</p>
+                </div>
+            }
+
             <div>
                 <div class="btn-group btn-group-custom" style="padding-bottom:15px; padding-top:15px">
-                    @if (ViewBag.mode == 2)
-                    {
-                        if ((Model.status == Statuses.Draft && Model.originatorID.ToString() == AllSorts.getUserID()) ||
-                            (Model.dateSubmitted != null && AllSorts.UserCan("ManageKBs"))) {
-                            @Html.ActionLink("Edit", "Edit/" + Model.ID, null, htmlAttributes: new { @title = "Click to modify document", @class = "btn btn-primary" })
-                        }
-                        <a href="@ViewBag.prevURL" title="Click to return to News home" class="btn btn-primary">Close</a>
+                    @{
+                        var superCede = (Model != null && Model.status == Statuses.Published && AllSorts.UserCan("ManageKBs")) ? Html.ActionLink("New Version","New", new { id = Model.ID }, htmlAttributes: new { @title = "Click to supercede this article with a new version", @class = "btn btn-primary" }) : Html.Raw("");
 
-                    }
-                    else {
+                        if (ViewBag.mode == 2)
+                        {
+                            if ((Model.status == Statuses.Draft && Model.originatorID.ToString() == AllSorts.getUserID()) ||
+                                (Model.dateSubmitted != null && AllSorts.UserCan("ManageKBs")))
+                            {
+                                @Html.ActionLink("Edit", "Edit/" + Model.ID, null, htmlAttributes: new { @title = "Click to modify document", @class = "btn btn-primary" })
+                            }
+                            @superCede
+                            <a href="@ViewBag.prevURL" title="Click to return to News home" class="btn btn-primary">Close</a>
 
-                        <input type="submit" name="btnSave" value="Save" class="btn btn-primary" />
-                        <input type="submit" name="btnSClose" value="Save & Close" class="btn btn-primary" />
-                        if (Model == null || Model.dateSubmitted == null)
-                        {
-                            <input type="submit" name="btnSubmit" value="Submit" class="btn btn-primary" title="Submit article for approval"/>
                         }
-                        if (AllSorts.UserCan("ManageKBs"))
+                        else
                         {
-                            if (Model != null && Model.published)
+
+                            <input type="submit" name="btnSave" value="Save" class="btn btn-primary" />
+                            <input type="submit" name="btnSClose" value="Save & Close" class="btn btn-primary" />
+                            if (Model == null || Model.dateSubmitted == null)
                             {
-                                <input type="submit" name="btnUnApprove" value="UnApprove" class="btn btn-primary" />
+                                <input type="submit" name="btnSubmit" value="Submit" class="btn btn-primary" title="Submit article for approval"/>
                             }
-                            else
+                            if (AllSorts.UserCan("ManageKBs"))
                             {
-                                <input type="submit" name="btnApprove" value="Approve" class="btn btn-primary" />
+                                if (Model != null && Model.published)
+                                {
+                                    <input type="submit" name="btnUnApprove" value="UnApprove" class="btn btn-primary" />
+                                }
+                                else
+                                {
+                                    <input type="submit" name="btnApprove" value="Approve" class="btn btn-primary" />
+                                }
                             }
+                            <a href="@ViewBag.prevURL" title="Click to return to News home" class="btn btn-primary">Cancel</a>
                         }
-                        <a href="@ViewBag.prevURL" title="Click to return to News home" class="btn btn-primary">Cancel</a>
                     }
                 </div>
             </div>

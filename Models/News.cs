@@ -45,6 +45,15 @@ namespace Help_Desk_2.Models
 
         public virtual UserProfile Originator { get; set; }
 
+        public virtual ICollection<Attachment> Files { get; set; }
+
+        [NotMapped]
+        [Display(Name = "Choose file")]
+        public string filePath { get; set; }
+
+        [NotMapped]     //List of files to delete
+        public string deleteField { get; set; }
+
         [Display(Name = "Created on"), DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime creationDate {  get;  set; }
 

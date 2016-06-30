@@ -585,11 +585,6 @@
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce-small.eot" />
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\readme.md" />
     <Content Include="Scripts\tinymce\langs\readme.md" />
-    <Content Include="Views\NewsNew\New.cshtml" />
-    <Content Include="Views\NewsNew\Delete.cshtml" />
-    <Content Include="Views\NewsNew\Details.cshtml" />
-    <Content Include="Views\NewsNew\Edit.cshtml" />
-    <Content Include="Views\NewsNew\Index.cshtml" />
     <Content Include="Views\News\NewsOne.cshtml" />
     <Content Include="Views\FAQs\FAQOne.cshtml" />
     <Content Include="Views\FAQs\Index.cshtml" />
@@ -597,11 +592,6 @@
     <Content Include="Views\FAQs\Suggest.cshtml" />
     <Content Include="Views\News\Admin.cshtml" />
     <Content Include="Views\News\Article.cshtml" />
-    <Content Include="Views\TicketsAuto1\Create.cshtml" />
-    <Content Include="Views\TicketsAuto1\Delete.cshtml" />
-    <Content Include="Views\TicketsAuto1\Details.cshtml" />
-    <Content Include="Views\TicketsAuto1\Edit.cshtml" />
-    <Content Include="Views\TicketsAuto1\Index.cshtml" />
     <Content Include="Views\Emails\_ViewStart.cshtml" />
     <Content Include="Views\Emails\Web.config" />
     <Content Include="Views\Emails\_Attachments.cshtml" />
@@ -618,17 +608,6 @@
     <Content Include="Views\TrashCan\Index.cshtml" />
     <Content Include="Views\UserProfile\Subscriptions.cshtml" />
     <Content Include="Views\Ticket\Reports.cshtml" />
-    <Content Include="Views\UserProfilesTest\Create.cshtml" />
-    <Content Include="Views\UserProfilesTest\Delete.cshtml" />
-    <Content Include="Views\UserProfilesTest\Details.cshtml" />
-    <Content Include="Views\UserProfilesTest\Edit.cshtml" />
-    <Content Include="Views\UserProfilesTest\Index.cshtml" />
-    <Content Include="Views\DummyWordLists\Create.cshtml" />
-    <Content Include="Views\DummyWordLists\Delete.cshtml" />
-    <Content Include="Views\DummyWordLists\Details.cshtml" />
-    <Content Include="Views\DummyWordLists\Edit.cshtml" />
-    <Content Include="Views\DummyWordLists\Index.cshtml" />
-    <Content Include="Views\GlobalSettings\Edit.cshtml" />
     <Content Include="Views\Home\T.cshtml" />
     <Content Include="Views\Emails\Subscriptions.cshtml" />
   </ItemGroup>
