@@ -34,5 +34,37 @@ namespace Help_Desk_2.Controllers
             //string vp = "~/App_Data/Files/Customer-ORDER-FORM-2 (2).jpg";
             return File(attach.filePath, System.Net.Mime.MediaTypeNames.Application.Octet, attach.fileName); //Path.GetFileName(vp));
         }
+
+        public ActionResult dsp(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            Attachment attach = db.Attachments.Find(id);
+            if (attach == null)
+            {
+                return HttpNotFound();
+            }
+            //return View();
+            //return FileResult("adb.txt");
+            //R:\Development\Clients\progrex\Renold\Engineering Help Desk\Help Desk 2\App_Data\Files\Customer-ORDER-FORM-2 (2).jpg
+
+            //string vp = "~/App_Data/Files/Customer-ORDER-FORM-2 (2).jpg";
+            return File(attach.filePath, System.Net.Mime.MediaTypeNames.Application.Octet, attach.fileName); //Path.GetFileName(vp));
+        }
+
+        /*
+        private FileResult RenderImage()
+        {
+            MemoryStream stream = new MemoryStream();
+            var bitmap = CreateThumbnail();
+            bitmap.Save(stream, System.Drawing.Imaging.ImageFormat.Bmp);
+            Byte[] bytes = stream.ToArray();
+            return File(bytes, "image/png");
+
+        }
+        */
     }
 }

@@ -69,14 +69,12 @@
         @Html.HiddenFor(model => model.published)
         @Html.HiddenFor(model => model.deleted)
         @Html.HiddenFor(model => model.archived)
-        @if (Model == null)
+
+        @if (Model != null)
         {
             @Html.HiddenFor(model => model.archiveID)
         }
-        else
-        {
-            @Html.HiddenFor(model => model.archiveID, Model.ID)
-        }
+        
 
         @if (ViewBag.mode == 1)
         {
@@ -257,10 +255,10 @@
                 </table>
             </div>
 
-            @if(ViewBag.mode != 0 && Model != null && Model.archiveID)
+            @if(ViewBag.mode != 0 && Model != null && Model.archiveID > 0)
             {
                 <div>
-                    <p>This article is a new version of @Html.ActionLink((string) ViewBag.archiveTitle, "Edit", new { id = Model.archiveID }, htmlAttributes: new { @title = "_blank" })</p>
+                    <p>This article is a new version of @Html.ActionLink((string) ViewBag.archiveTitle, "Details", new { id = Model.archiveID }, htmlAttributes: new { @title = "_blank" })</p>
                 </div>
             }
 

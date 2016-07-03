@@ -103,6 +103,13 @@ namespace Help_Desk_2.Controllers
                 return HttpNotFound();
             }
 
+            //Is there archive article           
+            if (kb.archiveID > 0)
+            {
+                KnowledgeFAQ kba = db.KnowledgeFAQs.Find(kb.archiveID);
+                if (kba != null) ViewBag.archiveTitle = kba.headerText;
+            }
+
             ViewBag.mode = 2;
             return View("KBOne", kb);
         }
@@ -111,6 +118,7 @@ namespace Help_Desk_2.Controllers
         public ActionResult New(int? id)
         {
             ViewBag.mode = 0;
+            
             if (id == null)
             {
                 return View("KBOne");
@@ -122,6 +130,7 @@ namespace Help_Desk_2.Controllers
                 {
                     return HttpNotFound();
                 }
+                kb.archiveID = (int) id;
                 return View("KBOne", kb);
             }
             
@@ -195,6 +204,7 @@ namespace Help_Desk_2.Controllers
             } else
             {
                 AllSorts.displayMessage = "0#General error creating KB Article";
+                
             }
 
             ViewBag.mode = 0;
@@ -219,8 +229,8 @@ namespace Help_Desk_2.Controllers
             ViewBag.mode = 1;
             if (kb.archiveID > 0)
             {
-                KnowledgeFAQ kba = db.KnowledgeFAQs.Find(id);
-                ViewBag.archiveTitle = kba.headerText;
+                KnowledgeFAQ kba = db.KnowledgeFAQs.Find(kb.archiveID);
+                if (kba != null) ViewBag.archiveTitle = kba.headerText;
             }
             return View("KBOne", kb);
         }
@@ -250,7 +260,11 @@ namespace Help_Desk_2.Controllers
                     kb.published = false;
                     outMsg = "KB Article unapproved successfully";
                 }
-
+                else if (submittedValues.Contains("btnSubmit"))
+                {
+                    kb.dateSubmitted = DateTime.Now;
+                    outMsg = "KB Article submitted successfully";
+                }
                 /***** Add File ************/
                 AllSorts.saveAttachments(kb.ID, db, kb.deleteField, 1);
 
@@ -262,10 +276,9 @@ namespace Help_Desk_2.Controllers
                 //Better to send mail post save in case there errors
                 if (submittedValues.Contains("btnSubmit"))
                 {
-
                     //Send email to ticket admins to let them know of this new ticket submission
                     Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendTicketNotification("Submitted",kb.ID));
-                    outMsg = "KB Article submitted successfully";
+                    
                 }
                 else if (submittedValues.Contains("btnApprove"))
                 {

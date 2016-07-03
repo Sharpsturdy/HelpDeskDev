@@ -54,10 +54,12 @@
 <hr class="title" />
 
 
-@using (Html.BeginForm()) 
+@*using (Html.BeginForm())*@
+@using (Html.BeginForm(ViewBag.mode == 0 ? "New" : "Edit", "News", FormMethod.Post,
+                             new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
        
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -67,7 +69,7 @@
             @Html.HiddenFor(model => model.originatorID)
             @Html.HiddenFor(model => model.creationDate)
             @Html.HiddenFor(model => model.deleted)
-                    
+
         }
         <div class="container-form news">
             @if (ViewBag.mode < 2)
@@ -152,7 +154,8 @@
                     </div>
                 </div>
             }
-            else {
+            else
+            {
             <div class="form-publish-bar">
                 <span>
                     @Html.EditorFor(model => model.published)
@@ -162,7 +165,7 @@
                 <span>
 
                     @Html.LabelFor(model => model.publishedDate, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.publishedDate, new { htmlAttributes = new { @type="text" , @class = "form-control datepicker1", @style = "width:auto; display: table-cell; margin-left: 10px; padding-left:6px" } })
+                    @Html.EditorFor(model => model.publishedDate, new { htmlAttributes = new { @type = "text", @class = "form-control datepicker1", @style = "width:auto; display: table-cell; margin-left: 10px; padding-left:6px" } })
                 </span>                  
                
 
@@ -171,15 +174,17 @@
                     @Html.LabelFor(model => model.sticky, htmlAttributes: new { @class = "control-label" })
                 </span>
             </div>
-           
+
             <div>
                 <div class="btn-group btn-group-custom" style="padding-bottom:15px; padding-top:15px">
                     <input type="submit" name="btnSave" value="Save" class="btn btn-primary" />
                     <input type="submit" name="btnSClose" value="Save & Close" class="btn btn-primary" />
-                    @if (Model !=null && Model.deleted) {
+                    @if (Model != null && Model.deleted)
+                    {
                         <input type="submit" name="btnUnDelete" value="Undelete" class="btn btn-primary" />
                     }
-                    else {
+                    else
+                    {
                         <input type="submit" name="btnDelete" value="Delete" class="btn btn-primary" />
                     }
                     <a href="@ViewBag.prevURL" name="actionBtn" class="btn btn-primary">Cancel</a>
