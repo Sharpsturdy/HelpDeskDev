@@ -42,18 +42,35 @@ namespace Help_Desk_2.Utilities
                     {
 
                         //Get physical path to directory
-                        string savePath = Path.Combine(HttpContext.Current.Server.MapPath("~/App_Data/Files"), DateTime.Now.Year.ToString());
+                        string saveBasePath = attachType == 2 ? "~/Content/news/images" : "~/App_Data/Files";
+                        string savePath = Path.Combine(HttpContext.Current.Server.MapPath(saveBasePath), DateTime.Now.Year.ToString());
+
+                        //Create directory if it does not exist
                         if (!Directory.Exists(savePath))
                         {
                             Directory.CreateDirectory(savePath);
                         }
 
-                        //Get unique random name, duplication not very possible
                         string randomName = "";
-                        do
+                        if (attachType == 2)
                         {
-                            randomName = Path.GetRandomFileName();
-                        } while (System.IO.File.Exists(Path.Combine(savePath, randomName)));
+                            /**Save to ~Content/images using real file name
+                             */                            
+                            randomName = file.FileName;
+                            int x = 1;
+                            while (System.IO.File.Exists(Path.Combine(savePath, randomName)))
+                            {
+                                randomName = file.FileName + "_" + x++;
+                            }                            
+                        }
+                        else
+                        {
+                            //Get unique random name, duplication not very possible                            
+                            do
+                            {
+                                randomName = Path.GetRandomFileName();
+                            } while (System.IO.File.Exists(Path.Combine(savePath, randomName)));                            
+                        }
 
                         //Save file
                         //file.SaveAs(savePath + "/" + randomName);
@@ -61,17 +78,15 @@ namespace Help_Desk_2.Utilities
 
                         //Add file data to database
                         Attachment attachment = new Attachment();
-                        attachment.fileName = Path.GetFileName(file.FileName);
-                        attachment.filePath = "~/App_Data/Files/" + DateTime.Now.Year + "/" + randomName;
-                        if (attachType == 1)
-                        {
+                        attachment.fileName = Path.GetFileName(attachType == 2 ? randomName: file.FileName);
+                        attachment.filePath = saveBasePath + "/" + DateTime.Now.Year + "/" + randomName;
+
+                        if (attachType == 1) {
                             attachment.commonID = ID;
                         }
-                        else if (attachType == 2)
-                        {
+                        else if (attachType == 2) {
                             attachment.newsID = ID;
-                        }
-                        {
+                        } else {
                             attachment.parentID = ID;
                         }
 

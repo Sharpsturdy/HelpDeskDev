@@ -55,16 +55,16 @@ namespace Help_Desk_2.Controllers
             return File(attach.filePath, System.Net.Mime.MediaTypeNames.Application.Octet, attach.fileName); //Path.GetFileName(vp));
         }
 
-        /*
-        private FileResult RenderImage()
+        
+        private FileResult images(int? id)
         {
             MemoryStream stream = new MemoryStream();
-            var bitmap = CreateThumbnail();
-            bitmap.Save(stream, System.Drawing.Imaging.ImageFormat.Bmp);
+            //var bitmap = CreateThumbnail();
+            //bitmap.Save(stream, System.Drawing.Imaging.ImageFormat.Bmp);
             Byte[] bytes = stream.ToArray();
             return File(bytes, "image/png");
 
         }
-        */
+        
     }
 }
