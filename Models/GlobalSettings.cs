@@ -24,7 +24,7 @@ namespace Help_Desk_2.Models
         public int TicketSeeder { get; set; }
                
         
-        [Display(Name = "New ticker message")]
+        [Display(Name = "New ticket message")]
         [DataType(DataType.MultilineText)]
         public string TicketHeader { get; set; }
 

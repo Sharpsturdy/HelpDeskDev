@@ -573,7 +573,6 @@
     <Content Include="Views\UserProfile\Edit.cshtml" />
     <Content Include="Views\UserProfile\List.cshtml" />
     <Content Include="Views\Ticket\TicketOne.cshtml" />
-    <Content Include="Views\News\Details.cshtml" />
     <Content Include="Views\News\Index.cshtml" />
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce.woff" />
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce.ttf" />

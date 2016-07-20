@@ -96,8 +96,14 @@ namespace Help_Desk_2.Controllers
         [CustomAuthorise(Roles = "AdminUsers")]
         public ActionResult New()
         {
-            
-            ViewBag.mode = 0;
+            //Check new ticket message
+            GlobalSettings gs = db.GlobalSettingss.FirstOrDefault<GlobalSettings>();
+
+            if ((gs != null && gs.ID != null && gs.TicketHeaderEnabled))
+            {
+                AllSorts.displayMessage = gs.TicketHeader;
+            }
+                ViewBag.mode = 0;
             return View("NewsOne");
         }
 

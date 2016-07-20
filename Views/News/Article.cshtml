@@ -8,19 +8,20 @@
 <div class="container-view">
     <header>
         <h2 class="title">@ViewBag.Title</h2>
-        @foreach (var t in Model.Files)
-        {
-            <img src="@t.filePath.Substring(1)" width="25%" class="pull-left body-image" />
-
-        }
         <p class="text-muted">Tag: News / @Html.DisplayFor(model => model.publishedDate) / Author: @Html.DisplayFor(model => model.Originator.displayName)</p>
 
+        @foreach (var t in Model.Files)
+        {
+            <img src="@t.filePath.Substring(1)" width="25%" class="pull-left body-image" style="margin-right:15px"/>
+
+        }
+        
     </header>
     <div>
         @Html.Raw(Model.body)
     </div>        
 
-    <div class="clearfix">
+    <div class="clearfix" style="clear:both">
         <div class="btn-group btn-group-custom" style="padding-bottom:15px; padding-top:15px">
             
             <a href="~/News" name="actionBtn" class="btn btn-primary">Close</a>

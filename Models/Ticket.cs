@@ -31,6 +31,7 @@ namespace Help_Desk_2.Models
         [Display(Name = "Ticket No.")]
         public int ticketID { get; set;  }
 
+        [Required]
         [ForeignKey("Originator")]
         public Guid originatorID { get; set; } //AD Username
 
