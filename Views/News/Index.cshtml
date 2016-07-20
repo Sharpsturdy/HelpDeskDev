@@ -14,14 +14,17 @@
     @foreach (var item in Model)
         {
         <div class="panel panel-default">
+            @foreach (var t in item.Files)
+            {
+                <img src="@t.filePath.Substring(1)" width="80px" class="pull-left body-image" style="margin-right:15px" />
+
+            }
             <a class="article-title" onclick="$(location).attr('href', '@Url.Action("Article", "News", new { @id = item.ID })')">
                 @Html.DisplayFor(modelItem => item.title)                    
             </a>
-            @*<div class="article-body">
-    @Html.Raw(item.body)
-</div>*@
+            
             <p class="text-muted">@Html.DisplayFor(modelItem => item.publishedDate) / Author: @Html.DisplayFor(modelItem => item.Originator.displayName)</p>
-
+            <p style="clear:both"></p>
                 
         </div>
     }

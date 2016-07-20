@@ -175,6 +175,10 @@
                     @Html.EditorFor(model => model.sticky)
                     @Html.LabelFor(model => model.sticky, htmlAttributes: new { @class = "control-label" })
                 </span>
+
+            </div>
+            <div>
+                @Html.ValidationMessageFor(model => model.publishedDate, "", new { @class = "text-danger" })
             </div>
 
             <div>

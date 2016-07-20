@@ -1037,7 +1037,15 @@ $.extend($.validator, {
 
 		// http://docs.jquery.com/Plugins/Validation/Methods/date
 		date: function( value, element ) {
-			return this.optional(element) || !/Invalid|NaN/.test(new Date(value).toString());
+		    //return this.optional(element) || !/Invalid|NaN/.test(new Date(value).toString());
+		    if ($.browser.webkit) {
+		        //ES - Chrome does not use the locale when new Date objects instantiated:
+		        var d = new Date();
+		        return this.optional(element) || !/Invalid|NaN/.test(new Date(d.toLocaleDateString(value)));
+		    }
+		    else {
+		        return this.optional(element) || !/Invalid|NaN/.test(new Date(value));
+		    }
 		},
 
 		// http://docs.jquery.com/Plugins/Validation/Methods/dateISO

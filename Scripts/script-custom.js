@@ -55,16 +55,15 @@
 
         refreshLinks();
     });
-    /*
+    
     try { //Wrap is try/catch because datepicker script is not always loaded
         $(".datepicker1").datepicker({
             format: 'dd/mm/yyyy',
-            startDate: 'd',
             autoclose: true,
             todayHighlight: true
         });
     } catch (e) { }
-    ***********************/
+    
 
     //Multi-select fields
     try { //Wrap is try/catch because select2 script is not always loaded
