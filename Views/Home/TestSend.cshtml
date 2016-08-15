@@ -1,6 +1,7 @@
-﻿
+﻿@using Help_Desk_2.BackgroundJobs
 @{
     ViewBag.Title = "Test Send";
+    Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendAgedTicketNotification());
 }
 
 <h2>@ViewBag.Title</h2>

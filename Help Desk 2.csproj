@@ -609,6 +609,7 @@
     <Content Include="Views\Ticket\Reports.cshtml" />
     <Content Include="Views\Home\T.cshtml" />
     <Content Include="Views\Emails\Subscriptions.cshtml" />
+    <Content Include="Views\Emails\AgedTickets.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Files\" />

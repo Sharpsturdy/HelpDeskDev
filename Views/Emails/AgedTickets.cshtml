@@ -1,0 +1,42 @@
+﻿From: @Html.Raw(ViewBag.From)
+To: @ViewBag.To
+@if(ViewBag.CC != "") { Html.Raw("CC: " + ViewBag.CC); }
+Subject: @ViewBag.Subject
+Content-Type: text/html; charset=utf-8
+
+<html>
+    <body>
+        <style type="text/css">
+            table.embedded td { vertical-align: top; border-bottom: 1px solid #ddd; }
+        </style>
+        <p>Hi Ticket Administrators,</p>
+        <p>The following tickets are being brought to your attention because they have been sitting in the queue for longer than @ViewBag.ticketSLA
+        </p>
+        <br/>
+        <table cellpadding="3" cellspacing="3" width="90%" class="embedded">
+            <thead>
+                <tr>
+                    <td width="60%" style="border-bottom: 1px solid #ddd;"><strong>Header Text</strong></td>
+                    <td width="10%" style="border-bottom: 1px solid #ddd;"><strong>Submitted by</strong></td>
+                    <td width="10%" style="border-bottom: 1px solid #ddd;"><strong>Submitted on</strong></td>
+                    <td width="10%" style="border-bottom: 1px solid #ddd;"><strong>Age in queue</strong></td>
+                </tr>
+            </thead>
+            @foreach(Help_Desk_2.Models.Ticket t in ViewBag.tickets)
+            {
+                <tr>
+                    <td style="border-bottom: 1px solid #ddd;">@t.headerText</td>
+                    <td style="border-bottom: 1px solid #ddd;">@t.Originator.displayName</td>
+                    <td style="border-bottom: 1px solid #ddd;">@t.dateSubmitted</td>
+                    <td style="border-bottom: 1px solid #ddd;">@t.ageInQueue</td>
+                </tr>
+            }
+        </table>
+        @*{
+            var baseURL = System.Configuration.ConfigurationManager.AppSettings["BaseURL"];
+            ViewBag.link = "<a href='" + baseURL + Url.Action("Details/" + ViewBag.id, "Knowledgebase")
+                +"'>" + Url.Action("Details/" + ViewBag.id, "Knowledgebase") + "</a>";
+        }*@
+        <p><b>System Message</b></p>
+    </body>
+</html>

@@ -67,15 +67,16 @@ namespace Help_Desk_2.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Index([Bind(Include = "userID,loginName,principalName,emailAddress,displayName")] UserProfile userProfile)
+        public ActionResult Index([Bind(Include = "userID,loginName,principalName,emailAddress,displayName")] UserProfile up)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(userProfile).State = EntityState.Modified;
+                //db.Entry(userProfile).State = EntityState.Modified;
+                UserProfile userProfile = db.UserProfiles.Find(up.userID);
                 AllSorts.saveWordLists(Request.Form.GetValues("infaqkeywords"), Request.Form.GetValues("infaqexpertareas"), db, userProfile);
                 AllSorts.saveWordLists(Request.Form.GetValues("inkbkeywords"), Request.Form.GetValues("inkbexpertareas"), db, userProfile, true);
                 db.SaveChanges();
-                Session.Add("UserDisplayName", userProfile.displayName);//Update display name
+                //Session.Add("UserDisplayName", userProfile.displayName);//Update display name
                 AllSorts.displayMessage = "Profile updated successfully!";
 
                 return RedirectToAction("Index");
@@ -83,7 +84,7 @@ namespace Help_Desk_2.Controllers
             {
                 AllSorts.displayMessage = "0#General error updating User Profile.";
             }
-            return View(userProfile);
+            return View(up);
         }
 
         // GET: UserProfile/Create

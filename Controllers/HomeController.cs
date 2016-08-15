@@ -16,7 +16,7 @@ namespace Help_Desk_2.Controllers
         public String TestEmail()
         {
             //RecurringJob.AddOrUpdate("ContentNotification", () => Mailer.sendNotification(), "*/5 * * * *");
-            Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendSubscriptions());
+            Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendNotification());
             return "All done!";
         }
 

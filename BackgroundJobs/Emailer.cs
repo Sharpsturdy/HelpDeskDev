@@ -214,6 +214,26 @@ namespace Help_Desk_2.BackgroundJobs
             email.Send();
         }
 
+        /********
+         * send ticket reminders every so often as set in global settings if not attended
+         * list all tickets submitted but not attend to longer that time set
+         * Compose email to set ticket admins and send links to all tickets maybe in a table
+         * Ticket header / date submitted / who submitted it / how old the ticket is.
+         * **************************/
+        public void sendAgedTicketNotification()
+        {
+            string processingTime = DateTime.Now.ToString();
+
+            dynamic email = new Email("AgedTickets");
+            email.From = From;
+            email.To = "pelias@avexacomputing.net";
+            email.Subject = "Helpdesk System: Aged Tickets Notification";
+            email.ticketSLA = "24 hours";
+
+            email.tickets = db.Tickets.Where(t => t.dateSubmitted != null).Take(3).ToList<Ticket>();
+            email.Send();
+
+        }
         public string sendThis()
         {
             try

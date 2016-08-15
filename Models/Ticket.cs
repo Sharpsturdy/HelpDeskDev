@@ -184,6 +184,20 @@ namespace Help_Desk_2.Models
             }
         }
 
+        [NotMapped]
+        public string ageInQueue
+        {
+            get
+            {
+                if (dateSubmitted == null)
+                    return "0";
+
+                TimeSpan t = (TimeSpan)(DateTime.Now - dateSubmitted);
+                
+                return (t.Days > 0 ? (t.Days +" day(s), and "):"") + t.Hours + " hour(s)";
+            }
+        }
+
         public virtual ICollection<WordList> wordList { get; set; }
 
         public virtual UserProfile Originator { get; set; }
