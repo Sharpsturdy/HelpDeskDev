@@ -170,7 +170,6 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="BackgroundJobs\Emailer.cs" />
     <Compile Include="BackgroundJobs\Mailer.cs" />
-    <Compile Include="Controllers\DummyWordListsController.cs" />
     <Compile Include="Controllers\KnowledgeBaseController.cs" />
     <Compile Include="Controllers\FAQsController.cs" />
     <Compile Include="Controllers\FilesController.cs" />
@@ -181,7 +180,6 @@
     <Compile Include="Controllers\TicketController.cs" />
     <Compile Include="Controllers\TrashCanController.cs" />
     <Compile Include="Controllers\UserProfileController.cs" />
-    <Compile Include="Controllers\UserProfilesTestController.cs" />
     <Compile Include="DataAccessLayer\HelpDeskContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -367,8 +365,10 @@
     <None Include="Properties\PublishProfiles\avx01.pubxml" />
     <None Include="Properties\PublishProfiles\azure vm.pubxml" />
     <None Include="Properties\PublishProfiles\dev web deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\hlpdsk.pubxml" />
     <None Include="Properties\PublishProfiles\hlpdsk02 - Web Deploy %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\hlpdsk02 - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\live file upload.pubxml" />
     <None Include="Properties\PublishProfiles\live web deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2-vsdoc.js" />
     <Content Include="Scripts\fileinput.min.js" />

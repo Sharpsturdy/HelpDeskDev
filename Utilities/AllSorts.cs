@@ -129,7 +129,7 @@ namespace Help_Desk_2.Utilities
 
             if (eatmp == null) eatmp = new string[] { "0" };
 
-            //displayMessage = "KW=" + string.Join(",", kwtmp) + "<br/>" + "EA=" + string.Join(",", eatmp) + "//Top of Page//";
+            //displayMessage += "KW=" + string.Join(",", kwtmp) + "<br/>" + "EA=" + string.Join(",", eatmp) + "//Top of Page//";
 
             //Get exisiting wordlist  (keywords + expertAreas)             
             db.Entry(kbfaq).Collection(x => x.wordList).Load();

@@ -124,24 +124,15 @@ namespace Help_Desk_2.Controllers
         //[CustomAuthorise(Roles = "ManageTickets")]
         public ActionResult Admin(string searchType, string searchStr, int? page)
         {
-            if(!AllSorts.UserCan("ManageTickets")) 
-                return RedirectToAction("Unauthorized", "Home");
+            if(!AllSorts.UserCan("ManageTickets"))
+                  return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
 
             var tickets = from t in db.Tickets
                           where !t.deleted && t.dateSubmitted != null
 
                           select t;
 
-            /* 
-            new SelectListItem {Value = "", Text = "Open" },
-        new SelectListItem {Value = "1", Text = "Submitted" },
-        new SelectListItem {Value = "2", Text = "Checked" },
-        new SelectListItem {Value = "3", Text = "Assigned" },
-        new SelectListItem {Value = "4", Text = "Returned" },
-        new SelectListItem {Value = "5", Text = "OnHold" },
-        new SelectListItem {Value = "6", Text = "Completed" },
-        new SelectListItem {Value = "7", Text = "All" }
-            */
+           
             switch (searchType)
             {
                 case "":

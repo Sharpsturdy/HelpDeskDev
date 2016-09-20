@@ -13,7 +13,7 @@ using Help_Desk_2.BackgroundJobs;
 
 namespace Help_Desk_2.Controllers
 {
-    [CustomAuthorise(Roles = "SuperUsers")]
+    //[CustomAuthorise(Roles = "SuperUsers")]
     public class KnowledgeBaseController : Controller
     {
         private HelpDeskContext db = new HelpDeskContext();
@@ -21,6 +21,9 @@ namespace Help_Desk_2.Controllers
         // GET: KB
         public ActionResult Index(int? page)
         {
+            if (!AllSorts.userHasRole("SuperUsers"))
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+
             int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
 
             return View(db.KnowledgeFAQs.Where(k => k.type == 2 && k.published && !(k.deleted || k.archived))
@@ -30,6 +33,9 @@ namespace Help_Desk_2.Controllers
 
         public ActionResult Drafts(int? page)
         {
+            if (!AllSorts.userHasRole("SuperUsers"))
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+
             int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
 
             string userName = AllSorts.getUserID();
@@ -41,7 +47,7 @@ namespace Help_Desk_2.Controllers
         public ActionResult Admin(string searchType, string searchStr, int? page)
         {
             if (!AllSorts.UserCan("ManageKBs"))
-                return RedirectToAction("Unauthorized", "Home");
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
 
             var kbs = from m in db.KnowledgeFAQs
                        where (m.type == 2 && !m.deleted && m.dateSubmitted != null)
@@ -75,6 +81,9 @@ namespace Help_Desk_2.Controllers
 
         public ActionResult Search(string searchStr, int? page)
         {
+            if (!AllSorts.userHasRole("SuperUsers"))
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+
             var kbs = from m in db.KnowledgeFAQs
                        where (m.type == 2 && !m.deleted && m.published)
                        select m;
@@ -93,6 +102,9 @@ namespace Help_Desk_2.Controllers
         // GET: KB/Details/5
         public ActionResult Details(int? id)
         {
+            if (!AllSorts.userHasRole("SuperUsers"))
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -117,6 +129,9 @@ namespace Help_Desk_2.Controllers
         // GET: KB/New
         public ActionResult New(int? id)
         {
+            if (!AllSorts.userHasRole("SuperUsers"))
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+
             ViewBag.mode = 0;
             
             if (id == null)
@@ -141,6 +156,9 @@ namespace Help_Desk_2.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult New([Bind(Include = "type,headerText,description,links,archiveID")] KnowledgeFAQ kb)
         {
+            if (!AllSorts.userHasRole("SuperUsers"))
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+
             if (ModelState.IsValid)
             {
                 var submittedValues = Request.Form.AllKeys;
@@ -216,6 +234,9 @@ namespace Help_Desk_2.Controllers
         // GET: KB/Edit/5
         public ActionResult Edit(int? id)
         {
+            if (!AllSorts.userHasRole("SuperUsers"))
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -239,6 +260,9 @@ namespace Help_Desk_2.Controllers
         [HttpPost]
         public ActionResult Edit([Bind(Include = "ID,originatorID,expiryDate,dateComposed,dateSubmitted,type,headerText,description,links,deleteField,published,archiveID")] KnowledgeFAQ kb)
         {
+            if (!AllSorts.userHasRole("SuperUsers"))
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+
             if (ModelState.IsValid)
             {
                 var submittedValues = Request.Form.AllKeys;
@@ -309,6 +333,9 @@ namespace Help_Desk_2.Controllers
         // GET: KB/Delete/5
         public ActionResult Delete(int id)
         {
+            if (!AllSorts.userHasRole("SuperUsers"))
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+
             return View();
         }
 
@@ -316,6 +343,9 @@ namespace Help_Desk_2.Controllers
         [HttpPost]
         public ActionResult Delete(int id, FormCollection collection)
         {
+            if (!AllSorts.userHasRole("SuperUsers"))
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+
             try
             {
                 // TODO: Add delete logic here

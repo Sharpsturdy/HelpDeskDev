@@ -47,9 +47,12 @@ namespace Help_Desk_2.Controllers
         }
 
         // GET: News for Admins  
-        [CustomAuthorise(Roles = "AdminUsers")]
+        //[CustomAuthorise(Roles = "AdminUsers")]
         public ActionResult Admin(string searchType, string searchStr, int? page)
         {
+            if (!AllSorts.userHasRole("AdminUsers"))
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+
             var news = from m in db.News
                        where !m.deleted
                        select m;
@@ -76,9 +79,12 @@ namespace Help_Desk_2.Controllers
         }
 
         // GET: News/Details/5 for admins
-        [CustomAuthorise(Roles = "AdminUsers")]
+        //[CustomAuthorise(Roles = "AdminUsers")]
         public ActionResult Details(int? id)
         {
+            if (!AllSorts.userHasRole("AdminUsers"))
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+            
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -93,9 +99,12 @@ namespace Help_Desk_2.Controllers
         }
 
         // GET: News/New (aka Create)
-        [CustomAuthorise(Roles = "AdminUsers")]
+        // [CustomAuthorise(Roles = "AdminUsers")]
         public ActionResult New()
         {
+            if (!AllSorts.userHasRole("AdminUsers"))
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+
             //Check new ticket message
             GlobalSettings gs = db.GlobalSettingss.FirstOrDefault<GlobalSettings>();
 
@@ -110,9 +119,15 @@ namespace Help_Desk_2.Controllers
         // POST: News/New (aka Create)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [CustomAuthorise(Roles = "AdminUsers")]
+        //[CustomAuthorise(Roles = "AdminUsers")]
         public ActionResult New([Bind(Include = "ID,title,body,sticky,published,publishedDate,creationDate")] News news)
         {
+            if (!AllSorts.userHasRole("AdminUsers"))
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+
+            if (!AllSorts.userHasRole("AdminUsers"))
+                return RedirectToAction("Unauthorized", "Home");
+
             if (ModelState.IsValid)
             {
                 UserData ud = new UserData();
@@ -149,9 +164,12 @@ namespace Help_Desk_2.Controllers
         }
 
         // GET: News/Edit/5
-        [CustomAuthorise(Roles = "AdminUsers")]
+        //[CustomAuthorise(Roles = "AdminUsers")]
         public ActionResult Edit(int? id)
         {
+            if (!AllSorts.userHasRole("AdminUsers"))
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -171,9 +189,12 @@ namespace Help_Desk_2.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [CustomAuthorise(Roles = "AdminUsers")]
+        //[CustomAuthorise(Roles = "AdminUsers")]
         public ActionResult Edit([Bind(Include = "ID,originatorID,title,body,sticky,published,publishedDate,creationDate,deleted,deleteField")] News news)
         {
+            if (!AllSorts.userHasRole("AdminUsers"))
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+
             if (ModelState.IsValid)
             {
                 var submittedValues = Request.Form.AllKeys;

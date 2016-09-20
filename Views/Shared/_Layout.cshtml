@@ -85,7 +85,7 @@
                                     <li>@Html.ActionLink("View all my tickets", "List", "Ticket", null, htmlAttributes: new { @title = "Draft & Open & Closed" })</li>
                                     <li>@Html.SecureActionLink("My Assigned Tickets", "Assigned", "Ticket", "ManageTickets")</li>
                                     <li>@Html.SecureActionLink("Manage Tickets", "Admin", "Ticket", "ManageTickets")</li>
-                                    <li>@Html.SecureActionLink("Ticket Reports", "Reports", "Ticket", "ManageTickets")</li>
+                    @*              <li>@Html.SecureActionLink("Ticket Reports", "Reports", "Ticket", "ManageTickets")</li> *@
                                 </ul>
                             </div>
                         </div>
@@ -156,7 +156,7 @@
                                     </ul>
                                 </div>
                             </div>
-
+                            <!--
                             <div class="panel panel-default panel-custom">
                                 <div class="panel-heading">Trash Can</div>
                                 <div class="panel-body">
@@ -165,6 +165,7 @@
                                     </ul>
                                 </div>
                             </div>
+                            -->
                         }
                                                 
                         <div class="panel panel-custom quick-search">

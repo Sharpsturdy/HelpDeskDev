@@ -10,7 +10,7 @@ using System.Net;
 
 namespace Help_Desk_2.Controllers
 {
-    [CustomAuthorise(Roles = "AdminUsers")]
+    //[CustomAuthorise(Roles = "AdminUsers")]
     public class GlobalSettingsController : Controller
     {
         private HelpDeskContext db = new HelpDeskContext();
@@ -18,7 +18,9 @@ namespace Help_Desk_2.Controllers
         // GET: GlobalSettings, get first record
         public ActionResult Index()
         {
-           
+            if (!AllSorts.userHasRole("AdminUsers"))
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+
             GlobalSettings gs = db.GlobalSettingss.FirstOrDefault<GlobalSettings>();
            
             //if (gs == null) { }
@@ -36,7 +38,10 @@ namespace Help_Desk_2.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Index([Bind(Include = "ID,TicketSeeder,TicketHeader,TicketHeaderEnabled,TicketExpiryDays,FAQsExpiryDays,KBExpiryDays")] GlobalSettings globalSettings)
         {
-            
+            if (!AllSorts.userHasRole("AdminUsers"))
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+
+
             if (ModelState.IsValid)
             {
 
@@ -67,6 +72,9 @@ namespace Help_Desk_2.Controllers
         /********* Keywords Section ****************/
         public ActionResult Keywords(int? page)
         {
+            if (!AllSorts.userHasRole("AdminUsers"))
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+
             int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
 
             return View("Keywords",db.WordLists.Where(k => k.type == 1 && !k.deleted)
@@ -79,6 +87,9 @@ namespace Help_Desk_2.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Keywords([Bind(Include = "type,text")] WordList wordList)
         {
+            if (!AllSorts.userHasRole("AdminUsers"))
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+
             if (ModelState.IsValid)
             {
                 db.WordLists.Add(wordList);
@@ -89,6 +100,9 @@ namespace Help_Desk_2.Controllers
 
         public ActionResult KeywordsDeleted(int? page)
         {
+            if (!AllSorts.userHasRole("AdminUsers"))
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+
             int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
 
             return View("Keywords", db.WordLists.Where(k => k.type == 1 && k.deleted)
@@ -100,6 +114,9 @@ namespace Help_Desk_2.Controllers
         /********* Expert Area Section ****************/
         public ActionResult ExpertAreas(int? page)
         {
+            if (!AllSorts.userHasRole("AdminUsers"))
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+
             int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
 
             return View("ExpertAreas",db.WordLists.Where(k => k.type == 2 && !k.deleted)
@@ -111,6 +128,9 @@ namespace Help_Desk_2.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ExpertAreas([Bind(Include = "type,text")] WordList wordList)
         {
+            if (!AllSorts.userHasRole("AdminUsers"))
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+
             //wordList.type = 1; //Since it is a keyword
             if (ModelState.IsValid)
             {
@@ -123,6 +143,9 @@ namespace Help_Desk_2.Controllers
         /********* Expert Area Section ****************/
         public ActionResult ExpertAreasDeleted(int? page)
         {
+            if (!AllSorts.userHasRole("AdminUsers"))
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+
             int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
 
             return View("ExpertAreas", db.WordLists.Where(k => k.type == 2 && k.deleted)
@@ -133,6 +156,9 @@ namespace Help_Desk_2.Controllers
         // GET: DummyWordLists/Edit/5
         public ActionResult Edit(int? id)
         {
+            if (!AllSorts.userHasRole("AdminUsers"))
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -152,6 +178,9 @@ namespace Help_Desk_2.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,text,type,deleted")] WordList wordList)
         {
+            if (!AllSorts.userHasRole("AdminUsers"))
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+
             if (ModelState.IsValid)
             {
                 db.Entry(wordList).State = EntityState.Modified;
@@ -165,6 +194,9 @@ namespace Help_Desk_2.Controllers
         // GET: WordLists/Delete/5
         public ActionResult Delete(int? id)
         {
+            if (!AllSorts.userHasRole("AdminUsers"))
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -184,6 +216,9 @@ namespace Help_Desk_2.Controllers
         // GET: WordLists/UnDelete/5
         public ActionResult UnDelete(int? id)
         {
+            if (!AllSorts.userHasRole("AdminUsers"))
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);

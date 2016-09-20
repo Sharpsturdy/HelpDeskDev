@@ -43,7 +43,7 @@ namespace Help_Desk_2.Controllers
         public ActionResult Admin(string searchType, string searchStr, int? page)
         {
             if (!AllSorts.UserCan("ManageFAQs"))
-                return RedirectToAction("Unauthorized", "Home");
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
 
             var faqs = from m in db.KnowledgeFAQs
                        where (m.type == 1 && !m.suggest && m.dateSubmitted != null)
@@ -91,6 +91,7 @@ namespace Help_Desk_2.Controllers
         // GET: FAQs/Details/5
         public ActionResult Details(int? id)
         {
+            
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -108,6 +109,9 @@ namespace Help_Desk_2.Controllers
         // GET: FAQs/New
         public ActionResult New()
         {
+            if (!AllSorts.UserCan("CreateFAQs"))
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+
             //ViewBag.originatorID = new SelectList(db.UserProfiles, "userID", "loginName");
             ViewBag.mode = 0;
             return View("FAQOne");
@@ -119,6 +123,9 @@ namespace Help_Desk_2.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult New([Bind(Include = "type,headerText,description,links")] KnowledgeFAQ faq)
         {
+            if (!AllSorts.UserCan("CreateFAQs"))
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+
             if (ModelState.IsValid)
             {
                 UserData ud = new UserData();
@@ -241,7 +248,8 @@ namespace Help_Desk_2.Controllers
         public ActionResult Suggestions(string searchType, string searchStr, int? page)
         {
             if (!AllSorts.UserCan("ManageFAQs"))
-                return RedirectToAction("Unauthorized", "Home");
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+
 
             var faqs = from m in db.KnowledgeFAQs
                        where (m.type == 1 && m.suggest)
@@ -320,6 +328,9 @@ namespace Help_Desk_2.Controllers
                 else if(submittedValues.Contains("btnConvert"))
                 {
                     faq.suggest = false;
+                    if (faq.dateSubmitted == null)
+                        faq.dateSubmitted = DateTime.Now;
+
                     outMsg = "FAQ Suggestion converted successfully!";
 
                 }

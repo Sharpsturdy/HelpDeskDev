@@ -22,6 +22,9 @@ namespace Help_Desk_2.Controllers
         // GET: UserProfile
         public ActionResult List(int? page)
         {
+            if (!AllSorts.userHasRole("AdminUsers"))
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+
             int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
 
             var lastGoodDate = DateTime.Now.AddDays(-30);
@@ -36,6 +39,9 @@ namespace Help_Desk_2.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult List([Bind(Include = "userID")] UserProfile user)
         {
+            if (!AllSorts.userHasRole("AdminUsers"))
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+
             if (ModelState.IsValid)
             {
                 UserProfile u = db.UserProfiles.Find(user.userID);
@@ -74,10 +80,13 @@ namespace Help_Desk_2.Controllers
                 //db.Entry(userProfile).State = EntityState.Modified;
                 UserProfile userProfile = db.UserProfiles.Find(up.userID);
                 AllSorts.saveWordLists(Request.Form.GetValues("infaqkeywords"), Request.Form.GetValues("infaqexpertareas"), db, userProfile);
-                AllSorts.saveWordLists(Request.Form.GetValues("inkbkeywords"), Request.Form.GetValues("inkbexpertareas"), db, userProfile, true);
+                if (AllSorts.UserCan("SuperFunctions"))
+                {
+                    AllSorts.saveWordLists(Request.Form.GetValues("inkbkeywords"), Request.Form.GetValues("inkbexpertareas"), db, userProfile, true);
+                }
                 db.SaveChanges();
                 //Session.Add("UserDisplayName", userProfile.displayName);//Update display name
-                AllSorts.displayMessage = "Profile updated successfully!";
+                AllSorts.displayMessage += "\nProfile updated successfully!";
 
                 return RedirectToAction("Index");
             } else
