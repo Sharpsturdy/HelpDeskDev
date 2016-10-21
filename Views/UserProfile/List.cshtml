@@ -43,8 +43,8 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr onclick="$(location).attr('href', '@Url.Action("Details", "UserProfile", new { @id = item.userID })')">
-
+            @*<tr onclick="$(location).attr('href', '@Url.Action("Details", "UserProfile", new { @id = item.userID })')">*@
+            <tr class="noclick">
                 <td>
                     @Html.DisplayFor(modelItem => item.displayName)                    
                 </td>
@@ -63,8 +63,8 @@
                     {
                         @Html.AntiForgeryToken()
                             @*Html.Hidden(item.userID.ToString())*@
-                            <input type="hidden" name="userID" value="@item.userID.ToString()" />
-                            <input type="submit" value="Delete" class="btn btn-default" />
+                        <input type="hidden" name="userID" value="@item.userID.ToString()" />
+                        <input type="submit" value="Delete" class="btn btn-default" />
 
                     }
                 </td>

@@ -120,48 +120,74 @@ namespace Help_Desk_2.Controllers
             return View("Index", tickets.ToPagedList(currentPageIndex, AllSorts.pageSize));
         }
 
+        
         //List all tickets from all user for administration
         //[CustomAuthorise(Roles = "ManageTickets")]
         public ActionResult Admin(string searchType, string searchStr, int? page)
         {
-            if(!AllSorts.UserCan("ManageTickets"))
-                  return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+            if (!AllSorts.UserCan("ManageTickets"))
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
 
             var tickets = from t in db.Tickets
                           where !t.deleted && t.dateSubmitted != null
 
                           select t;
+            /*
+                        if (onhold) { return Statuses.OnHold; };
+                        if (returned) { return Statuses.Returned; };
 
-           
+                        if (dateL1Release == null) return Statuses.Submitted;
+                        if (dateL2Release == null)
+                        {
+                            if (sanityCheck == SanityChecks.Accept)
+                                return Statuses.Accepted;
+
+                            if (sanityCheck == SanityChecks.Reject)
+                                return Statuses.Rejected;
+
+                            //else
+                            return Statuses.Junked;
+                        }
+             */
             switch (searchType)
             {
+               
                 case "":
-                    tickets = tickets.Where(s => s.dateCompleted != null);
+                    tickets = tickets.Where(s => s.dateCompleted == null);
                     break;
-                case "1":
-                    tickets = tickets.Where(s => s.status == Statuses.Submitted);
+                case "1": //Submitted
+                    tickets = tickets.Where(s => !s.onhold && !s.returned && s.dateL1Release == null);
                     break;
-                case "2":
-                    tickets = tickets.Where(s => s.status == Statuses.Accepted);
+                case "2": //Checked
+                    //tickets = tickets.Where(s => s.status == Statuses.Accepted);
+                    tickets = tickets.Where(s => !s.onhold && !s.returned && s.dateL1Release != null &&
+                    s.dateL2Release == null);
                     break;
-                case "3":
-                    tickets = tickets.Where(s => s.status == Statuses.Assigned);
+                case "3": //Assigned
+                    //tickets = tickets.Where(s => s.status == Statuses.Assigned);
+                    tickets = tickets.Where(s => !s.onhold && !s.returned && s.dateL1Release != null &&
+                    s.sanityCheck == SanityChecks.Accept && s.dateL2Release != null && s.dateCompleted == null);
                     break;
-                case "4":
-                    tickets = tickets.Where(s => s.status == Statuses.Returned);
+                case "4": //Returned
+                    tickets = tickets.Where(s => s.returned && !s.onhold && s.dateCompleted == null);
                     break;
                 case "5":
-                    tickets = tickets.Where(s => s.status == Statuses.OnHold);
+                    tickets = tickets.Where(s => s.onhold);
                     break;
-                case "6":
-                    tickets = tickets.Where(s => s.status == Statuses.Completed);
+                case "6": //Completed
+                    tickets = tickets.Where(s => s.dateCompleted != null);
                     break;
-                case "8":
-                    tickets = tickets.Where(s => s.status == Statuses.Rejected);
+                /*case "8":
+                    //tickets = tickets.Where(s => s.status == Statuses.Rejected);
+                    tickets = tickets.Where(s => !s.onhold && !s.returned && s.dateL1Release != null &&
+                    s.sanityCheck == SanityChecks.Reject);
                     break;
                 case "9":
-                    tickets = tickets.Where(s => s.status == Statuses.Junked);
+                    //tickets = tickets.Where(s => s.status == Statuses.Junked);
+                    tickets = tickets.Where(s => !s.onhold && !s.returned && s.dateL1Release != null &&
+                    s.sanityCheck == SanityChecks.Junk);
                     break;
+                */
 
             }
 

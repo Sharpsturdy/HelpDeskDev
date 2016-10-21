@@ -42,7 +42,7 @@ namespace Help_Desk_2.Controllers
             if (!AllSorts.userHasRole("AdminUsers"))
                 return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
 
-            if (ModelState.IsValid)
+            if (true) //ModelState.IsValid)
             {
                 UserProfile u = db.UserProfiles.Find(user.userID);
                 if (u != null)
@@ -54,6 +54,9 @@ namespace Help_Desk_2.Controllers
 
                     AllSorts.displayMessage = "User profile for '" + u.displayName +"' has been deleted successfully";
                 }
+            } else
+            {
+                AllSorts.displayMessage = "0#User profile failed to delete";
             }
             return RedirectToAction("List");
         }
@@ -86,7 +89,7 @@ namespace Help_Desk_2.Controllers
                 }
                 db.SaveChanges();
                 //Session.Add("UserDisplayName", userProfile.displayName);//Update display name
-                AllSorts.displayMessage += "\nProfile updated successfully!";
+                AllSorts.displayMessage += "Profile updated successfully!";
 
                 return RedirectToAction("Index");
             } else
