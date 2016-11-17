@@ -7,7 +7,7 @@
     var actionName = ViewContext.RouteData.Values["action"].ToString().ToLower();
     ViewBag.showSelect = actionName == "admin";
 
-    if (actionName == "List")
+    if (actionName == "list")
     {
         ViewBag.Title = "All My Tickets";
     } else if (actionName == "admin")
