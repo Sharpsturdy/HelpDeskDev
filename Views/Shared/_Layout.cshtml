@@ -46,7 +46,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <h2 style="margin:15px 0; padding:0; color: #e4eeff">Engineering Helpdesk</h2>
+                <h2 style="margin:15px 0; padding:0; color: #e4eeff">UAT Engineering Helpdesk</h2>
             </div>
             <a class="navbar-brand navbar-right hidden-xs" href="#">
 
@@ -62,10 +62,25 @@
             <ul class="nav navbar-nav">
                 <li>@Html.ActionLink("Home", "Index", "Home")</li>
                 <li>@Html.ActionLink("FAQs", "Index","FAQs")</li>
-                <li>@Html.SecureActionLink("Knowledge base", "Index", "KnowledgeBase", "SuperFunctions")</li>
-                <li>@Html.ActionLink("Latest news","Index", "News")</li>
+                <li>@Html.SecureActionLink("Knowledge Base", "Index", "KnowledgeBase", "SuperFunctions")</li>
+                <li>@Html.ActionLink("Latest News","Index", "News")</li>
             </ul>
-            <p class="nav navbar-text navbar-right">@Html.ActionLink(AllSorts.getUserDisplayName(), "Index", "UserProfile")</p>
+            
+   
+                @if (AllSorts.userHasRole("SuperUsers"))
+                {
+                    <p class="nav navbar-text navbar-right">@Html.ActionLink(AllSorts.getUserDisplayName() + " [SUPERUSER]", "Index", "UserProfile") </p> 
+                }
+
+                @if (AllSorts.userHasRole("AdminUsers"))
+                {
+                    <p class="nav navbar-text navbar-right">@Html.ActionLink(AllSorts.getUserDisplayName() + " [ADMIN]", "Index", "UserProfile") </p>
+                }
+                else
+                {
+                    <p class="nav navbar-text navbar-right">@Html.ActionLink(AllSorts.getUserDisplayName() + " [STANDARD]", "Index", "UserProfile") </p>
+                }
+
         </div>
     </div>
 
@@ -74,18 +89,23 @@
     <div class="container">
         <div class="row ">
             <div class="row-height">
+                <!--[if IE ]>
+       <div class="col-md-3 col-sm-4 left-column1">
+    <![endif]-->
+                <!--[if !IE]>-->
                 <div class="col-md-3 col-sm-4 col-sm-height left-column1">
-                    <div class="inside-full-height content">                        
+                    <!--<![endif]-->
+                    <div class="inside-full-height content">
                         <div class="panel panel-default panel-custom">
                             <div class="panel-heading">Tickets</div>
                             <div class="panel-body">
                                 <ul class="nav nav-pills nav-stacked">
-                                    <li>@Html.ActionLink("Raise new ticket", "New", "Ticket")</li>
-                                    <li>@Html.ActionLink("View my open tickets", "Index", "Ticket", null, htmlAttributes: new { @title = "Draft & Open" })</li>
-                                    <li>@Html.ActionLink("View all my tickets", "List", "Ticket", null, htmlAttributes: new { @title = "Draft & Open & Closed" })</li>
+                                    <li>@Html.ActionLink("Raise New Ticket", "New", "Ticket")</li>
+                                    <li>@Html.ActionLink("View My Open Tickets", "Index", "Ticket", null, htmlAttributes: new { @title = "Draft & Open" })</li>
+                                    <li>@Html.ActionLink("View All My Tickets", "List", "Ticket", null, htmlAttributes: new { @title = "Draft & Open & Closed" })</li>
                                     <li>@Html.SecureActionLink("My Assigned Tickets", "Assigned", "Ticket", "ManageTickets")</li>
                                     <li>@Html.SecureActionLink("Manage Tickets", "Admin", "Ticket", "ManageTickets")</li>
-                    @*              <li>@Html.SecureActionLink("Ticket Reports", "Reports", "Ticket", "ManageTickets")</li> *@
+                                    @*              <li>@Html.SecureActionLink("Ticket Reports", "Reports", "Ticket", "ManageTickets")</li> *@
                                 </ul>
                             </div>
                         </div>
@@ -100,7 +120,7 @@
                             </div>
                         </div>
 
-                        
+
                         <div class="panel panel-default panel-custom">
                             <div class="panel-heading">FAQs</div>
                             <div class="panel-body">
@@ -108,12 +128,12 @@
                                     @if (AllSorts.UserCan("CreateFAQs"))
                                     {
                                         <li>@Html.ActionLink("New FAQ Article", "New", "FAQs")</li>
-                                        <li>@Html.ActionLink("View My FAQ Drafts", "Drafts", "FAQs")</li>
+                                            <li>@Html.ActionLink("View My FAQ Drafts", "Drafts", "FAQs")</li>
                                     }
                                     else
                                     {
-                                        <li>@Html.ActionLink("Suggest an FAQ", "Suggest", "FAQs")</li>
-                                        <li>@Html.ActionLink("View My FAQ Suggestons", "MySuggestions", "FAQs")</li>
+                                        <li>@Html.ActionLink("Suggest An FAQ", "Suggest", "FAQs")</li>
+                                            <li>@Html.ActionLink("View My FAQ Suggestons", "MySuggestions", "FAQs")</li>
                                     }
 
                                     <li>@Html.SecureActionLink("Manage FAQs", "Admin", "FAQs", "ManageFAQs")</li>
@@ -123,7 +143,7 @@
                         </div>
 
                         @if (AllSorts.UserCan("CreateKBs"))
-                        {                            
+                        {
                             <div class="panel panel-default panel-custom">
                                 <div class="panel-heading">Knowledge base</div>
                                 <div class="panel-body">
@@ -135,7 +155,7 @@
                                 </div>
                             </div>
                         }
-                                                                            
+
                         @if (AllSorts.UserCan("ManageAll"))
                         {
                             <div class="panel panel-default panel-custom">
@@ -148,56 +168,58 @@
                                 </div>
                             </div>
 
-                            <div class="panel panel-default panel-custom">
-                                <div class="panel-heading">Global Settings</div>
-                                <div class="panel-body">
-                                    <ul class="nav nav-pills nav-stacked">
-                                        <li>@Html.ActionLink("Global Settings", "", "GlobalSettings")</li>
-                                    </ul>
+                                <div class="panel panel-default panel-custom">
+                                    <div class="panel-heading">Global Settings</div>
+                                    <div class="panel-body">
+                                        <ul class="nav nav-pills nav-stacked">
+                                            <li>@Html.ActionLink("Global Settings", "", "GlobalSettings")</li>
+                                        </ul>
+                                    </div>
                                 </div>
-                            </div>
-                            <!--
-                            <div class="panel panel-default panel-custom">
-                                <div class="panel-heading">Trash Can</div>
-                                <div class="panel-body">
-                                    <ul class="nav nav-pills nav-stacked">
-                                        <li>@Html.ActionLink("Recycle Bin", "", "TrashCan")</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            -->
+                                <!--
+                    <div class="panel panel-default panel-custom">
+                        <div class="panel-heading">Trash Can</div>
+                        <div class="panel-body">
+                            <ul class="nav nav-pills nav-stacked">
+                                <li>@Html.ActionLink("Recycle Bin", "", "TrashCan")</li>
+                            </ul>
+                        </div>
+                    </div>
+                    -->
                         }
-                                                
+
                         <div class="panel panel-custom quick-search">
                             @using (Html.BeginForm("Search", "FAQs", FormMethod.Get))
                             {
-                            @*Html.AntiForgeryToken()*@
-                            @*Html.Editor("searchStr", new { htmlAttributes = new { placeholder = "Search FAQs" } })*@
-                            <input class="text-box single-line" id="searchStr" name="searchStr" placeholder="Search FAQs" type="text" >
-                            <input type="submit" value="Search" class="btn btn-default" />
+                                @*Html.AntiForgeryToken()*@
+                                @*Html.Editor("searchStr", new { htmlAttributes = new { placeholder = "Search FAQs" } })*@
+                                <input class="text-box single-line" id="searchStr" name="searchStr" placeholder="Search FAQs" type="text">
+                                <input type="submit" value="Search" class="btn btn-default" />
                             }
                         </div>
                     </div>
                 </div>
-                <div class="col-md-9 col-sm-8 col-sm-height">
-                    <div class="inside-full-height content-column"> 
-                        @if(!string.IsNullOrEmpty(AllSorts.displayMessage) && string.IsNullOrEmpty(ViewBag.isErrorPage)) {
-                            var msg = AllSorts.displayMessage;
-                            AllSorts.displayMessage = ""; //Blank message to avoid being displayed again
-                            var st = "success";
-                            if(msg.StartsWith("0#"))
+
+                    <div class="col-md-8 col-sm-8 col-sm-height">
+                        <div class="inside-full-height content-column">
+                            @if (!string.IsNullOrEmpty(AllSorts.displayMessage) && string.IsNullOrEmpty(ViewBag.isErrorPage))
                             {
-                                st = "danger";
-                                msg = msg.Substring(2);
+                                var msg = AllSorts.displayMessage;
+                                AllSorts.displayMessage = ""; //Blank message to avoid being displayed again
+                                var st = "success";
+                                if (msg.StartsWith("0#"))
+                                {
+                                    st = "danger";
+                                    msg = msg.Substring(2);
+                                }
+                                <div class="container alert-@st alert-custom">@msg</div>
                             }
-                            <div class="container alert-@st alert-custom">@msg</div>
-                        }                      
-                        @RenderBody()
+                            @RenderBody()
+                        </div>
                     </div>
                 </div>
-            </div>
 
-        </div>
+            </div>
     </div>
     
     <footer>

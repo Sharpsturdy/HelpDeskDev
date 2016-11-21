@@ -365,6 +365,7 @@
     <None Include="Properties\PublishProfiles\avx01.pubxml" />
     <None Include="Properties\PublishProfiles\azure vm.pubxml" />
     <None Include="Properties\PublishProfiles\dev web deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\EHUAT.pubxml" />
     <None Include="Properties\PublishProfiles\hlpdsk.pubxml" />
     <None Include="Properties\PublishProfiles\hlpdsk02 - Web Deploy %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\hlpdsk02 - Web Deploy.pubxml" />

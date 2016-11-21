@@ -32,7 +32,7 @@
         {
             <div class="form-group">
                 <label for="searchType">Filter by: </label>
-                @Html.DropDownList("searchType", null, new { @class = "form-control" })
+                @Html.DropDownList("searchType", null, new { @class = "form-control", onchange = "this.form.submit();" })
             </div>
         }
         <div class="form-group">
@@ -49,7 +49,7 @@
                     <th>Brief description</th>
                     <th>Originator</th>                
                     <th>Creation date</th>
-                    <th>Exiry date</th>
+                    <th>Expiry date</th>
                 </tr>
             </thead>
             <tbody>
