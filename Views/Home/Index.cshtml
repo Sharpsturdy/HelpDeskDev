@@ -48,6 +48,8 @@
     </ul>
 </div>
 
+    
+
     <div class="col-sm-12" style="border: 1px solid #ddd;">
         <h3>My Subscriptions</h3>
         
@@ -139,5 +141,17 @@
             </tbody>
         </table>
         }
+    </div>
+
+    <div class="col-sm-12" style="border: 1px solid #ddd; margin: 15px 0">
+        <h3>UserGroups</h3>
+        <ul class="list-unstyled">
+            @foreach (var item in ViewBag.userGroups)
+            {
+                <li class="panel panel-default">
+                    <p class="text-muted">@item</p>
+                </li>
+            }
+        </ul>
     </div>
 </div>

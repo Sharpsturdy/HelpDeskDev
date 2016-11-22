@@ -9,6 +9,8 @@ using System.Linq;
 using System.Security.Policy;
 using System.Web;
 using System.Web.Mvc;
+using System.DirectoryServices.AccountManagement;
+
 
 namespace Help_Desk_2.Utilities
 {
@@ -400,6 +402,25 @@ namespace Help_Desk_2.Utilities
             return false;
         }
 
+        public static string[] GetGroups()
+        {
+            string[] output = null;
+
+
+            using (var ctx = new PrincipalContext(ContextType.Domain))
+            using (var user = UserPrincipal.FindByIdentity(ctx, HttpContext.Current.User.Identity.Name))
+            {
+                if (user != null)
+                {
+                    output = user.GetGroups() //this returns a collection of principal objects
+                        .Select(x => x.SamAccountName) // select the name.  you may change this to choose the display name or whatever you want
+                        .ToArray(); // convert to string array
+                }
+            }
+
+            return output;
+        }
+
         public static bool UserCan(string ActionName)
         {
             var user = HttpContext.Current.User.Identity.Name;
@@ -410,7 +431,11 @@ namespace Help_Desk_2.Utilities
             }
             else if (ActionName == "ManageKBs")
             {
-                return userHasRole("AdminUsers") || db.UserProfiles.Where(u => (u.isKbApprover && u.loginName == user)).Count() > 0;
+                if (userHasRole("AdminUsers") || db.UserProfiles.Where(u => (u.isKbApprover && u.loginName == user)).Count() > 0)
+                {
+                    return true;
+                }
+                else return false;
 
             }
             else if (ActionName == "ManageFAQs")

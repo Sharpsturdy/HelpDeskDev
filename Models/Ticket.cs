@@ -140,7 +140,7 @@ namespace Help_Desk_2.Models
         [NotMapped]     //List of files to delete
         public string deleteField { get; set; }
 
-        [Display(Name = "Sanity Check")]
+        [Display(Name = "Checked")]
         public SanityChecks? sanityCheck { get; set; }
 
         [Display(Name = "Summary")]
