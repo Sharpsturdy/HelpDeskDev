@@ -28,6 +28,9 @@
                 menubar: false,
                 statusbar: false,
                 selector: ".richeditor",
+                plugins: "autoresize",
+                autoresize_max_height: 500,
+                autoresize_bottom_margin: 10,
 
                 // Example content CSS (should be your site CSS)
                 content_css: "@Href("~/Content/tinymce/editor.css")", //"css/example.css",
@@ -62,8 +65,9 @@
             <ul class="nav navbar-nav">
                 <li>@Html.ActionLink("Home", "Index", "Home")</li>
                 <li>@Html.ActionLink("FAQs", "Index","FAQs")</li>
-                <li>@Html.SecureActionLink("Knowledge Base", "Index", "KnowledgeBase", "SuperFunctions")</li>
+                <li>@Html.SecureActionLink("Knowledge Base", "Admin", "KnowledgeBase", "SuperFunctions")</li>
                 <li>@Html.ActionLink("Latest News","Index", "News")</li>
+                <li><a href="@AllSorts.getHelpFile()" target="_blank">Help</a></li>
             </ul>
             
    
@@ -110,15 +114,7 @@
                             </div>
                         </div>
 
-                        <div class="panel panel-default panel-custom">
-                            <div class="panel-heading">Profile</div>
-                            <div class="panel-body">
-                                <ul class="nav nav-pills nav-stacked">
-                                    <li>@Html.ActionLink("My Profile", "Index", "UserProfile")</li>
-                                    <li>@Html.SecureActionLink("Manage Profiles", "List", "UserProfile", "ManageAll")</li>
-                                </ul>
-                            </div>
-                        </div>
+                       
 
 
                         <div class="panel panel-default panel-custom">
@@ -155,6 +151,7 @@
                                 </div>
                             </div>
                         }
+                       
 
                         @if (AllSorts.UserCan("ManageAll"))
                         {
@@ -167,7 +164,19 @@
                                     </ul>
                                 </div>
                             </div>
+                        }
 
+                         <div class="panel panel-default panel-custom">
+                            <div class="panel-heading">Profile</div>
+                            <div class="panel-body">
+                                <ul class="nav nav-pills nav-stacked">
+                                    <li>@Html.ActionLink("My Profile", "Index", "UserProfile")</li>
+                                    <li>@Html.SecureActionLink("Manage Profiles", "List", "UserProfile", "ManageAll")</li>
+                                </ul>
+                            </div>
+                        </div> 
+                        @if (AllSorts.UserCan("ManageAll"))
+                        {
                                 <div class="panel panel-default panel-custom">
                                     <div class="panel-heading">Global Settings</div>
                                     <div class="panel-body">
@@ -189,7 +198,7 @@
                         }
 
                         <div class="panel panel-custom quick-search">
-                            @using (Html.BeginForm("Search", "FAQs", FormMethod.Get))
+                            @using (Html.BeginForm("Search", "Search", FormMethod.Get))
                             {
                                 @*Html.AntiForgeryToken()*@
                                 @*Html.Editor("searchStr", new { htmlAttributes = new { placeholder = "Search FAQs" } })*@
@@ -227,6 +236,7 @@
     </footer>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/datatable")
     @RenderSection("scripts", required: false)
     @if (ViewBag.addAttachCode == "1")
     {

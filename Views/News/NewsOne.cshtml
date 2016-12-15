@@ -116,8 +116,12 @@
                                 {
                                     <tr>
                                         <td class="fileID hidden">@t.ID</td>
-                                        <td>@Html.ActionLink(t.fileName, "d/" + t.ID, "Files", null, new { target = "_blank" })</td>
-                                        <td>@t.displaySize</td>
+                                        @if (!System.IO.File.Exists(Server.MapPath(t.filePath)))
+                                        { <td>MISSING FILE</td>}
+                                        else
+                                        {
+                                        <td>@Html.ActionLink(t.fileName, "d/" + t.ID, "Files", null, new { target = "_blank" })</td>}
+                                        @*<td>@t.displaySize</td>*@
                                         @if (ViewBag.mode < 2)
                                         {
                                             <td>

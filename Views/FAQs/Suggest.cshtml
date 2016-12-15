@@ -74,7 +74,7 @@
 
             </div>
             }       
-            <div class="panel panel-info">
+            <div class="panel panel-info" style="visibility:hidden;">
                 <div class="panel-heading">
                     @Html.DisplayName("Answer")
                 </div>
@@ -90,7 +90,9 @@
                 </div>
 
             </div>
-                        
+               
+            
+                  
             <div>
                 <div class="btn-group btn-group-custom" style="padding-bottom:15px; padding-top:15px">
                     @if (ViewBag.mode == 2)
@@ -120,4 +122,9 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+<script type="text/javascript">
+    $(function () {
+        $("#description").html("Answer Required");
+    });
+</script>
 }

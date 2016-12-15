@@ -19,7 +19,7 @@ namespace Help_Desk_2.Models
         [Display(Name = "Article Title")]
         public string title { get; set; }
 
-        [Display(Name ="Artilce Body")]
+        [Display(Name ="Article Body")]
         [AllowHtml]
         [Required]
         public string body { get; set; }

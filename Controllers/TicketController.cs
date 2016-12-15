@@ -33,17 +33,59 @@ namespace Help_Desk_2.Controllers
         }
 
         //List all my tickets draft/open/closed
-        public ActionResult List(int? page)
+        public ActionResult List(string searchType, string searchStr, int? page)
         {
             int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
 
             string userName = AllSorts.getUserID();
+
             var tickets = from t in db.Tickets
                           where (!t.deleted && (t.originatorID.ToString() == userName))
                           orderby t.dateComposed descending
                           select t;
 
-            return View("Index", tickets.ToPagedList(currentPageIndex, AllSorts.pageSize));
+            switch (searchType)
+            {
+
+                case "":
+                    tickets = tickets.Where(s => s.dateCompleted == null).OrderBy(p=>0);
+                    break;
+                case "1": //Submitted
+                    tickets = tickets.Where(s => !s.onhold && !s.returned && s.dateL1Release == null).OrderBy(p => 0);
+                    break;
+                case "2": //Checked
+                    //tickets = tickets.Where(s => s.status == Statuses.Accepted);
+                    tickets = tickets.Where(s => !s.onhold && !s.returned && s.dateL1Release != null &&
+                    s.dateL2Release == null).OrderBy(p => 0);
+                    break;
+                case "3": //Assigned
+                    //tickets = tickets.Where(s => s.status == Statuses.Assigned);
+                    tickets = tickets.Where(s => !s.onhold && !s.returned && s.dateL1Release != null &&
+                    s.sanityCheck == SanityChecks.Accept && s.dateL2Release != null && s.dateCompleted == null).OrderBy(p => 0);
+                    break;
+                case "4": //Returned
+                    tickets = tickets.Where(s => s.returned && !s.onhold && s.dateCompleted == null).OrderBy(p => 0);
+                    break;
+                case "5":
+                    tickets = tickets.Where(s => s.onhold).OrderBy(p => 0);
+                    break;
+                case "6": //Completed
+                    tickets = tickets.Where(s => s.dateCompleted != null).OrderBy(p => 0);
+                    break;
+                    
+
+            }
+
+            //orderby t.dateComposed descending
+
+            if (!String.IsNullOrEmpty(searchStr))
+            {
+                tickets = tickets.Where(s => s.headerText.Contains(searchStr) || s.description.Contains(searchStr)).OrderBy(p => 0);
+            }
+
+            
+
+            return View("List", tickets.ToPagedList(currentPageIndex, AllSorts.pageSize));
         }
 
         public ActionResult Reports(string p1, int? p0)
@@ -116,6 +158,8 @@ namespace Help_Desk_2.Controllers
                           where (!t.deleted && t.dateL2Release !=null && (t.responsibleID.ToString() == userName))
                           orderby t.dateComposed descending
                           select t;
+
+
 
             return View("Index", tickets.ToPagedList(currentPageIndex, AllSorts.pageSize));
         }
@@ -230,7 +274,7 @@ namespace Help_Desk_2.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult New([Bind(Include = "headerText,description")] Ticket ticket)
+        public ActionResult New([Bind(Include = "headerText,description,links")] Ticket ticket)
         //"ID,originatorUsername,dateComposed,headerText,description,dateSubmitted,adminEmail,dateL1Release,dateL2Release,sanityCheck")] Ticket ticket)
         {
             if (ModelState.IsValid)

@@ -10,10 +10,16 @@
     if (actionName == "list")
     {
         ViewBag.Title = "All My Tickets";
-    } else if (actionName == "admin")
+    }
+    else if (actionName == "admin")
     {
         ViewBag.Title = "Manage Tickets";
-    } else
+    }
+    else if (actionName == "assigned")
+    {
+        ViewBag.Title = "My Assigned Tickets";
+    }
+    else
     {
         ViewBag.Title = "My Open Tickets";
     }
@@ -40,17 +46,17 @@
         {
             <div class="form-group">
                 <label for="searchType">Filter by: </label>
-                @Html.DropDownList("searchType", (IEnumerable<SelectListItem>)ViewBag.searchType, new { @class = "form-control" })
+                @Html.DropDownList("searchType", (IEnumerable<SelectListItem>)ViewBag.searchType, new { @class = "form-control", onchange = "this.form.submit();" })
 
             </div>
-            <div class="form-group hidden">
+            <div class="form-group">
                 <input type="text" class="form-control" id="searchStr1" name="searchStr" placeholder="Enter search text" value='@Request.QueryString["searchStr"]'>
             </div>
             <button type="submit" class="btn btn-default">Search</button>
         }
       
     </form>
-    <table class="table table-bordered table-hover table-condensed table-view">
+    <table style="margin:15px" id="tickets" class="table table-bordered table-hover table-condensed table-view">
         <thead>
             <tr>
                 <th>Created on</th>
@@ -77,7 +83,7 @@
         </tbody>
     </table>
 
-    <div class="pager">
+    @*<div class="pager">
         @Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount).Options(o => o.AddRouteValue("searchType", @Request.QueryString["searchType"])
         .AddRouteValue("searchStr", @Request.QueryString["searchStr"])
         .DisplayFirstAndLastPage()
@@ -87,5 +93,40 @@
         .SetNextPageText("Next"))
 
         <div class="text-muted">Displaying @Model.ItemStart - @Model.ItemEnd of @Model.TotalItemCount</div>
-    </div>
+    </div>*@
 </div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript" charset="utf8">
+        jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+            "date-uk-pre": function ( a ) {
+                var ukDatea = a.split('/');
+                return (ukDatea[2] + ukDatea[1] + ukDatea[0]) * 1;
+            },
+
+            "date-uk-asc": function ( a, b ) {
+                return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+            },
+
+            "date-uk-desc": function ( a, b ) {
+                return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+            }
+        } );
+    $(document).ready( function () {        
+        $('#tickets').DataTable({
+            "lengthChange": false,
+            "searching": false,
+            "aoColumns": [            
+            { "sType": "date-uk" },
+            null,
+            null,
+            null
+            ]
+        });
+    } );
+</script>
+}
+
+
+

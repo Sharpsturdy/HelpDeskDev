@@ -24,16 +24,30 @@
 
         var linkText = $("#linkText").val();
         var linkURL = $("#linkURL").val();
+        
         if (linkText == "" && linkURL == "") {
             alert("Please enter both link text and URL to link to");
             return;
-        } else if (linkText == "") {
+        }
+        if (linkURL.length <  7) {
+            alert("url must be in format http://url");
+            return;
+        }
+       
+        if (linkURL.substring(0, 4) == "http") {
+            var correct = true;
+        } else {
+            linkURL = "http://" + $("#linkURL").val();
+           
+        }
+
+         if (linkText == "") {
             alert("Please enter the link text");
             return;
         } else if (linkURL == "") {
             alert("Please enter the link URL");
             return;
-        }
+        } 
         $("table.links tbody").append("<tr class=\"normal warning\"><td><a href=\"" + linkURL + "\" target=\"_blank\">" + linkText + "</a></td>" +
             "<td><input type=\"button\" value=\"Remove\" class=\"btn btn-default btn-custom-cancel\"></tr>");
 

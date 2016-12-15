@@ -44,10 +44,20 @@ namespace Help_Desk_2.Controllers
                     .ToPagedList(currentPageIndex, AllSorts.pageSize));            
         }
 
-        public ActionResult Admin(string searchType, string searchStr, int? page)
+        public ActionResult Admin(string searchType, string Keywords, string ExpertAreas, string searchStr, int? page)
         {
             if (!AllSorts.UserCan("ManageKBs"))
                 return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+
+            //ViewBag.Keywords = "test";
+            //ViewBag.ExpertArea = "test2";
+
+            List<WordList> list = db.WordLists.Where(k => k.type == 1 && !k.deleted).ToList();
+            ViewBag.Keywords = new SelectList(list, "text", "text");
+
+            List<WordList> list2 = db.WordLists.Where(k => k.type == 2 && !k.deleted).ToList();
+            ViewBag.ExpertAreas = new SelectList(list2, "text", "text");
+            
 
             var kbs = from m in db.KnowledgeFAQs
                        where (m.type == 2 && !m.deleted && m.dateSubmitted != null)
@@ -71,6 +81,26 @@ namespace Help_Desk_2.Controllers
                 kbs = kbs.Where(s => s.headerText.Contains(searchStr) || s.description.Contains(searchStr));
             }
 
+            if (!String.IsNullOrEmpty(Keywords))
+            {
+               Keywords.Replace("+", " ");               
+
+                IEnumerable<WordList> keywordtext = db.WordLists.Where(m => m.type == 1 && !m.deleted && m.text == Keywords);
+                
+                kbs = from s in kbs where(s.wordList.Where(x => x.type == 1 && !x.deleted).Contains(keywordtext.FirstOrDefault())) select s;
+               
+                
+            }
+            if (!String.IsNullOrEmpty(ExpertAreas))
+            {
+                ExpertAreas.Replace("+", " ");                
+
+                IEnumerable<WordList> expertareatext = db.WordLists.Where(m => m.type == 2 && !m.deleted && m.text == ExpertAreas);
+
+                kbs = from s in kbs where (s.wordList.Where(x => x.type == 2 && !x.deleted).Contains(expertareatext.FirstOrDefault())) select s;
+
+
+            }
             //ViewBag.selectedOption = "" + searchType;
             int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
 
@@ -172,7 +202,8 @@ namespace Help_Desk_2.Controllers
                 {
                     kb.published = true;
                     //@modifed 17/06/2016 KBs never expire 
-                    //kb.expiryDate = kb.dateComposed.AddDays(AllSorts.getExpiryDays(2));
+                    //reinstated 23/11/2016
+                    kb.expiryDate = kb.dateComposed.AddDays(AllSorts.getExpiryDays(2));
 
                     if (kb.dateSubmitted == null)
                         kb.dateSubmitted = DateTime.Now;
@@ -275,7 +306,8 @@ namespace Help_Desk_2.Controllers
 
                     //If being approved from expired then calculate expiry date from now instead of composed date
                     //@modifed 17/06/2016 KBs never expire 
-                    //kb.expiryDate = (kb.status == Statuses.Expired ? DateTime.Now : kb.dateComposed).AddDays(AllSorts.getExpiryDays(2));
+                    // reinstated 23/11/2016
+                    kb.expiryDate = (kb.status == Statuses.Expired ? DateTime.Now : kb.dateComposed).AddDays(AllSorts.getExpiryDays(2));
 
                     outMsg = "KB Article approved successfully";
                 }

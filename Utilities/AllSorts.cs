@@ -341,9 +341,25 @@ namespace Help_Desk_2.Utilities
 
                 if (type == 1) return globalSettings.FAQsExpiryDays;
 
-                if (type == 2) return globalSettings.TicketExpiryDays;
+                if (type == 2) return globalSettings.KBExpiryDays;
 
                 return 0;
+            }
+        }
+
+        public static string getHelpFile()
+        {
+            GlobalSettings globalSettings = db.GlobalSettingss.FirstOrDefault<GlobalSettings>();
+
+            if (globalSettings == null)
+            {
+
+                return "";
+            }
+            else
+            {
+                return globalSettings.HelpFile;
+
             }
         }
 

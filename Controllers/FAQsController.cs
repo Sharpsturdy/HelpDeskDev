@@ -22,7 +22,10 @@ namespace Help_Desk_2.Controllers
         public ActionResult Index(int? page)
         {
             int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
-            
+
+           
+
+
             return View(db.KnowledgeFAQs.Where(k => k.type == 1 && !k.suggest && k.published)
                     .OrderByDescending(k => k.dateComposed)
                     .ToPagedList(currentPageIndex, AllSorts.pageSize));
@@ -40,20 +43,23 @@ namespace Help_Desk_2.Controllers
         }
 
 
-        public ActionResult Admin(string searchType, string searchStr, int? page)
+        public ActionResult Admin(string searchType, string Keywords, string ExpertAreas, string searchStr, int? page)
         {
             if (!AllSorts.UserCan("ManageFAQs"))
                 return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
 
+            List<WordList> list = db.WordLists.Where(k => k.type == 1 && !k.deleted).ToList();
+            ViewBag.Keywords = new SelectList(list, "text", "text");
+
+            List<WordList> list2 = db.WordLists.Where(k => k.type == 2 && !k.deleted).ToList();
+            ViewBag.ExpertAreas = new SelectList(list2, "text", "text");
+
             var faqs = from m in db.KnowledgeFAQs
-                       where (m.type == 1 && !m.suggest && m.dateSubmitted != null)
+                       where (m.type == 1 && !m.suggest && m.dateSubmitted != null && m.published)
                        select m;
 
-            if (String.IsNullOrEmpty(searchType))
-            {
-                faqs = faqs.Where(s => !s.published);
-            }
-            else if (searchType == "1")
+          
+            if (searchType == "1")
             {
                 faqs = faqs.Where(s => s.expiryDate <= DateTime.Today);
             }
@@ -66,7 +72,28 @@ namespace Help_Desk_2.Controllers
             {
                 faqs = faqs.Where(s => s.headerText.Contains(searchStr) || s.description.Contains(searchStr));
             }
-            
+
+            if (!String.IsNullOrEmpty(Keywords))
+            {
+                Keywords.Replace("+", " ");
+
+                IEnumerable<WordList> keywordtext = db.WordLists.Where(m => m.type == 1 && !m.deleted && m.text == Keywords);
+
+                faqs = from s in faqs where (s.wordList.Where(x => x.type == 1 && !x.deleted).Contains(keywordtext.FirstOrDefault())) select s;
+
+
+            }
+            if (!String.IsNullOrEmpty(ExpertAreas))
+            {
+                ExpertAreas.Replace("+", " ");
+
+                IEnumerable<WordList> expertareatext = db.WordLists.Where(m => m.type == 2 && !m.deleted && m.text == ExpertAreas);
+
+                faqs = from s in faqs where (s.wordList.Where(x => x.type == 2 && !x.deleted).Contains(expertareatext.FirstOrDefault())) select s;
+
+
+            }
+
             int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
 
             //ViewBag.selectedOption = ""+ searchType;
@@ -78,14 +105,27 @@ namespace Help_Desk_2.Controllers
             var faqs = from m in db.KnowledgeFAQs
                        where(m.type == 1 && !m.suggest && m.published)
                        select m;
+            var news = from n in db.News
+                       where(n.published)
+                       select n;
 
             if (!String.IsNullOrEmpty(searchStr))
             {
                 faqs = faqs.Where(s => s.headerText.Contains(searchStr) || s.description.Contains(searchStr));
             }
 
+            if (!String.IsNullOrEmpty(searchStr))
+            {
+                news = news.Where(s => s.body.Contains(searchStr) || s.title.Contains(searchStr));
+            }
+
+            
+            int currentPageIndex1 = page.HasValue ? page.Value - 1 : 0;
+            ViewBag.NewsResults = news.OrderByDescending(m => m.creationDate).ToPagedList(currentPageIndex1, AllSorts.pageSize);
+
             int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
-            return View("Index",faqs.OrderByDescending(m => m.dateComposed).ToPagedList(currentPageIndex, AllSorts.pageSize));
+            return View("Index", faqs.OrderByDescending(m => m.dateComposed).ToPagedList(currentPageIndex, AllSorts.pageSize));
+            
         }
 
         // GET: FAQs/Details/5
@@ -209,6 +249,9 @@ namespace Help_Desk_2.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Suggest([Bind(Include = "type,headerText,description")] KnowledgeFAQ faq)
         {
+
+            faq.description = "Answer needed for suggestion";            
+
             if (ModelState.IsValid)
             {
                 UserData ud = new UserData();

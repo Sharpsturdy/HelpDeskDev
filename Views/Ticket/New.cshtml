@@ -68,17 +68,33 @@
                         <td colspan="2">
                             <div class="row add-link">
                                 <div class="col-sm-5">
-                                    @Html.EditorFor(model => model.linkText, new { htmlAttributes = new { @placeholder = "Link Display Text" } })
+                                   @Html.Label("Display Text for the Link")
                                 </div>
 
                                 <div class="col-sm-5">
-                                    @Html.EditorFor(model => model.linkURL, new { htmlAttributes = new { @placeholder = "Link URL" } })
+                                    @Html.Label("URL for the Link ")
+                                </div>
+
+                               
+                            </div>
+                        </td>
+                        </tr>
+                    <tr>
+                        <td colspan="2">
+                            <div class="row add-link">
+                                <div class="col-sm-5">
+                                    @Html.EditorFor(model => model.linkText, new { htmlAttributes = new { @placeholder = "Link Display Text", @style = "width:300px" } })
+                                </div>
+
+                                <div class="col-sm-5">
+                                    @Html.EditorFor(model => model.linkURL, new { htmlAttributes = new { @placeholder = "http://", @style = "width:300px" } })
                                 </div>
 
                                 <div class="col-sm-1">
                                     <input type="button" id="addLink" value="Add Link" class="btn btn-default" />
                                 </div>
                             </div>
+
                         </td>
                     </tr>
                 </tfoot>

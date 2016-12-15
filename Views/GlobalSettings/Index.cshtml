@@ -76,60 +76,70 @@
         </div>
 
         <div class="form-group">
-            <div class="col-sm-6">
-                @*Html.LabelFor(model => model.TicketExpiryDays, htmlAttributes: new { @class = "control-label" })
-                @Html.EditorFor(model => model.TicketExpiryDays, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.TicketExpiryDays, "", new { @class = "text-danger" })*@
-                @Html.LabelFor(model => model.FAQsExpiryDays, htmlAttributes: new { @class = "control-label" })
-                @Html.EditorFor(model => model.FAQsExpiryDays, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.FAQsExpiryDays, "", new { @class = "text-danger" })
+            <div class="col-sm-12">
+                @Html.Label("Help File", htmlAttributes: new { @class = "control-label" })
+                @Html.EditorFor(model => model.HelpFile, new { htmlAttributes = new { @class = "form-control" } })
                 
             </div>
-            <div class="col-sm-6">
-                @Html.LabelFor(model => model.KBExpiryDays, htmlAttributes: new { @class = "control-label" })
-                @Html.EditorFor(model => model.KBExpiryDays, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.KBExpiryDays, "", new { @class = "text-danger" })
-            </div> 
-                   
         </div>
 
-        
+            <div class="form-group">
+                <div class="col-sm-6">
+                    @*Html.LabelFor(model => model.TicketExpiryDays, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.TicketExpiryDays, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.TicketExpiryDays, "", new { @class = "text-danger" })*@
+                    @Html.LabelFor(model => model.FAQsExpiryDays, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.FAQsExpiryDays, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.FAQsExpiryDays, "", new { @class = "text-danger" })
 
-        <div class="form-group">
-            <div class="col-md-12">
-                <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+                <div class="col-sm-6">
+                    @Html.LabelFor(model => model.KBExpiryDays, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.KBExpiryDays, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.KBExpiryDays, "", new { @class = "text-danger" })
+                </div>
+
             </div>
-        </div>
-        <hr/>
-        <div class="form-group odd">
-            <h3 class="control-label col-md-6">Keywords&nbsp; @Html.ActionLink("Manage", "Keywords", null, new { @class = "btn btn-default" })</h3>
-            <h3 class="control-label col-md-6">Expert Areas &nbsp; @Html.ActionLink("Manage", "ExpertAreas", null, new { @class = "btn btn-default" })</h3>
-        </div>
 
-        <div class="form-group">
-            <div class="col-md-6">
-                <table>
-                    @foreach (string kword in Model.Keywords)
+
+
+            <div class="form-group">
+                <div class="col-md-12">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+            </div>
+            <hr />
+            <div class="form-group odd">
+                <h3 class="control-label col-md-6">Keywords&nbsp; @Html.ActionLink("Manage", "Keywords", null, new { @class = "btn btn-default" })</h3>
+                <h3 class="control-label col-md-6">Expert Areas &nbsp; @Html.ActionLink("Manage", "ExpertAreas", null, new { @class = "btn btn-default" })</h3>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-6">
+                    <table>
+                        @foreach (string kword in Model.Keywords)
                     {
-                        <tr>
-                            <td>@kword</td>
-                        </tr>
+                    <tr>
+                        <td>@kword</td>
+                    </tr>
                     }
-                </table>
-                
-            </div>
-            <div class="col-md-6">
-                <table>
-                    @foreach (string kword in Model.ExpertAreas)
+                    </table>
+
+                </div>
+                <div class="col-md-6">
+                    <table>
+                        @foreach (string kword in Model.ExpertAreas)
                     {
-                        <tr>
-                            <td>@kword</td>
-                        </tr>
+                    <tr>
+                        <td>@kword</td>
+                    </tr>
                     }
-                </table>
+                    </table>
+                </div>
             </div>
-        </div>       
-    </div>
+
+
+        </div>
 }
 
 

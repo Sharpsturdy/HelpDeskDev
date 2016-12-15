@@ -42,7 +42,7 @@ namespace Help_Desk_2.Controllers
             ViewBag.kbsubskw = up.kbKeywords.Select(x => x.text);
             ViewBag.kbsubsea = up.kbExpertAreas.Select(x => x.text);
 
-            ViewBag.userGroups = AllSorts.GetGroups();
+            //ViewBag.userGroups = AllSorts.GetGroups();
 
             return View();
         }

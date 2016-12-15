@@ -18,8 +18,7 @@
     ViewBag.adminView = (actionName == "admin" || actionName == "drafts" || ViewBag.isSuggestions);
 
     ViewBag.searchType = new SelectList(new List<SelectListItem>
-    {
-        new SelectListItem {Value = "", Text = "Unpublished" },
+    {       
         new SelectListItem {Value = "1", Text = "Expired" },
         new SelectListItem {Value = "2", Text = "Published" },
         new SelectListItem {Value = "3", Text = "All" }
@@ -43,6 +42,20 @@
               
             </div>
         }
+
+        <div class="form-group">
+            <label for="Keywords" style="padding:5px;padding-right:5px">Keywords: </label>
+            @Html.DropDownList("Keywords", ViewBag.Keywords as SelectList, "All", new { @class = "form-control", onchange = "this.form.submit();" })
+
+
+        </div>
+        <div class="form-group">
+            <label for="ExpertAreas" style="padding:5px;padding-right:5px">Expert Areas: </label>
+            @Html.DropDownList("ExpertAreas", ViewBag.ExpertAreas as SelectList, "All", new { @class = "form-control", onchange = "this.form.submit();" })
+
+
+        </div>
+       
         <div class="form-group">
             <input type="text" class="form-control" id="searchStr1" name="searchStr" placeholder="Enter search text" value='@Request.QueryString["searchStr"]'>
         </div>
@@ -51,13 +64,14 @@
 
     @if (ViewBag.adminView)
     {
-    <table class="table table-bordered table-hover table-condensed table-view">
+    <table id="faqs" style="margin:15px" class="table table-bordered table-hover table-condensed table-view">
         <thead>
             <tr>
                 <th>@Html.DisplayName("Question")</th>
                 <th>Originator</th>
                 <th>Creation date</th>
                 <th>Status</th>
+                <th>Expiry Date</th>
                
             </tr>
         </thead>
@@ -70,6 +84,7 @@
                     <td>@Html.DisplayFor(modelItem => item.Originator.displayName)</td>
                     <td>@Html.DisplayFor(modelItem => item.dateComposed)</td>
                     <td>@Html.DisplayFor(modelItem => item.status)</td>
+                    <td>@Html.DisplayFor(modelItem => item.expiryDate)</td>
                 </tr>
             }
         </tbody>
@@ -93,7 +108,7 @@
             </div>
         }
     }
-    <div class="pager">
+    @*<div class="pager">
         @Html.Pager(Model.PageSize, Model.PageNumber, Model.TotalItemCount).Options(o => o.AddRouteValue("searchType", @Request.QueryString["searchType"])
         .AddRouteValue("searchStr", @Request.QueryString["searchStr"])
         .DisplayFirstAndLastPage()
@@ -103,7 +118,39 @@
         .SetNextPageText("Next"))
        
         <div class="text-muted">Displaying @Model.ItemStart - @Model.ItemEnd of @Model.TotalItemCount</div>
-    </div>
+    </div>*@
 </div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript" charset="utf8">
+        
+       jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+           "date-uk-pre": function ( a ) {
+               var ukDatea = a.split('/');
+               return (ukDatea[2] + ukDatea[1] + ukDatea[0]) * 1;
+           },
 
+           "date-uk-asc": function ( a, b ) {
+               return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+           },
+
+           "date-uk-desc": function ( a, b ) {
+               return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+           }
+       } );
+    $(document).ready( function () {
+        $('#faqs').DataTable({
+            "lengthChange": false,
+            "searching": false,
+            "aoColumns": [    
+            null,
+            null,
+            { "sType": "date-uk" },
+            null,
+            null
+            ]
+        });
+    } );
+    </script>
+}
 

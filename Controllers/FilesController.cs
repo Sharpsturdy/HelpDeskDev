@@ -27,6 +27,11 @@ namespace Help_Desk_2.Controllers
             {
                 return HttpNotFound();
             }
+
+            if(!System.IO.File.Exists(Server.MapPath(attach.filePath)))
+            {
+                return File(attach.filePath, System.Net.Mime.MediaTypeNames.Application.Octet, "MISSING FILE"); //Path.GetFileName(vp));
+            }
             //return View();
             //return FileResult("adb.txt");
             //R:\Development\Clients\progrex\Renold\Engineering Help Desk\Help Desk 2\App_Data\Files\Customer-ORDER-FORM-2 (2).jpg

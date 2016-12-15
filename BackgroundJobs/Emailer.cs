@@ -103,7 +103,7 @@ namespace Help_Desk_2.BackgroundJobs
         {
             dynamic email1 = new Email("Subscriptions");
             email1.From = From;
-            email1.To = "patrice.elias@gmail.com";
+            email1.To = email;
             email1.userName = userName;
             email1.Type = type;
             email1.Subject = type + " Subscriptions feed";

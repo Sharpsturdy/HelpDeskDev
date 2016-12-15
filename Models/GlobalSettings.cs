@@ -63,5 +63,9 @@ namespace Help_Desk_2.Models
         [DefaultValue(false)]
         public bool TicketHeaderEnabled { get; set; }
 
+        [Display(Name = "Help File")]
+        [DataType(DataType.Text)]
+        public string HelpFile { get; set; }
+
     }
 }
