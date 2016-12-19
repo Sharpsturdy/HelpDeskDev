@@ -1,0 +1,126 @@
+﻿@using Help_Desk_2.Models
+@model IEnumerable<TicketsKPI>
+
+@{
+    ViewBag.Title = "Ticket KPIs Year to Date By User";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    ViewBag.Year = new SelectList(new List<SelectListItem>
+    {
+        new SelectListItem {Value = "0", Text = "Current Year" },
+        new SelectListItem {Value = "2015", Text = "2015" },
+        new SelectListItem {Value = "2016", Text = "2016" },
+        new SelectListItem {Value = "2017", Text = "2017" },
+       
+    }, "Value", "Text");
+
+
+}
+
+
+<header>
+    <h2 class="title">@ViewBag.Title</h2>
+</header>
+
+
+<form class="form-inline" action="UserYearToDateKPI">
+
+    <div class="form-group">
+        <label for="Keywords" style="padding:5px;padding-right:5px">User Responsible : </label>
+        @Html.DropDownList("user", ViewBag.User as SelectList, "All", new { @class = "form-control", onchange = "this.form.submit();" })
+    </div>
+    <div class="form-group">
+        <label for="searchType">Year : </label>
+        @Html.DropDownList("year", (IEnumerable<SelectListItem>)ViewBag.Year, new { @class = "form-control", onchange = "this.form.submit();" })
+    </div>
+
+
+
+</form>
+
+<h3>Summary</h3>
+
+<table style="margin:15px" class="table table-bordered table-hover table-condensed table-view">
+    <thead>
+        <tr>
+            <th>Number of Tickets</th>
+            <th>Average Submitted to Last Assigned</th>
+            <th>Average Last Assigned to Completed</th>
+            <th>Average Submitted to Completed</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@ViewBag.YTDTotal</td>
+            <td>@ViewBag.YTDAVGstoa</td>
+            <td>@ViewBag.YTDAVGatoc</td>
+            <td>@ViewBag.YTDAVGstoc</td>
+        </tr>
+
+    </tbody>
+
+</table>
+
+<h3>Detail</h3>
+
+<table id="kpi" style="margin:15px" class="table table-bordered table-hover table-condensed table-view">
+    <thead>
+        <tr>
+            <th>Ticket</th>
+            <th>Responsible</th>
+            <th>Submitted</th>
+            <th>Completed</th>
+            <th>Last Assigned</th>
+            <th>Submitted to Last Assigned</th>
+            <th>Last Assigned to Completed</th>
+            <th>Submitted to completed</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>@Html.DisplayFor(modelItem => item.ticketID)</td>
+                <td>@Html.DisplayFor(model => item.responsible)</td>
+                <td>@Html.DisplayFor(modelItem => item.dateSubmitted)</td>
+                <td>@Html.DisplayFor(modelItem => item.dateCompleted)</td>
+                <td>@Html.DisplayFor(modelItem => item.lastAssigned)</td>
+                <td>@Html.DisplayFor(modelItem => item.stoa)</td>
+                <td>@Html.DisplayFor(modelItem => item.atoc)</td>
+                <td>@Html.DisplayFor(modelItem => item.stoc)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript" charset="utf8">
+        jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+            "date-uk-pre": function ( a ) {
+                var ukDatea = a.split('/');
+                return (ukDatea[2] + ukDatea[1] + ukDatea[0]) * 1;
+            },
+
+            "date-uk-asc": function ( a, b ) {
+                return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+            },
+
+            "date-uk-desc": function ( a, b ) {
+                return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+            }
+        } );
+    $(document).ready( function () {
+        $('#kpi').DataTable({
+            "lengthChange": false,
+            "searching": false,
+            "order": [[ 0, "asc" ]]
+
+        });
+    } );
+    </script>
+}
+

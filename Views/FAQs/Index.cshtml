@@ -41,21 +41,33 @@
                 @Html.DropDownList("searchType", null, new { @class = "form-control", onchange = "this.form.submit();" })
               
             </div>
+
+
+            
+           
         }
 
-        <div class="form-group">
-            <label for="Keywords" style="padding:5px;padding-right:5px">Keywords: </label>
-            @Html.DropDownList("Keywords", ViewBag.Keywords as SelectList, "All", new { @class = "form-control", onchange = "this.form.submit();" })
+        @if (ViewBag.Keywords != null)
+        {
+            <div class="form-group">
+                <label for="Keywords" style="padding:5px;padding-right:5px">Keywords: </label>
+                @Html.DropDownList("Keywords", ViewBag.Keywords as SelectList, "All", new { @class = "form-control", onchange = "this.form.submit();" })
 
 
-        </div>
+            </div>
+        }
+
+@if (ViewBag.ExpertAreas != null)
+{
         <div class="form-group">
             <label for="ExpertAreas" style="padding:5px;padding-right:5px">Expert Areas: </label>
             @Html.DropDownList("ExpertAreas", ViewBag.ExpertAreas as SelectList, "All", new { @class = "form-control", onchange = "this.form.submit();" })
 
 
         </div>
-       
+
+}
+
         <div class="form-group">
             <input type="text" class="form-control" id="searchStr1" name="searchStr" placeholder="Enter search text" value='@Request.QueryString["searchStr"]'>
         </div>
@@ -142,6 +154,7 @@
         $('#faqs').DataTable({
             "lengthChange": false,
             "searching": false,
+            "order": [[ 2, "desc" ]],
             "aoColumns": [    
             null,
             null,

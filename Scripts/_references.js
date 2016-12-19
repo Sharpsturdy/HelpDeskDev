@@ -46,6 +46,7 @@
 /// <reference path="dojo.js" />
 /// <reference path="dojo.js.uncompressed.js" />
 /// <reference path="fileinput.min.js" />
+/// <reference path="html5shiv.js" />
 /// <reference path="jquery.validate.js" />
 /// <reference path="jquery.validate.unobtrusive.min.js" />
 /// <reference path="jquery-1.10.2.js" />

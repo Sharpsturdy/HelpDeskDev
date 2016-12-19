@@ -417,6 +417,13 @@ textarea.form-control {
      background-color: transparent;
  }
  / * **************/
+@media print
+{    
+    .no-print, .no-print *
+    {
+        display: none !important;
+    }
+}
 
 .left-column1 .panel-custom {
 	border-color: #2A6496;

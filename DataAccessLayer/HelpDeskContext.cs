@@ -26,6 +26,8 @@ namespace Help_Desk_2.DataAccessLayer
         public DbSet<KnowledgeFAQ> KnowledgeFAQs { get; set;  }
         public DbSet<AuditTrail> AuditTrails { get; set; }
 
+        public DbSet<TicketsKPI> TicketKPIs { get; set; }
+
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

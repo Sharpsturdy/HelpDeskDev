@@ -487,7 +487,7 @@ namespace Help_Desk_2.Controllers
                     //Send email to originator to let them know ticket is completed
                     Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendTicketNotification("Completed", ticket.ID));
                     var resp = db.UserProfiles.Find(ticket.responsibleID).displayName;
-                    auditMsg = "Ticket assigned and notification sent to " + resp;
+                    auditMsg = "Ticket completed and notification sent to " + resp;
 
                     AllSorts.displayMessage = "Ticket completed successfully!";
                 }

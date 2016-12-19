@@ -23,8 +23,7 @@ namespace Help_Desk_2.Controllers
         {
             int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
 
-           
-
+            
 
             return View(db.KnowledgeFAQs.Where(k => k.type == 1 && !k.suggest && k.published)
                     .OrderByDescending(k => k.dateComposed)
@@ -34,6 +33,16 @@ namespace Help_Desk_2.Controllers
 
         public ActionResult Drafts(int? page)
         {
+
+
+            ViewBag.Keywords = null;
+
+
+            ViewBag.ExpertAreas = null;
+
+            var faqs = from m in db.KnowledgeFAQs
+                       where (m.type == 1 && !m.suggest && m.dateSubmitted != null )
+                       select m;
             int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
 
             string userName = AllSorts.getUserID();
@@ -55,7 +64,7 @@ namespace Help_Desk_2.Controllers
             ViewBag.ExpertAreas = new SelectList(list2, "text", "text");
 
             var faqs = from m in db.KnowledgeFAQs
-                       where (m.type == 1 && !m.suggest && m.dateSubmitted != null && m.published)
+                       where (m.type == 1 && !m.suggest && m.dateSubmitted != null )
                        select m;
 
           
@@ -288,10 +297,15 @@ namespace Help_Desk_2.Controllers
             return View("Index", faqs.OrderByDescending(m => m.dateComposed).ToPagedList(currentPageIndex, AllSorts.pageSize));
 
         }
-        public ActionResult Suggestions(string searchType, string searchStr, int? page)
+        public ActionResult Suggestions(string searchType,  string searchStr, int? page)
         {
             if (!AllSorts.UserCan("ManageFAQs"))
                 return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+
+
+            ViewBag.Keywords = null;
+
+            ViewBag.ExpertAreas = null;
 
 
             var faqs = from m in db.KnowledgeFAQs
@@ -315,6 +329,9 @@ namespace Help_Desk_2.Controllers
             {
                 faqs = faqs.Where(s => s.headerText.Contains(searchStr) || s.description.Contains(searchStr));
             }
+
+           
+           
 
             //ViewBag.selectedOption = "" + searchType;
 

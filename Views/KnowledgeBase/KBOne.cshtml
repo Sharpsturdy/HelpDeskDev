@@ -270,7 +270,7 @@
                         if (ViewBag.mode == 2)
                         {
                             if ((Model.status == Statuses.Draft && Model.originatorID.ToString() == AllSorts.getUserID()) ||
-                                (Model.dateSubmitted != null && AllSorts.UserCan("ManageKBs")))
+                                (Model.dateSubmitted != null && Model.status != Statuses.Published && AllSorts.UserCan("ManageKBs")))
                             {
                                 @Html.ActionLink("Edit", "Edit/" + Model.ID, null, htmlAttributes: new { @title = "Click to modify document", @class = "btn btn-primary" })
                             }
@@ -293,7 +293,7 @@
                                 {
                                     <input type="submit" name="btnUnApprove" value="UnApprove" class="btn btn-primary" />
                                 }
-                                else
+                                if (Model != null && Model.dateSubmitted != null)
                                 {
                                     <input type="submit" name="btnApprove" value="Approve" class="btn btn-primary" />
                                 }

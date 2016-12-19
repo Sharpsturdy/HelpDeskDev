@@ -249,7 +249,7 @@ namespace Help_Desk_2.Controllers
                 if (!string.IsNullOrEmpty((string)Session["lastView"]))
                     return Redirect((string)Session["lastView"]);
 
-                return RedirectToAction("Index");
+                return RedirectToAction("KnowledgeBase/Index");
             } else
             {
                 AllSorts.displayMessage = "0#General error creating KB Article";

@@ -193,6 +193,7 @@
     <Compile Include="Models\News.cs" />
     <Compile Include="Models\AuditTrail.cs" />
     <Compile Include="Models\spTicket.cs" />
+    <Compile Include="Models\TicketsKPI.cs" />
     <Compile Include="Subscriptions.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utilities\AllSorts.cs" />
@@ -520,6 +521,7 @@
     <Content Include="Scripts\DataTables\responsive.semanticui.min.js" />
     <Content Include="Scripts\dojo.js" />
     <Content Include="Scripts\dojo.js.uncompressed.js" />
+    <Content Include="Scripts\html5shiv.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.ar.min.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.az.min.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.bg.min.js" />
@@ -848,10 +850,17 @@
     <Content Include="Views\Emails\Subscriptions.cshtml" />
     <Content Include="Views\Emails\AgedTickets.cshtml" />
     <Content Include="Views\Ticket\List.cshtml" />
+    <Content Include="Views\Reports\ChartYTD.cshtml" />
+    <Content Include="Views\Reports\ViewPage1.cshtml" />
+    <Content Include="Views\Reports\Index.cshtml" />
+    <Content Include="Views\Reports\YearToDateKPI.cshtml" />
+    <Content Include="Views\Reports\MonthToDateKPI.cshtml" />
+    <Content Include="Views\Reports\UserMonthToDateKPI.cshtml" />
+    <Content Include="Views\Reports\UserYearToDateKPI.cshtml" />
+    <Content Include="Views\Reports\OpenAssigned.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Files\" />
-    <Folder Include="Views\Reports\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
