@@ -10,6 +10,7 @@ namespace Help_Desk_2.Models
     public class TicketsKPI
     {
         [Key]
+        public int ID { get; set; }
         public int ticketID { get; set; } 
         public string responsible { get; set; }
         [Display(Name = "dateSubmitted"), DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:d}")]

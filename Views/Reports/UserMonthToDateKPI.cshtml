@@ -89,7 +89,8 @@
         {
             <tr>
 
-                <td>@Html.DisplayFor(modelItem => item.ticketID)</td>
+                <td>@Html.ActionLink(item.ticketID.ToString(), "Details", "Ticket", new { id = item.ID }, null)</td>
+
                 <td>@Html.DisplayFor(model => item.responsible)</td>
                 <td>@Html.DisplayFor(modelItem => item.dateSubmitted)</td>
                 <td>@Html.DisplayFor(modelItem => item.dateCompleted)</td>

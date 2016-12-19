@@ -97,6 +97,14 @@
   vertical-align: bottom;
 }
 
+@media print
+{    
+    #header, #navbar, #navbar, #toolbar, #footer, .no-print, .no-print *
+    {
+        display: none !important;
+    }
+}
+
 @media (min-width: 480px) {
   .row-xs-height {
     display: table;
@@ -417,13 +425,7 @@ textarea.form-control {
      background-color: transparent;
  }
  / * **************/
-@media print
-{    
-    .no-print, .no-print *
-    {
-        display: none !important;
-    }
-}
+
 
 .left-column1 .panel-custom {
 	border-color: #2A6496;
