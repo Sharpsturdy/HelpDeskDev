@@ -13,20 +13,22 @@ public static class Globals
         
     static Globals()
     {
-        try {
-            var appData = ConfigurationManager.AppSettings;
-            appAdministrators = appData["AppAdministrators"].Trim();
-            superUsers = appData["SuperUsers"].Trim();
-            baseURL = appData["BaseURL"].Trim();
-            //vlookup_limit = int.Parse(appData["VlookupLimit"].Trim());
-
-        } catch (Exception ex)
-        {
-            //do nothing. This is not always a show stopper
-        }
+	    try
+	    {
+		    var appData = ConfigurationManager.AppSettings;
+		    appAdministrators = appData["AppAdministrators"].Trim();
+		    superUsers = appData["SuperUsers"].Trim();
+		    baseURL = appData["BaseURL"].Trim();
+		    //vlookup_limit = int.Parse(appData["VlookupLimit"].Trim());
+	    }
+	    catch (Exception ex)
+	    {
+		    //do nothing. This is not always a show stopper
+	    }
        
     }
 
-   
+	public static string LocalDevMachine { get; } = "DESKTOP-PTOFCJ0";
+
 }
 

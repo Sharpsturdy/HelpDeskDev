@@ -5,6 +5,7 @@ using Hangfire.SqlServer;
 using System;
 using Microsoft.Owin;
 using Help_Desk_2.BackgroundJobs;
+using Help_Desk_2.DataAccessLayer;
 
 [assembly: OwinStartup(typeof(Help_Desk_2.Startup))]
 namespace Help_Desk_2
@@ -19,7 +20,7 @@ namespace Help_Desk_2
                 QueuePollInterval = TimeSpan.FromSeconds(15) // Default value
             };
             GlobalConfiguration.Configuration
-                .UseSqlServerStorage("HelpDeskContext", sqlOptions);
+                .UseSqlServerStorage(HelpDeskContext.ConnString, sqlOptions);
 
             //app.UseHangfireDashboard();
             //app.UseHangfireDashboard("/hangfire", new DashboardOptions

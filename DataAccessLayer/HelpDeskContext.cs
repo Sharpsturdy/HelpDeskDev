@@ -13,8 +13,11 @@ namespace Help_Desk_2.DataAccessLayer
 {
     public class HelpDeskContext : DbContext
     {
-        public HelpDeskContext() :base("HelpDeskContext")
+
+		public static string ConnString = Environment.MachineName == Globals.LocalDevMachine ? "HelpDeskContextLocalDev" : "HelpDeskContext";
+		public HelpDeskContext() :base(ConnString)
         {
+
         }
 
         public DbSet<GlobalSettings> GlobalSettingss { get; set;  }

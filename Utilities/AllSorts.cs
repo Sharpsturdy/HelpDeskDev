@@ -396,6 +396,10 @@ namespace Help_Desk_2.Utilities
 
         public static bool userHasRole(string roleName) //Configured in web config as CSL
         {
+	        if (Environment.MachineName == Globals.LocalDevMachine)
+	        {
+		        return true;
+	        }
             var appSettings = ConfigurationManager.AppSettings[roleName];
             var user = HttpContext.Current.User;
 
