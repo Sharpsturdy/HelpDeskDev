@@ -198,7 +198,7 @@
     <Compile Include="Subscriptions.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utilities\AllSorts.cs" />
-    <Compile Include="Utilities\ApplicationRoles.cs" />
+    <Compile Include="Utilities\UserRoles.cs" />
     <Compile Include="Utilities\CustomAuthorise.cs" />
     <Compile Include="Utilities\Globals.cs" />
     <Compile Include="Utilities\HangFireAuthorize.cs" />

@@ -30,7 +30,7 @@ namespace Help_Desk_2.BackgroundJobs
             db = new HelpDeskContext();
         
             string tmp = ConfigurationManager.AppSettings["FromAddress"];
-            if (tmp.Trim() == "")
+            if (string.IsNullOrEmpty(tmp?.Trim()))
             {
                 From = "helpdesk@renold.com";
             } else

@@ -72,7 +72,7 @@
             <ul class="nav navbar-nav">
                 <li>@Html.ActionLink("Home", "Index", "Home")</li>
                 <li>@Html.ActionLink("FAQs", "Index","FAQs")</li>
-                <li>@Html.SecureActionLinkNEW("Knowledge Base", "Admin", "KnowledgeBase", UserRoles.AdminAndSuperUserRoles)</li>
+                <li>@Html.SecureActionLinkNEW("Knowledge Base", "Admin", "KnowledgeBase", UserRoles.DomainAdminAndSuperUserRoles)</li>
                 <li>@Html.ActionLink("Latest News","Index", "News")</li>
                 <li><a href="@AllSorts.getHelpFile()" target="_blank">Help</a></li>
                 <li class="dropdown">

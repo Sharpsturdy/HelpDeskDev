@@ -10,6 +10,7 @@ using System.Web;
 using System.Web.Mvc;
 using MvcPaging;
 using Help_Desk_2.BackgroundJobs;
+using Help_Desk_2.Helpers;
 
 namespace Help_Desk_2.Controllers
 {
@@ -185,22 +186,25 @@ namespace Help_Desk_2.Controllers
                 faq.dateComposed = DateTime.Now;
                 faq.originatorID = userProfile.userID;
 
-                if (submittedValues.Contains("btnApprove"))
-                {
+				if (User.CustomIsInRole(UserRoles.DomainAdminRole))
+				{
+					if (submittedValues.Contains("btnApprove"))
+					{
 
-                    faq.published = true;
-                    faq.expiryDate = faq.dateComposed.AddDays(AllSorts.getExpiryDays(1));
+						faq.published = true;
+						faq.expiryDate = faq.dateComposed.AddDays(AllSorts.getExpiryDays(1));
 
-                    if (faq.dateSubmitted == null)
-                        faq.dateSubmitted = DateTime.Now;
+						if (faq.dateSubmitted == null)
+							faq.dateSubmitted = DateTime.Now;
 
-                    outMsg = "New FAQ created and approved successfully!";
+						outMsg = "New FAQ created and approved successfully!";
 
-                }
-                else if (submittedValues.Contains("btnUnApprove"))
-                {
-                    faq.published = false;
-                }
+					}
+					else if (submittedValues.Contains("btnUnApprove"))
+					{
+						faq.published = false;
+					} 
+				}
 
                 faq = db.KnowledgeFAQs.Add(faq);
 

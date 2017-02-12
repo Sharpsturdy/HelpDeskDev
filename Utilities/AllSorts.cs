@@ -457,11 +457,11 @@ namespace Help_Desk_2.Utilities
             }
             else if (ActionName == "ManageFAQs")
             {
-                return userHasRole("AdminUsers") || db.UserProfiles.Where(u => (u.isFaqApprover && u.loginName == user)).Count() > 0;
+                return userHasRole(UserRoles.AppAdminRole) || userHasRole(UserRoles.AppSuperUserRole) || db.UserProfiles.Where(u => (u.isFaqApprover && u.loginName == user)).Count() > 0;
             }
             else if (ActionName == "ManageTickets")
             {
-                return userHasRole("AdminUsers") || db.UserProfiles.Where(u => (u.isResponsible && u.loginName == user)).Count() > 0;
+                return userHasRole(UserRoles.AppAdminRole) || userHasRole(UserRoles.AppSuperUserRole) || db.UserProfiles.Where(u => (u.isResponsible && u.loginName == user)).Count() > 0;
             }
             else if (ActionName.StartsWith("Create"))
             {

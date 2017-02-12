@@ -1,5 +1,6 @@
 ﻿@using Help_Desk_2.Utilities
 @using Help_Desk_2.Models
+@using Help_Desk_2.Helpers
 @model Help_Desk_2.Models.KnowledgeFAQ
 
 @{
@@ -258,7 +259,7 @@
                         {
                             <input type="submit" name="btnSubmit" value="Submit" class="btn btn-primary" title="Submit article for approval" />
                         }
-                        if (AllSorts.UserCan("ManageFAQs"))
+                        if (User.CustomIsInRole(UserRoles.DomainAdminRole))
                         {
                             if (Model != null && Model.published)
                             {
