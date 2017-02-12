@@ -14,7 +14,7 @@ namespace Help_Desk_2.DataAccessLayer
     public class HelpDeskContext : DbContext
     {
 
-		public static string ConnString = Environment.MachineName == Globals.LocalDevMachine ? "HelpDeskContextLocalDev" : "HelpDeskContext";
+		public static string ConnString = Globals.LocalDevMachine.Contains(Environment.MachineName) ? "HelpDeskContextLocalDev" : "HelpDeskContext";
 		public HelpDeskContext() :base(ConnString)
         {
 

@@ -10,10 +10,12 @@ using System.Web;
 using System.Web.Mvc;
 using MvcPaging;
 using Help_Desk_2.BackgroundJobs;
+using System.Web.Security;
 
 namespace Help_Desk_2.Controllers
 {
-    //[CustomAuthorise(Roles = "AdminUsers")]
+	
+	[CustomAuthorise(Roles=UserRoles.AdminAndSuperUserRoles)]
     public class KnowledgeBaseController : Controller
     {
         private HelpDeskContext db = new HelpDeskContext();

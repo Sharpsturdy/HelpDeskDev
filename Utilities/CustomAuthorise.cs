@@ -7,52 +7,44 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Security;
+using Help_Desk_2.Helpers;
 
 namespace Help_Desk_2.Utilities
 {
-    public class CustomAuthorise : AuthorizeAttribute
-    {
-        protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
-        {
-            //filterContext.Result = new HttpUnauthorizedResult(); // Try this but i'm not sure
-            filterContext.Result = new RedirectResult("~/Home/Unauthorized");
-        }
+	public class CustomAuthorise : AuthorizeAttribute
+	{
+		protected override bool AuthorizeCore(HttpContextBase httpContext)
+		{
+			var user = httpContext.User;
 
-        /*
-        public override void OnAuthorization(AuthorizationContext filterContext)
-        {
-            if (this.AuthorizeCore(filterContext.HttpContext))
-            {
-                base.OnAuthorization(filterContext);
-            }
-            else
-            {
-                this.HandleUnauthorizedRequest(filterContext);
-            }
-        }
-        */
-        protected override bool AuthorizeCore(HttpContextBase httpContext) {
-            if (!httpContext.User.Identity.IsAuthenticated)
-                return false; var roles = GetAuthorizedRoles();
+			if (!user.Identity.IsAuthenticated)
+			{
+				return false;
+			}
+			if (string.IsNullOrEmpty(Roles))
+			{
+				throw new ArgumentException("Define target roles for Custom authorization");
+			}
 
-            var provider = new WindowsTokenRoleProvider();
-            if (roles.Any(role => provider.IsUserInRole(httpContext.User.Identity.Name, role))) {
-                return true;
-            } return base.AuthorizeCore(httpContext);
-        }
+			return IsUserAuthorized(user, Roles);
+		}
 
-        private IEnumerable<string> GetAuthorizedRoles() {
-            var appSettings = ConfigurationManager.AppSettings[Roles];
-            if (string.IsNullOrEmpty(appSettings)) {
-                Trace.TraceError("Missing AD groups in Web.config for Roles {0}", Roles);
-                return new[] { "" };
-            }
-            return appSettings.Split(',');
-        }
+		private bool IsUserAuthorized(System.Security.Principal.IPrincipal user, string definedRoles)
+		{
+			string[] targetRoles = definedRoles.Split(' ');
+			foreach (var item in targetRoles)
+			{
+				if (user.CustomIsInRole(item))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+	}
 
-    }
 
-    [AttributeUsageAttribute(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
+	[AttributeUsageAttribute(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
     public class myAuthorizeAttribute : AuthorizeAttribute
     {
 

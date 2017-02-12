@@ -10,6 +10,7 @@ using System.Security.Policy;
 using System.Web;
 using System.Web.Mvc;
 using System.DirectoryServices.AccountManagement;
+using Help_Desk_2.Helpers;
 
 
 namespace Help_Desk_2.Utilities
@@ -396,11 +397,7 @@ namespace Help_Desk_2.Utilities
 
         public static bool userHasRole(string roleName) //Configured in web config as CSL
         {
-	        if (Environment.MachineName == Globals.LocalDevMachine)
-	        {
-		        return true;
-	        }
-            var appSettings = ConfigurationManager.AppSettings[roleName];
+	        var appSettings = ConfigurationManager.AppSettings[roleName];
             var user = HttpContext.Current.User;
 
             if (string.IsNullOrEmpty(appSettings))
@@ -411,7 +408,7 @@ namespace Help_Desk_2.Utilities
             foreach (string grp in appSettings.Split(','))
             {
                 try {
-                    if (user.IsInRole(grp.Trim()))
+                    if (user.CustomIsInRole(grp.Trim()))
                         return true;
                 } catch (Exception ge)
                 {
@@ -422,7 +419,7 @@ namespace Help_Desk_2.Utilities
             return false;
         }
 
-        public static string[] GetGroups()
+		public static string[] GetGroups()
         {
             string[] output = null;
 

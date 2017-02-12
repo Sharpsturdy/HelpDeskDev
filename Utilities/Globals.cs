@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Help_Desk_2.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Web.Configuration;
@@ -28,7 +29,9 @@ public static class Globals
        
     }
 
-	public static string LocalDevMachine { get; } = "DESKTOP-PTOFCJ0";
+	public static string[] LocalDevMachine { get; } = { "DESKTOP-PTOFCJ0", "WINDEV1612SYS" };
+
+	public static string LocalDevRole { get; } = UserRoles.DomainSuperUserRole;
 
 }
 

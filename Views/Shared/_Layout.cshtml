@@ -72,7 +72,7 @@
             <ul class="nav navbar-nav">
                 <li>@Html.ActionLink("Home", "Index", "Home")</li>
                 <li>@Html.ActionLink("FAQs", "Index","FAQs")</li>
-                <li>@Html.SecureActionLink("Knowledge Base", "Admin", "KnowledgeBase", "SuperFunctions")</li>
+                <li>@Html.SecureActionLinkNEW("Knowledge Base", "Admin", "KnowledgeBase", UserRoles.AdminAndSuperUserRoles)</li>
                 <li>@Html.ActionLink("Latest News","Index", "News")</li>
                 <li><a href="@AllSorts.getHelpFile()" target="_blank">Help</a></li>
                 <li class="dropdown">
@@ -95,20 +95,20 @@
             
    
                 @if (AllSorts.userHasRole("SuperUsers"))
-                {
-                    <p class="nav navbar-text navbar-right">@Html.ActionLink(AllSorts.getUserDisplayName() + " [SUPERUSER]", "Index", "UserProfile") </p> 
-                }
+				{
+					<p class="nav navbar-text navbar-right">@Html.ActionLink(AllSorts.getUserDisplayName() + " [SUPERUSER]", "Index", "UserProfile") </p>
+				}
 
-                @if (AllSorts.userHasRole("AdminUsers"))
-                {
-                    <p class="nav navbar-text navbar-right">@Html.ActionLink(AllSorts.getUserDisplayName() + " [ADMIN]", "Index", "UserProfile") </p>
-                }
-                else
-                {
-                    <p class="nav navbar-text navbar-right">@Html.ActionLink(AllSorts.getUserDisplayName() + " [STANDARD]", "Index", "UserProfile") </p>
-                }
+				else if (AllSorts.userHasRole("AdminUsers"))
+				{
+					<p class="nav navbar-text navbar-right">@Html.ActionLink(AllSorts.getUserDisplayName() + " [ADMIN]", "Index", "UserProfile") </p>
+				}
+				else
+				{
+					<p class="nav navbar-text navbar-right">@Html.ActionLink(AllSorts.getUserDisplayName() + " [STANDARD]", "Index", "UserProfile") </p>
+				}
 
-        </div>
+		</div>
     </div>
 
    <!--<div class="container hidden-lg"><p>Globals.errorMsg</p></div>-->
