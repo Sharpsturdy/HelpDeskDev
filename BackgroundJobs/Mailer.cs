@@ -12,7 +12,7 @@ namespace Help_Desk_2.BackgroundJobs
         public static void sendNotification()
         {
             dynamic email = new Email("Test");
-            email.To = "pelias@avexacomputing.net";
+            email.To = EmailAddresses.DeveloperEmail;
             email.Message = "DB.GetRandomLolcatLink()";
             email.Send();
         }

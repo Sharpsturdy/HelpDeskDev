@@ -168,6 +168,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="BackgroundJobs\EmailAddresses.cs" />
     <Compile Include="BackgroundJobs\Emailer.cs" />
     <Compile Include="BackgroundJobs\Mailer.cs" />
     <Compile Include="Controllers\KnowledgeBaseController.cs" />

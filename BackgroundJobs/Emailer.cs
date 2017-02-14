@@ -43,7 +43,7 @@ namespace Help_Desk_2.BackgroundJobs
         {
             dynamic email = new Email("KB");
             email.From = From;
-            email.To = "pelias@avexacomputing.net";
+            email.To = EmailAddresses.DeveloperEmail;
             
             email.Send();
         }
@@ -51,7 +51,7 @@ namespace Help_Desk_2.BackgroundJobs
         public void sendNotification()
         {
             dynamic email = new Email("Test");
-            email.To = "pelias@avexacomputing.net";
+            email.To = EmailAddresses.DeveloperEmail;
             email.Message = "DB.GetRandomLolcatLink()";
             email.Send();
         }
@@ -226,7 +226,7 @@ namespace Help_Desk_2.BackgroundJobs
 
             dynamic email = new Email("AgedTickets");
             email.From = From;
-            email.To = "pelias@avexacomputing.net";
+            email.To = EmailAddresses.DeveloperEmail;
             email.Subject = "Helpdesk System: Aged Tickets Notification";
             email.ticketSLA = "24 hours";
 
@@ -242,7 +242,7 @@ namespace Help_Desk_2.BackgroundJobs
                
                 dynamic email = new Email("General");
                 
-                email.To = "pelias@avexacomputing.net";
+                email.To = EmailAddresses.DeveloperEmail;
                 email.CC = "patrice@aloehealthsecrets.com";
                 email.Subject = "New Ticket submitted: " + refNum;
                 email.Message = "A new ticket, ref: " + refNum + ", has been submitted for your attention.";
