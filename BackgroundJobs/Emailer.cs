@@ -5,6 +5,7 @@ using Help_Desk_2.DataAccessLayer;
 using Help_Desk_2.Models;
 using System.Configuration;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Help_Desk_2.BackgroundJobs
 {
@@ -66,77 +67,88 @@ namespace Help_Desk_2.BackgroundJobs
              * 
              * 4. Repeat for KBS
              * ********/
-
-            //1. FAQS
-            var faqsubs = db.faqSubs();
-
-            //var faqSubsLinq = from faq in db.KnowledgeFAQs
-            //                  join wl in db.WordLists on faq
-            //                  where !faq.notifiedSubscriptions && faq.type == 1
-                             
-            //                  select faq;
-                                      
-
-
-            string userName = "", email = "", loginName = "";
-
-            ArrayList subDocs = new ArrayList();
-            foreach (var sub in faqsubs)
-            {
-                if (sub.loginName != loginName)
-                {
-                    if (loginName != "")
-                    {
-                        //Send subs for this user
-                        _sendSubsToUser("FAQs",userName, email, subDocs);
-                    }
-
-                    //Move to next user
-                    userName = sub.userName;
-                    email = sub.emailAddress;
-                    loginName = sub.loginName;
-                    subDocs.Clear(); //Reset
-                }
-                subDocs.Add(sub.ID);
-            }
-            if (userName != "")
-            {
-                //Send subs for LAST user
-                _sendSubsToUser("FAQs", userName, email, subDocs);
-            }
-
+            notifySubscribers("FAQs");
+            notifySubscribers("KnowledgeBase");
         }
 
-        private void _sendSubsToUser(string type, string userName, string email, ArrayList subDocs)
+        private void notifySubscribers(string type)
         {
-            try
+            byte selectFor = 0;
+            switch (type)
             {
-                dynamic email1 = new Email("Subscriptions");
-                email1.From = From;
-                email1.To = email;
-                email1.UserName = userName ?? "";
-                email1.Type = type;
-                email1.Subject = type + " Subscriptions feed";
-                //Convert object list to int array
-                var tmp = subDocs.ToArray();
-                int[] scom = new int[tmp.Length];
-                int i = 0;
-                foreach (var x in tmp) { scom[i++] = (int)x; }
-
-                //Get full records restricted to matched subs
-                email1.NotificationFor = db.KnowledgeFAQs.Where(k => k.type == 1 && !k.suggest && k.published && !k.deleted && scom.Contains(k.ID) && !k.notifiedSubscriptions)
-                        .OrderByDescending(k => k.dateComposed)
-                        .ToList<KnowledgeFAQ>();
-
-                //email1.Send();
-
-            }
-            catch (Exception)
-            {
-
+                case "FAQs":
+                    selectFor = 1;
+                    break;
+                case "KnowledgeBase":
+                    selectFor = 2;
+                    break;
+                default:
+                    break;
             }
 
+            var subscrToNotify = GetSubscriptionsForNotification(selectFor);//1-Faq
+            foreach (var subscriptions in subscrToNotify)
+            {
+                var subscriber = subscriptions.Key;
+                _sendSubsToUser(type, subscriber, subscriptions);
+            }
+
+            UpdateArticleStatusAfterSubscribersNotification(subscrToNotify);
         }
+
+        private void UpdateArticleStatusAfterSubscribersNotification(IEnumerable<IGrouping<Subscriber, Subscription>> faqsubs)
+        {
+            var notifiedArticleIds = faqsubs.SelectMany(f => f).Select(f => f.FaqId).Distinct();
+            if (notifiedArticleIds.Any())
+            {
+                foreach (var article in db.KnowledgeFAQs.Where(a => notifiedArticleIds.Contains(a.ID)))
+                {
+                    article.notifiedSubscriptions = true;
+                }
+                db.SaveChanges();
+            }
+        }
+
+        private IEnumerable<IGrouping<Subscriber, Subscription>> GetSubscriptionsForNotification(byte articleType)
+        {
+            var faqSubsLinq = (from faq in db.KnowledgeFAQs
+                               where faq.published && !faq.deleted && !faq.processed && faq.type == articleType && !faq.suggest && !faq.notifiedSubscriptions
+
+                               from wl in faq.wordList
+                               where !wl.deleted
+
+                               from user in wl.FAQSubs
+                               where user.emailAddress.Contains("@")
+
+                               select new
+                               {
+                                   LoginName = user.loginName,
+                                   UserFirstName = user.firstName,
+                                   UserSurName = user.surName,
+                                   EmailAddress = user.emailAddress,
+                                   FaqId = faq.ID,
+                                   FaqHeader = faq.headerText,
+                                   Originator = faq.Originator.displayName,
+                                   Date = faq.dateComposed,
+                                   SubscribeFor = wl.type                                   
+                               })
+                               .GroupBy(s => new Subscriber() {EmailAddress = s.EmailAddress, LoginName = s.LoginName, UserFirstName =  s.UserFirstName, UserSurName = s.UserSurName },
+                                        s => new Subscription { FaqHeader = s.FaqHeader, FaqId = s.FaqId, SubscribeFor = s.SubscribeFor, Date = s.Date, OriginatorName = s.Originator }).ToArray();
+            return faqSubsLinq;
+        }
+
+        private void _sendSubsToUser(string type, Subscriber subscriber, IEnumerable<Subscription> subscriptions)
+        {
+            dynamic email1 = new Email("Subscriptions");
+            email1.From = From;
+            email1.To = subscriber.EmailAddress;
+            email1.UserName = $"{subscriber.UserFirstName} {subscriber.UserSurName}";
+            email1.Type = type;
+            email1.Subject = type + " Subscriptions feed";
+            email1.Subscribtions = subscriptions;
+            email1.Send();
+        }
+
         public void sendTicketNotification(string mailType, int id)
         {
             Ticket tik  = db.Tickets.Find(id); //Get Ticket

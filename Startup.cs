@@ -23,24 +23,19 @@ namespace Help_Desk_2
             GlobalConfiguration.Configuration
                 .UseSqlServerStorage(HelpDeskContext.ConnString, sqlOptions);
 
-            //app.UseHangfireDashboard();
-            //app.UseHangfireDashboard("/hangfire", new DashboardOptions
-            //{
-            //    AuthorizationFilters = new[] { new HangFileAuthorize() }
-            //});
 
-            DashboardOptions options = new DashboardOptions {
-                AuthorizationFilters = new [] {
-                    new AuthorizationFilter { Roles = UserRoles.DomainAdminRole },
-                }
+            var options = new DashboardOptions
+            {
+#if !DEBUG
+                AuthorizationFilters = new [] { new AuthorizationFilter { Roles = UserRoles.DomainAdminRole } }
+#endif
             };
 
             app.UseHangfireDashboard("/hangfire", options);
 
             app.UseHangfireServer();
 
-            //RecurringJob.AddOrUpdate("ContentNotification", () => Mailer.sendNotification(), "*/5 * * * *");
-            //RecurringJob.AddOrUpdate("SubscriptionNotification", () => new Emailer().sendSubscriptions(), "*/1 * * * *");
+            RecurringJob.AddOrUpdate("SubscriptionNotification", () => new Emailer().sendSubscriptions(), "*/5 * * * *");
         }
     }
 }

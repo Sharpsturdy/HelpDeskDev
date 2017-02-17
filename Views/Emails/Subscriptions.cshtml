@@ -14,14 +14,14 @@ Content-Type: text/html; charset=utf-8
             var baseURL = System.Configuration.ConfigurationManager.AppSettings["BaseURL"];
             
             var link = "";
-            foreach (KnowledgeFAQ item in ViewBag.NotificationFor)
+            foreach (Subscription item in ViewBag.Subscribtions)
             {
-                link = baseURL + Url.Action("Details", ViewBag.Type, new { @id = item.ID });
+                link = baseURL + Url.Action("Details", ViewBag.Type, new { @id = item.FaqId });
                 <p>
                     <a href="@link">
-                        @item.headerText
+                        @item.FaqHeader
                     </a><br/>
-                    <span style="color: #ccc; font-size:90%">@item.dateComposed.ToShortDateString() / Author: @item.Originator.displayName</span>
+                    <span style="color: #ccc; font-size:90%">@item.Date.ToShortDateString() / Author: @item.OriginatorName</span>
                 </p>
             }
         }
