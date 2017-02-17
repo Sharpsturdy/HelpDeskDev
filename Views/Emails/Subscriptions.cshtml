@@ -7,22 +7,21 @@ Content-Type: text/html; charset=utf-8
 
 <html>
     <body>
-        <p>Hi @ViewBag.userName,</p>
+        <p>Hi @ViewBag.UserName,</p>
         <p>Here is the latest feed from your @ViewBag.Type subscriptions</p>
         <p></p>
         @{
             var baseURL = System.Configuration.ConfigurationManager.AppSettings["BaseURL"];
             
             var link = "";
-            foreach (KnowledgeFAQ item in ViewBag.Model)
+            foreach (KnowledgeFAQ item in ViewBag.NotificationFor)
             {
                 link = baseURL + Url.Action("Details", ViewBag.Type, new { @id = item.ID });
-
                 <p>
                     <a href="@link">
-                        @Html.DisplayFor(modelItem => item.headerText)
+                        @item.headerText
                     </a><br/>
-                    <span style="color: #ccc; font-size:90%">@Html.DisplayFor(modelItem => item.dateComposed) / Author: @Html.DisplayFor(modelItem => item.Originator.displayName)</span>
+                    <span style="color: #ccc; font-size:90%">@item.dateComposed.ToShortDateString() / Author: @item.Originator.displayName</span>
                 </p>
             }
         }

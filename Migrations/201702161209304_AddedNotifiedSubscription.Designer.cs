@@ -7,13 +7,13 @@ namespace Help_Desk_2.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class AddHelp : IMigrationMetadata
+    public sealed partial class AddedNotifiedSubscription : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddHelp));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(AddedNotifiedSubscription));
         
         string IMigrationMetadata.Id
         {
-            get { return "201612011615244_AddHelp"; }
+            get { return "201702161209304_AddedNotifiedSubscription"; }
         }
         
         string IMigrationMetadata.Source

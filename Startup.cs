@@ -6,6 +6,7 @@ using System;
 using Microsoft.Owin;
 using Help_Desk_2.BackgroundJobs;
 using Help_Desk_2.DataAccessLayer;
+using Help_Desk_2.Utilities;
 
 [assembly: OwinStartup(typeof(Help_Desk_2.Startup))]
 namespace Help_Desk_2
@@ -30,7 +31,7 @@ namespace Help_Desk_2
 
             DashboardOptions options = new DashboardOptions {
                 AuthorizationFilters = new [] {
-                    new AuthorizationFilter { Roles = "Administrators" },
+                    new AuthorizationFilter { Roles = UserRoles.DomainAdminRole },
                 }
             };
 
@@ -39,6 +40,7 @@ namespace Help_Desk_2
             app.UseHangfireServer();
 
             //RecurringJob.AddOrUpdate("ContentNotification", () => Mailer.sendNotification(), "*/5 * * * *");
+            //RecurringJob.AddOrUpdate("SubscriptionNotification", () => new Emailer().sendSubscriptions(), "*/1 * * * *");
         }
     }
 }

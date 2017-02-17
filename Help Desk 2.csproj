@@ -187,9 +187,13 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\Helpers.cs" />
-    <Compile Include="Migrations\201612011615244_AddHelp.cs" />
-    <Compile Include="Migrations\201612011615244_AddHelp.Designer.cs">
-      <DependentUpon>201612011615244_AddHelp.cs</DependentUpon>
+    <Compile Include="Migrations\201702161207250_InitMigr.cs" />
+    <Compile Include="Migrations\201702161207250_InitMigr.Designer.cs">
+      <DependentUpon>201702161207250_InitMigr.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702161209304_AddedNotifiedSubscription.cs" />
+    <Compile Include="Migrations\201702161209304_AddedNotifiedSubscription.Designer.cs">
+      <DependentUpon>201702161209304_AddedNotifiedSubscription.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Attachment.cs" />
     <Compile Include="Models\News.cs" />
@@ -879,8 +883,11 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201612011615244_AddHelp.resx">
-      <DependentUpon>201612011615244_AddHelp.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201702161207250_InitMigr.resx">
+      <DependentUpon>201702161207250_InitMigr.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702161209304_AddedNotifiedSubscription.resx">
+      <DependentUpon>201702161209304_AddedNotifiedSubscription.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

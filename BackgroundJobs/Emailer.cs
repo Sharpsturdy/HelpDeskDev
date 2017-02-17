@@ -52,6 +52,7 @@ namespace Help_Desk_2.BackgroundJobs
         {
             dynamic email = new Email("Test");
             email.To = EmailAddresses.DeveloperEmail;
+            email.From = EmailAddresses.FromNoReplayEmail;
             email.Message = "DB.GetRandomLolcatLink()";
             email.Send();
         }
@@ -67,7 +68,15 @@ namespace Help_Desk_2.BackgroundJobs
              * ********/
 
             //1. FAQS
-            var faqsubs = db.Database.SqlQuery<Subscriptions>("dbo.faqSubs").ToList<Subscriptions>();
+            var faqsubs = db.faqSubs();
+
+            var faqSubsLinq = from faq in db.KnowledgeFAQs
+                              join wl in db.WordLists on faq
+                              where !faq.notifiedSubscriptions && faq.type == 1
+                             
+                              select faq;
+                                      
+
 
             string userName = "", email = "", loginName = "";
 
@@ -94,33 +103,38 @@ namespace Help_Desk_2.BackgroundJobs
             {
                 //Send subs for LAST user
                 _sendSubsToUser("FAQs", userName, email, subDocs);
-
             }
 
         }
 
         private void _sendSubsToUser(string type, string userName, string email, ArrayList subDocs)
         {
-            dynamic email1 = new Email("Subscriptions");
-            email1.From = From;
-            email1.To = email;
-            email1.userName = userName;
-            email1.Type = type;
-            email1.Subject = type + " Subscriptions feed";
+            try
+            {
+                dynamic email1 = new Email("Subscriptions");
+                email1.From = From;
+                email1.To = email;
+                email1.UserName = userName ?? "";
+                email1.Type = type;
+                email1.Subject = type + " Subscriptions feed";
+                //Convert object list to int array
+                var tmp = subDocs.ToArray();
+                int[] scom = new int[tmp.Length];
+                int i = 0;
+                foreach (var x in tmp) { scom[i++] = (int)x; }
 
-            //Convert object list to int array
-            var tmp = subDocs.ToArray();
-            int[] scom = new int[tmp.Length];
-            int i = 0;
-            foreach (var x in tmp) { scom[i++] = (int)x; }
+                //Get full records restricted to matched subs
+                email1.NotificationFor = db.KnowledgeFAQs.Where(k => k.type == 1 && !k.suggest && k.published && !k.deleted && scom.Contains(k.ID) && !k.notifiedSubscriptions)
+                        .OrderByDescending(k => k.dateComposed)
+                        .ToList<KnowledgeFAQ>();
 
-            //Get full records restricted to matched subs
-            email1.Model = db.KnowledgeFAQs.Where(k => k.type == 1 && !k.suggest && k.published && !k.deleted && scom.Contains(k.ID))
-                    .OrderByDescending(k => k.dateComposed)
-                    .ToList<KnowledgeFAQ>();
-           
-            email1.Send();
+                //email1.Send();
 
+            }
+            catch (Exception)
+            {
+
+            }
 
         }
         public void sendTicketNotification(string mailType, int id)

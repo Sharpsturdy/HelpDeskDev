@@ -13,6 +13,7 @@ namespace Help_Desk_2.BackgroundJobs
         {
             dynamic email = new Email("Test");
             email.To = EmailAddresses.DeveloperEmail;
+            email.From = EmailAddresses.DeveloperEmail;
             email.Message = "DB.GetRandomLolcatLink()";
             email.Send();
         }

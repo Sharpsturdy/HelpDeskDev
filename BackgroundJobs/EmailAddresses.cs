@@ -7,6 +7,8 @@ namespace Help_Desk_2.BackgroundJobs
 {
 	public class EmailAddresses
 	{
-		public const string DeveloperEmail = "andriy@lakhno.com";
-	}
+		public const string DeveloperEmail = "andriy@progrex.co.uk";
+
+        public const string FromNoReplayEmail = "noreplay@renold.com";
+    }
 }

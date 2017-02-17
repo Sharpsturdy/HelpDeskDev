@@ -60,6 +60,9 @@ namespace Help_Desk_2.Models
         [DefaultValue(false)]
         public bool processed { get; set; }
 
+        [DefaultValue(false)]
+        public bool notifiedSubscriptions { get; set; }
+
         [Display(Name = "Links")]
         public string links { get; set; }
 

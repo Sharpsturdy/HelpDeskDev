@@ -9,8 +9,8 @@ namespace Help_Desk_2.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = true;
-            AutomaticMigrationDataLossAllowed = true;
+            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationDataLossAllowed = false;
             ContextKey = "Help_Desk_2.DataAccessLayer.HelpDeskContext";
         }
 

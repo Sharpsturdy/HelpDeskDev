@@ -31,7 +31,7 @@ public static class Globals
 
 	public static string[] LocalDevMachine { get; } = { "DESKTOP-PTOFCJ0", "WINDEV1612SYS" };
 
-	public static string LocalDevRole { get; } = UserRoles.DomainSuperUserRole;
+	public static string LocalDevRole { get; } = UserRoles.DomainAdminRole;
 
 }
 
