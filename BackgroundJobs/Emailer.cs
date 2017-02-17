@@ -70,11 +70,11 @@ namespace Help_Desk_2.BackgroundJobs
             //1. FAQS
             var faqsubs = db.faqSubs();
 
-            var faqSubsLinq = from faq in db.KnowledgeFAQs
-                              join wl in db.WordLists on faq
-                              where !faq.notifiedSubscriptions && faq.type == 1
+            //var faqSubsLinq = from faq in db.KnowledgeFAQs
+            //                  join wl in db.WordLists on faq
+            //                  where !faq.notifiedSubscriptions && faq.type == 1
                              
-                              select faq;
+            //                  select faq;
                                       
 
 
