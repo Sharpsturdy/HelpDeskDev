@@ -170,6 +170,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="BackgroundJobs\EmailAddresses.cs" />
     <Compile Include="BackgroundJobs\Emailer.cs" />
+    <Compile Include="Models\EmailMessageModels\FaqKbEmail.cs" />
     <Compile Include="BackgroundJobs\Mailer.cs" />
     <Compile Include="Controllers\KnowledgeBaseController.cs" />
     <Compile Include="Controllers\FAQsController.cs" />
@@ -850,7 +851,7 @@
     <Content Include="Views\Emails\General.Text.cshtml" />
     <Content Include="Views\Home\TestSend.cshtml" />
     <Content Include="Views\Ticket\TestSend.cshtml" />
-    <Content Include="Views\Emails\KB.cshtml" />
+    <Content Include="Views\Emails\KnowledgeBase.cshtml" />
     <Content Include="Views\Emails\FAQ.cshtml" />
     <Content Include="Views\Emails\Ticket.cshtml" />
     <Content Include="Views\TrashCan\Index.cshtml" />

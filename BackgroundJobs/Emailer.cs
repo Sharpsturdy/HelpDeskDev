@@ -10,6 +10,7 @@ using System.Web.Hosting;
 using System.IO;
 using System.Web.Mvc;
 using Help_Desk_2.Models.EmailMessageModels;
+using System.Web;
 
 namespace Help_Desk_2.BackgroundJobs
 {
@@ -53,6 +54,7 @@ namespace Help_Desk_2.BackgroundJobs
 
         private EmailService SetupEmailService()
         {
+
             var viewsPath = Path.GetFullPath(HostingEnvironment.MapPath(@"~/Views/Emails"));
             var engines = new ViewEngineCollection();
             engines.Add(new FileSystemRazorViewEngine(viewsPath));
@@ -226,14 +228,17 @@ namespace Help_Desk_2.BackgroundJobs
             KnowledgeFAQ kf = db.KnowledgeFAQs.Find(id); //Get FAQ or KB
 
             if (kf == null) return;
-           
-            dynamic email = new Email(kf.type == 1 ? "FAQ":"KB");
+            string articleType = kf.GetArticleTypeString();
+            var email = new FaqKbEmail(articleType);
             email.From = From;
-            email.type = mailType;
-            email.title = kf.headerText;
-            email.id = "" + kf.ID;
-            email.user = kf.Originator.displayName;
-             
+            email.Type = mailType;
+            email.Title = kf.headerText;
+            email.Id = "" + kf.ID;
+            email.User = kf.Originator.displayName;
+            email.Cc = null;
+            string baseUrl    = ConfigurationManager.AppSettings["BaseURL"];
+            email.ArticleUrl  = $"{baseUrl}/{articleType}/Details/{kf.ID}";
+
             if (mailType == "Submitted")
             {
                 var approvers = from x in db.UserProfiles
@@ -258,7 +263,7 @@ namespace Help_Desk_2.BackgroundJobs
                 email.Subject = (kf.type == 1 ? "FAQ" : "Knowledgebase") + " article approved!";
             }
 
-            email.Send();
+            _emailServcie.Send(email);
         }
 
         /********

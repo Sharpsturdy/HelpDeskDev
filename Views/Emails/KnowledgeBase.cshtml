@@ -1,5 +1,4 @@
-﻿@using System.Web.Mvc;
-@model Help_Desk_2.Models.EmailMessageModels.FaqKbEmail
+﻿@model Help_Desk_2.Models.EmailMessageModels.FaqKbEmail
 From: @Model.From
 To: @Model.To
 @if (!string.IsNullOrEmpty(Model.Cc))
@@ -13,8 +12,8 @@ Content-Type: text/html; charset=utf-8
 <body>
     @if (Model.Type == "Submitted")
     {
-        <p>Hi FAQ Approvers,</p>
-            <p>A new FAQ article <strong>@Model.Title</strong> has been submitted for your consideration.</p>
+        <p>Hi Knowledgebase Approvers,</p>
+            <p>A new Knowledgebase article <strong>@Model.Title</strong> has been submitted for your consideration.</p>
             <p>
                 You can access this article at
                 <a href="@Model.ArticleUrl">Link</a>
@@ -23,13 +22,12 @@ Content-Type: text/html; charset=utf-8
     else if (Model.Type == "Approved")
     {
         <p>Hi @Model.User,</p>
-            <p>Your FAQ article <strong>@Model.Title</strong> has been approved!</p>
+            <p>Your Knowledgebase article <strong>@Model.Title</strong> has been approved!</p>
             <p>
                 You can access this article at
                 <a href="@Model.ArticleUrl">Link</a>
             </p>
     }
     <p><b>System Message</b></p>
-
 </body>
 </html>

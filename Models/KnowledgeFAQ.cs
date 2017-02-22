@@ -123,8 +123,20 @@ namespace Help_Desk_2.Models
             }
             set { expertAreas = value; }
         }
-        
-        
+
+
+        public string GetArticleTypeString()
+        {
+            switch (type)
+            {
+                case 1:
+                    return "FAQ";
+                case 2:
+                    return "KnowledgeBase";
+                default: 
+                    throw new Exception($"Unexpected KnowledgeFAQ article type: {type}");
+            }
+        }
 
         //read-only faq approverID
 
