@@ -1,30 +1,31 @@
 ﻿@using System.Collections.Generic;
-@using Help_Desk_2.Models
-From: @Html.Raw(ViewBag.From)
-To: @ViewBag.To
-Subject: @ViewBag.Subject
+@using System.Web.Mvc;
+@model Help_Desk_2.Models.EmailMessageModels.SubscriptionsEmail
+
+From: @Model.From
+To: @Model.To
+Subject: @Model.Subject
 Content-Type: text/html; charset=utf-8
 
 <html>
     <body>
-        <p>Hi @ViewBag.UserName,</p>
-        <p>Here is the latest feed from your @ViewBag.Type subscriptions</p>
+        <p>Hi @Model.UserName,</p>
+        <p>Here is the latest feed from your @Model.Type subscriptions</p>
         <p></p>
-        @{
-            var baseURL = System.Configuration.ConfigurationManager.AppSettings["BaseURL"];
+        
             
-            var link = "";
-            foreach (Subscription item in ViewBag.Subscribtions)
+            
+            @foreach (var item in Model.Subscribtions)
             {
-                link = baseURL + Url.Action("Details", ViewBag.Type, new { @id = item.FaqId });
+                string link = string.Format("{0}/{1}/Details/{2}", Model.BaseURL, Model.Type, item.FaqId);
                 <p>
                     <a href="@link">
                         @item.FaqHeader
                     </a><br/>
                     <span style="color: #ccc; font-size:90%">@item.Date.ToShortDateString() / Author: @item.OriginatorName</span>
-                </p>
+                </p>                
             }
-        }
+        
                  
         <p></p>
         <p><b>System Message</b></p>

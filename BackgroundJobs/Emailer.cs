@@ -6,6 +6,10 @@ using Help_Desk_2.Models;
 using System.Configuration;
 using System.Collections;
 using System.Collections.Generic;
+using System.Web.Hosting;
+using System.IO;
+using System.Web.Mvc;
+using Help_Desk_2.Models.EmailMessageModels;
 
 namespace Help_Desk_2.BackgroundJobs
 {
@@ -22,22 +26,37 @@ namespace Help_Desk_2.BackgroundJobs
     public class Emailer
     {
 
-        private HelpDeskContext db;
-
-        private string From;
+        private readonly HelpDeskContext db;
+        private readonly EmailService _emailServcie;
+        private string From
+        {
+            get
+            {
+                string tmp = ConfigurationManager.AppSettings["FromAddress"];
+                if (string.IsNullOrEmpty(tmp?.Trim()))
+                {
+                    return "helpdesk@renold.com";
+                }
+                else
+                {
+                    return tmp.Trim();
+                }
+            }
+        }
 
         public Emailer()
         {
             db = new HelpDeskContext();
-        
-            string tmp = ConfigurationManager.AppSettings["FromAddress"];
-            if (string.IsNullOrEmpty(tmp?.Trim()))
-            {
-                From = "helpdesk@renold.com";
-            } else
-            {
-                From = tmp.Trim();
-            }
+            _emailServcie = SetupEmailService();    
+
+        }
+
+        private EmailService SetupEmailService()
+        {
+            var viewsPath = Path.GetFullPath(HostingEnvironment.MapPath(@"~/Views/Emails"));
+            var engines = new ViewEngineCollection();
+            engines.Add(new FileSystemRazorViewEngine(viewsPath));
+            return new EmailService(engines);
         }
 
         public void sendNotification1()
@@ -51,11 +70,12 @@ namespace Help_Desk_2.BackgroundJobs
 
         public void sendNotification()
         {
-            dynamic email = new Email("Test");
+            var email = new TestEmail();
             email.To = EmailAddresses.DeveloperEmail;
             email.From = EmailAddresses.FromNoReplayEmail;
-            email.Message = "DB.GetRandomLolcatLink()";
-            email.Send();
+            email.Message = "Hello there!";
+           
+           _emailServcie.Send(email);
         }
 
         public void sendSubscriptions()
@@ -139,14 +159,15 @@ namespace Help_Desk_2.BackgroundJobs
 
         private void _sendSubsToUser(string type, Subscriber subscriber, IEnumerable<Subscription> subscriptions)
         {
-            dynamic email1 = new Email("Subscriptions");
-            email1.From = From;
-            email1.To = subscriber.EmailAddress;
-            email1.UserName = $"{subscriber.UserFirstName} {subscriber.UserSurName}";
-            email1.Type = type;
-            email1.Subject = type + " Subscriptions feed";
-            email1.Subscribtions = subscriptions;
-            email1.Send();
+            var subscriptionEmail = new SubscriptionsEmail();
+            subscriptionEmail.From = From;
+            subscriptionEmail.To = subscriber.EmailAddress;
+            subscriptionEmail.UserName = $"{subscriber.UserFirstName} {subscriber.UserSurName}";
+            subscriptionEmail.Type = type;
+            subscriptionEmail.Subject = type + " Subscriptions feed";
+            subscriptionEmail.Subscribtions = subscriptions;
+            subscriptionEmail.BaseURL = ConfigurationManager.AppSettings["BaseURL"];
+            _emailServcie.Send(subscriptionEmail);
         }
 
         public void sendTicketNotification(string mailType, int id)

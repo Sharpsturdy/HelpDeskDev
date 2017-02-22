@@ -35,7 +35,7 @@ namespace Help_Desk_2
 
             app.UseHangfireServer();
 
-            RecurringJob.AddOrUpdate("SubscriptionNotification", () => new Emailer().sendSubscriptions(), "*/5 * * * *");
+           RecurringJob.AddOrUpdate("SubscriptionNotification", () => new Emailer().sendSubscriptions(), "*/5 * * * *");
         }
     }
 }

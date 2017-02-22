@@ -101,8 +101,8 @@
       <HintPath>packages\Postal.Mvc5.1.2.0\lib\net45\Postal.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="RazorEngine, Version=3.4.1.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
-      <HintPath>packages\RazorEngine.3.4.1\lib\net45\RazorEngine.dll</HintPath>
+    <Reference Include="RazorEngine, Version=3.9.3.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
+      <HintPath>packages\RazorEngine.3.9.3\lib\net45\RazorEngine.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -196,9 +196,11 @@
       <DependentUpon>201702161209304_AddedNotifiedSubscription.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Attachment.cs" />
+    <Compile Include="Models\EmailMessageModels\SubscriptionsEmail.cs" />
     <Compile Include="Models\News.cs" />
     <Compile Include="Models\AuditTrail.cs" />
     <Compile Include="Models\spTicket.cs" />
+    <Compile Include="Models\EmailMessageModels\TestEmail.cs" />
     <Compile Include="Models\TicketsKPI.cs" />
     <Compile Include="Subscriptions.cs" />
     <Compile Include="Startup.cs" />
