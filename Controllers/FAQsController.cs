@@ -292,10 +292,10 @@ namespace Help_Desk_2.Controllers
         {
             string userName = AllSorts.getUserID();
             var faqs = from m in db.KnowledgeFAQs
-                       where (m.type == 1 && m.suggest)
+                       where (m.type == 1 && m.originatorID.ToString()==userName)
                        select m;
 
-            faqs = faqs.Where(s => s.originatorID.ToString() == userName);
+            //faqs = faqs.Where(s => s.originatorID.ToString() == userName);
             
             int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
             return View("Index", faqs.OrderByDescending(m => m.dateComposed).ToPagedList(currentPageIndex, AllSorts.pageSize));
