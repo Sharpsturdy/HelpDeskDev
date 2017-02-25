@@ -26,8 +26,8 @@ namespace Help_Desk_2.Controllers
 
         public ActionResult OpenAssigned()
         {
-            var ticketKPIs = db.TicketKPIs.Where(m => ((DateTime)m.dateCompleted == null && ((DateTime)m.lastAssigned != null)));
-            
+            var ticketKPIs = db.TicketKPIs.Where(m => (!m.dateCompleted.HasValue && m.lastAssigned.HasValue));
+
             if (ticketKPIs.Count() > 0)
             {
                 ViewBag.OpenAssignedTotal = ticketKPIs.Count();
@@ -51,9 +51,11 @@ namespace Help_Desk_2.Controllers
 
         public ActionResult YearToDateKPI()
         {
+            Func<TicketsKPI, bool> selectFunc = (t) => (t.dateSubmitted?.Year == DateTime.Now.Year)
+                                                || (t.dateCompleted?.Year == DateTime.Now.Year)
+                                                || !t.dateCompleted.HasValue;
 
-            
-            var ticketKPIs = db.TicketKPIs.Where(m => ((DateTime)m.dateSubmitted).Year == DateTime.Now.Year);
+            var ticketKPIs = db.TicketKPIs.Where(selectFunc);
             ViewBag.YTDTotal = ticketKPIs.Count();
 
             
@@ -73,7 +75,10 @@ namespace Help_Desk_2.Controllers
 
         public ActionResult MonthToDateKPI()
         {
-            var ticketKPIs = db.TicketKPIs.Where(m => ((DateTime)m.dateSubmitted).Month == DateTime.Now.Month);
+            Func<TicketsKPI, bool> selectFunc = (t) => (t.dateSubmitted?.Month == DateTime.Now.Month)
+                                                || (t.dateCompleted?.Month == DateTime.Now.Month)
+                                                || !t.dateCompleted.HasValue;
+            var ticketKPIs = db.TicketKPIs.Where(selectFunc);
             ViewBag.MTDTotal = ticketKPIs.Count();
             List<kpidates> kpiDates = new List<kpidates>();
 
@@ -101,8 +106,11 @@ namespace Help_Desk_2.Controllers
             if (month == null || month == 0)
             { month = DateTime.Now.Month; }
 
-
-            var ticketKPIs = db.TicketKPIs.Where(m => ((DateTime)m.dateSubmitted).Month == month);
+            Func<TicketsKPI, bool> selectFunc = (t) => (t.dateSubmitted?.Month == month)
+                                               || (t.dateCompleted?.Month == month)
+                                               || !t.dateCompleted.HasValue;
+            
+            var ticketKPIs = db.TicketKPIs.Where(selectFunc);
             
             if (user != null && user != "")
             {
@@ -139,8 +147,11 @@ namespace Help_Desk_2.Controllers
             if (year == null || year == 0)
             { year = DateTime.Now.Year; }
 
+            Func<TicketsKPI, bool> selectFunc = (t) => (t.dateSubmitted?.Year == year)
+                                              || (t.dateCompleted?.Year == year)
+                                              || !t.dateCompleted.HasValue;
 
-            var ticketKPIs = db.TicketKPIs.Where(m => ((DateTime)m.dateSubmitted).Year == year);
+            var ticketKPIs = db.TicketKPIs.Where(selectFunc);
 
             if (user != null && user != "")
             {
@@ -157,7 +168,6 @@ namespace Help_Desk_2.Controllers
                 {
                     kpiDates.Add(new kpidates { _stoa = kpi.stoa, _stoc = kpi.TotalDaysToDate, _atoc = kpi.FromLastAssignedDays });
                 }
-
 
                 ViewBag.YTDAVGstoa = Math.Round(kpiDates.Average(s => s._stoa), 0);
                 //List<int> Liststoa = ticketKPIs.s
