@@ -81,13 +81,10 @@ namespace Help_Desk_2.Controllers
             var ticketKPIs = db.TicketKPIs.Where(selectFunc);
             ViewBag.MTDTotal = ticketKPIs.Count();
             List<kpidates> kpiDates = new List<kpidates>();
-
             foreach (TicketsKPI kpi in ticketKPIs)
             {
                 kpiDates.Add(new kpidates { _stoa = kpi.stoa, _stoc = kpi.TotalDaysToDate, _atoc = kpi.FromLastAssignedDays });
             }
-
-
             ViewBag.MTDAVGstoa = Math.Round(kpiDates.Average(s => s._stoa), 0);
             //List<int> Liststoa = ticketKPIs.s
             ViewBag.MTDAVGstoc = Math.Round(kpiDates.Average(s => s._stoc), 0);
