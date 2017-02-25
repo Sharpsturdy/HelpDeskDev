@@ -11,38 +11,7 @@
     <h2 class="title">@ViewBag.Title</h2>
 </header>
 
-
-<table id="kpi" style="margin:15px" class="table table-bordered table-hover table-condensed table-view">
-    <thead>
-        <tr>
-            <th>Ticket</th>
-            <th>Responsible</th>
-            <th>Submitted</th>
-            <th>Completed</th>
-            <th>Last Assigned</th>
-            <th>Submitted to Last Assigned</th>
-            <th>Last Assigned to Completed</th>
-            <th>Submitted to completed</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-           <tr>
-
-               <td>@Html.ActionLink(item.ticketID.ToString(), "Details", "Ticket", new { id = item.ID }, null)</td>
-
-                <td>@Html.DisplayFor(model => item.responsible)</td>
-                <td>@Html.DisplayFor(modelItem => item.dateSubmitted)</td>
-                <td>@Html.DisplayFor(modelItem => item.dateCompleted)</td>
-                <td>@Html.DisplayFor(modelItem => item.lastAssigned)</td>
-                <td>@Html.DisplayFor(modelItem => item.stoa)</td>
-               <td>@Html.DisplayFor(modelItem => item.atoc)</td>
-               <td>@Html.DisplayFor(modelItem => item.stoc)</td>
-            </tr>
-        } 
-    </tbody>
-</table>
+@{Html.RenderPartial("KpiTablePartial", Model);}
 
 @section Scripts {
     @{Html.RenderPartial("ReportTablesScriptPartial");}

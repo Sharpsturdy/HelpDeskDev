@@ -35,7 +35,7 @@ namespace Help_Desk_2.Controllers
 
                 foreach (TicketsKPI kpi in ticketKPIs)
                 {
-                    kpiDates.Add(new kpidates { _stoa = kpi.stoa, _stoc = kpi.stoc, _atoc = kpi.atoc });
+                    kpiDates.Add(new kpidates { _stoa = kpi.stoa, _stoc = kpi.TotalDaysToDate, _atoc = kpi.FromLastAssignedDays });
                 }
 
 
@@ -61,7 +61,7 @@ namespace Help_Desk_2.Controllers
 
             foreach (TicketsKPI kpi in ticketKPIs)
             {
-                  kpiDates.Add(new kpidates { _stoa = kpi.stoa, _stoc = kpi.stoc, _atoc = kpi.atoc });
+                  kpiDates.Add(new kpidates { _stoa = kpi.stoa, _stoc = kpi.TotalDaysToDate, _atoc = kpi.FromLastAssignedDays });
             }
            
             ViewBag.YTDAVGstoa = Math.Round(kpiDates.Average(s => s._stoa),0);
@@ -79,7 +79,7 @@ namespace Help_Desk_2.Controllers
 
             foreach (TicketsKPI kpi in ticketKPIs)
             {
-                kpiDates.Add(new kpidates { _stoa = kpi.stoa, _stoc = kpi.stoc, _atoc = kpi.atoc });
+                kpiDates.Add(new kpidates { _stoa = kpi.stoa, _stoc = kpi.TotalDaysToDate, _atoc = kpi.FromLastAssignedDays });
             }
 
 
@@ -117,7 +117,7 @@ namespace Help_Desk_2.Controllers
 
                 foreach (TicketsKPI kpi in ticketKPIs)
                 {
-                    kpiDates.Add(new kpidates { _stoa = kpi.stoa, _stoc = kpi.stoc, _atoc = kpi.atoc });
+                    kpiDates.Add(new kpidates { _stoa = kpi.stoa, _stoc = kpi.TotalDaysToDate, _atoc = kpi.FromLastAssignedDays });
                 }
 
 
@@ -155,7 +155,7 @@ namespace Help_Desk_2.Controllers
 
                 foreach (TicketsKPI kpi in ticketKPIs)
                 {
-                    kpiDates.Add(new kpidates { _stoa = kpi.stoa, _stoc = kpi.stoc, _atoc = kpi.atoc });
+                    kpiDates.Add(new kpidates { _stoa = kpi.stoa, _stoc = kpi.TotalDaysToDate, _atoc = kpi.FromLastAssignedDays });
                 }
 
 

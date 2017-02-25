@@ -1,0 +1,34 @@
+﻿@using Help_Desk_2.Models
+@model IEnumerable<TicketsKPI>
+
+<table id="kpi" style="margin:15px" class="table table-bordered table-hover table-condensed table-view">
+    <thead>
+        <tr>
+            <th>Ticket</th>
+            <th>Responsible</th>
+            <th>Submitted</th>
+            <th>Completed</th>
+            <th>Last Assigned</th>
+            <th>Submitted to Last Assigned</th>
+            <th>From last Assigned</th>
+            <th>Total Days to date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>@Html.ActionLink(item.ticketID.ToString(), "Details", "Ticket", new { id = item.ID }, null)</td>
+
+                <td>@Html.DisplayFor(model => item.responsible)</td>
+                <td>@Html.DisplayFor(modelItem => item.dateSubmitted)</td>
+                <td>@Html.DisplayFor(modelItem => item.DateCompletedForTable)</td>
+                <td>@Html.DisplayFor(modelItem => item.lastAssigned)</td>
+                <td>@Html.DisplayFor(modelItem => item.stoa)</td>
+                <td>@Html.DisplayFor(modelItem => item.FromLastAssignedDays)</td>
+                <td>@Html.DisplayFor(modelItem => item.TotalDaysToDate)</td>
+            </tr>
+        }
+    </tbody>
+</table>

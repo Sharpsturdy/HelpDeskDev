@@ -870,6 +870,7 @@
     <Content Include="Views\Reports\UserYearToDateKPI.cshtml" />
     <Content Include="Views\Reports\OpenAssigned.cshtml" />
     <Content Include="Views\Reports\ReportTablesScriptPartial.cshtml" />
+    <Content Include="Views\Reports\KpiTablePartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Files\" />

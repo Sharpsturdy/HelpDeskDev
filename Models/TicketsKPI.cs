@@ -48,15 +48,15 @@ namespace Help_Desk_2.Models
 
         [NotMapped]
         [Display(Name = "AssignedToCompleted")]
-        public int atoc
+        public int FromLastAssignedDays
         {
             get
             {
-                if (dateCompleted != null && lastAssigned != null)
+                DateTime reportedCompletedDate = dateCompleted ?? DateTime.Now;
+                if (lastAssigned.HasValue)
                 {
-                    //DateTime la = (DateTime)lastAssigned;
-                    TimeSpan difference = (DateTime)dateCompleted - (DateTime)lastAssigned;
-                    var days = difference.Days;
+                    TimeSpan difference = reportedCompletedDate - lastAssigned.Value;
+                    int days = difference.Days;
                     return days;
                 }
                 else
@@ -72,15 +72,15 @@ namespace Help_Desk_2.Models
 
         [NotMapped]
         [Display(Name = "SubmittedToCompleted")]
-        public int stoc
+        public int TotalDaysToDate
         {
             get
             {
-                if (dateSubmitted != null && dateCompleted != null)
+                DateTime reportedCompletedDate = dateCompleted ?? DateTime.Now;
+                if (dateSubmitted.HasValue)
                 {
-                    //DateTime la = (DateTime)lastAssigned;
-                    TimeSpan difference = (DateTime)dateCompleted - (DateTime)dateSubmitted;
-                    var days = difference.Days;
+                    TimeSpan difference = reportedCompletedDate - dateSubmitted.Value;
+                    int days = difference.Days;
                     return days;
                 }
                 else
@@ -92,6 +92,24 @@ namespace Help_Desk_2.Models
             }
 
 
+        }
+
+        [NotMapped]
+        [Display(Name = "DateCompleted"), DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:d}")]
+        public DateTime DateCompletedForTable
+        {
+            get
+            {
+                if (dateCompleted.HasValue)
+                {
+                    return dateCompleted.Value;
+                }
+                else
+                {
+                    return DateTime.Now;
+
+                }
+            }
         }
     }
 }
