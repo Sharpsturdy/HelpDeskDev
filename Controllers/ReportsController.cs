@@ -9,6 +9,7 @@ using System.Web.Mvc;
 
 namespace Help_Desk_2.Controllers
 {
+    [CustomAuthorise(Roles =UserRoles.DomainAdminAndSuperUserRoles)]
     public class ReportsController : Controller
     {
 

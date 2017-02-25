@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
@@ -19,6 +20,13 @@ namespace Help_Desk_2
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
 		}
+
+        protected void Application_BeginRequest()
+        {
+            var gbCultureInfo = System.Globalization.CultureInfo.GetCultureInfo("en-GB");
+            Thread.CurrentThread.CurrentCulture = gbCultureInfo;
+            Thread.CurrentThread.CurrentUICulture = gbCultureInfo;
+        }
 
         
 
