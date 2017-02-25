@@ -1,15 +1,22 @@
-﻿
-    @Scripts.Render("~/bundles/jqueryval")
-    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
-    <script src="//cdn.datatables.net/plug-ins/1.10.13/sorting/datetime-moment.js"></script>
-    <script type="text/javascript" charset="utf8">
-         $(document).ready(function () {
-            $.fn.dataTable.moment("DD/MM/YYYY");
-            $('#kpi').DataTable({
-                "lengthChange": false,
-                "searching": false,
-                "order": [[0, "asc"]]
+﻿@using Help_Desk_2.Models;
+@model ReportTypeEnum?
 
-            });
-        });
-    </script>
+@Scripts.Render("~/bundles/jqueryval")
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+<script src="//cdn.datatables.net/plug-ins/1.10.13/sorting/datetime-moment.js"></script>
+<script type="text/javascript" charset="utf8">
+    $(document).ready(function () {
+        $.fn.dataTable.moment("DD/MM/YYYY");
+        var tableConfig = {
+            "lengthChange": false,
+            "searching": false,
+            "order": [[0, "asc"]]
+
+        };
+        @if (Model==ReportTypeEnum.Summary)
+        {
+                @:tableConfig.order[0][1] = "desc";
+        }
+        $('#kpi').DataTable(tableConfig);
+    });
+</script>

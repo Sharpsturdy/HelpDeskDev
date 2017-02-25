@@ -200,6 +200,7 @@
     <Compile Include="Models\EmailMessageModels\SubscriptionsEmail.cs" />
     <Compile Include="Models\News.cs" />
     <Compile Include="Models\AuditTrail.cs" />
+    <Compile Include="Models\ReportTypeEnum.cs" />
     <Compile Include="Models\spTicket.cs" />
     <Compile Include="Models\EmailMessageModels\TestEmail.cs" />
     <Compile Include="Models\TicketsKPI.cs" />
