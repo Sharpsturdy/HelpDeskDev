@@ -13,7 +13,7 @@ namespace Help_Desk_2.Models
 {
     public class KnowledgeFAQ
     {
-        public int ID { get; set;  }
+        public int ID { get; set; }
 
         [Display(Name = "Created on:"), DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:d}")]
         [DataType(DataType.DateTime)]
@@ -22,7 +22,7 @@ namespace Help_Desk_2.Models
 
         [Display(Name = "Expiries on:"), DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:d}")]
         [DataType(DataType.DateTime)]
-        public DateTime? expiryDate { get; set;  }
+        public DateTime? expiryDate { get; set; }
 
         [Display(Name = "Submitted on:"), DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:d}")]
         [DataType(DataType.DateTime)]
@@ -37,8 +37,13 @@ namespace Help_Desk_2.Models
         [Required]
         [AllowHtml]
         [Display(Name = "Detailed description")]
-        [DataType(DataType.MultilineText)]       
+        [DataType(DataType.MultilineText)]
         public string description { get; set; }
+
+        [AllowHtml]
+        [Display(Name = "Notes")]
+        [DataType(DataType.MultilineText)]
+        public string notes { get; set; }
 
         [ForeignKey("Originator")]
         public Guid originatorID { get; set; } //AD Username
@@ -81,7 +86,7 @@ namespace Help_Desk_2.Models
 
         public byte type { get; set; } //type => 1=FAQs, 2=Knowledge Base
 
-        public int archiveID { get; set;  }
+        public int archiveID { get; set; }
 
         [NotMapped]
         [Display(Name = "Status")]
@@ -89,11 +94,11 @@ namespace Help_Desk_2.Models
         {
             get
             {
-                
+
                 if (deleted) return Statuses.Deleted;
                 if (archived) return Statuses.Archived;
                 if (published) return Statuses.Published;
-                
+
                 if (dateSubmitted != null) return Statuses.Submitted;
 
                 return Statuses.Draft;
@@ -106,8 +111,10 @@ namespace Help_Desk_2.Models
 
         [NotMapped]
         [Display(Name = "Keywords", Prompt = "Select keywords from list")]
-        public IEnumerable<WordList> keywords {
-            get {
+        public IEnumerable<WordList> keywords
+        {
+            get
+            {
                 return wordList.Where(x => x.type == 1 && !x.deleted);
             }
             set { keywords = value; }
@@ -133,7 +140,7 @@ namespace Help_Desk_2.Models
                     return "FAQ";
                 case 2:
                     return "KnowledgeBase";
-                default: 
+                default:
                     throw new Exception($"Unexpected KnowledgeFAQ article type: {type}");
             }
         }

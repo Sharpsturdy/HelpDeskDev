@@ -170,6 +170,10 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="BackgroundJobs\EmailAddresses.cs" />
     <Compile Include="BackgroundJobs\Emailer.cs" />
+    <Compile Include="Migrations\201703050756039_AddedNotesToKnowladgeFaq.cs" />
+    <Compile Include="Migrations\201703050756039_AddedNotesToKnowladgeFaq.Designer.cs">
+      <DependentUpon>201703050756039_AddedNotesToKnowladgeFaq.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\EmailMessageModels\FaqKbEmail.cs" />
     <Compile Include="BackgroundJobs\Mailer.cs" />
     <Compile Include="Controllers\KnowledgeBaseController.cs" />
@@ -894,6 +898,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702161209304_AddedNotifiedSubscription.resx">
       <DependentUpon>201702161209304_AddedNotifiedSubscription.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703050756039_AddedNotesToKnowladgeFaq.resx">
+      <DependentUpon>201703050756039_AddedNotesToKnowladgeFaq.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
