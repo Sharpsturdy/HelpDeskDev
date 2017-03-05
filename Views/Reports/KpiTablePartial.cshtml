@@ -1,5 +1,8 @@
 ﻿@using Help_Desk_2.Models
 @model IEnumerable<TicketsKPI>
+    @{ 
+        DateTime reportDate = (DateTime)ViewBag.ReportDate;
+    }
 
 <table id="kpi" style="margin:15px" class="table table-bordered table-hover table-condensed table-view">
     <thead>
@@ -26,8 +29,8 @@
                 <td>@Html.DisplayFor(modelItem => item.DateCompletedForTable)</td>
                 <td>@Html.DisplayFor(modelItem => item.lastAssigned)</td>
                 <td>@Html.DisplayFor(modelItem => item.stoa)</td>
-                <td>@Html.DisplayFor(modelItem => item.FromLastAssignedDays)</td>
-                <td>@Html.DisplayFor(modelItem => item.TotalDaysToDate)</td>
+                <td>@item.FromLastAssignedDays(reportDate)</td>
+                <td>@item.TotalDaysToDate(reportDate)</td>
             </tr>
         }
     </tbody>

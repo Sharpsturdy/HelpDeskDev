@@ -46,13 +46,9 @@ namespace Help_Desk_2.Models
 
         }
 
-        [NotMapped]
-        [Display(Name = "AssignedToCompleted")]
-        public int FromLastAssignedDays
+        public int FromLastAssignedDays(DateTime reportDate)
         {
-            get
-            {
-                DateTime reportedCompletedDate = dateCompleted ?? DateTime.Now;
+                DateTime reportedCompletedDate = dateCompleted ?? reportDate;
                 if (lastAssigned.HasValue)
                 {
                     TimeSpan difference = reportedCompletedDate - lastAssigned.Value;
@@ -64,34 +60,22 @@ namespace Help_Desk_2.Models
                     return 0;
 
                 }
-
-            }
-
-
         }
 
-        [NotMapped]
-        [Display(Name = "SubmittedToCompleted")]
-        public int TotalDaysToDate
+        public int TotalDaysToDate(DateTime tillDate)
         {
-            get
+            DateTime reportedCompletedDate = dateCompleted ?? tillDate;
+            if (dateSubmitted.HasValue)
             {
-                DateTime reportedCompletedDate = dateCompleted ?? DateTime.Now;
-                if (dateSubmitted.HasValue)
-                {
-                    TimeSpan difference = reportedCompletedDate - dateSubmitted.Value;
-                    int days = difference.Days;
-                    return days;
-                }
-                else
-                {
-                    return 0;
-
-                }
+                TimeSpan difference = reportedCompletedDate - dateSubmitted.Value;
+                int days = difference.Days;
+                return days;
+            }
+            else
+            {
+                return 0;
 
             }
-
-
         }
 
         [NotMapped]

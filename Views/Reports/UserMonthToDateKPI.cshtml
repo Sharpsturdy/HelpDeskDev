@@ -22,7 +22,14 @@
              new SelectListItem {Value = "12", Text = "December" }
     }, "Value", "Text");
 
-   
+    ViewBag.Status = new SelectList(new List<SelectListItem>
+    {
+        new SelectListItem {Value = "3", Text =  TicketsKpiStatus.All.ToString() },
+        new SelectListItem {Value = "2", Text = TicketsKpiStatus.Closed.ToString() },
+        new SelectListItem {Value = "1", Text = TicketsKpiStatus.Open.ToString() },
+    }, "Value", "Text");
+
+
 }
 
 
@@ -36,11 +43,19 @@
     <div class="form-group">
         <label for="Keywords" style="padding:5px;padding-right:5px">Responsible : </label>
         @Html.DropDownList("user", ViewBag.User as SelectList, "All", new { @class = "form-control", onchange = "this.form.submit();" })
- </div>
-        <div class="form-group">
-            <label for="searchType">Month : </label>
-            @Html.DropDownList("month", (IEnumerable<SelectListItem>)ViewBag.Month, new { @class = "form-control", onchange = "this.form.submit();" })
-        </div>
+    </div>
+    <div class="form-group">
+        <label for="searchType">Year : </label>
+        @Html.DropDownList("year", (IEnumerable<SelectListItem>)ViewBag.Years, new { @class = "form-control", onchange = "this.form.submit();" })
+    </div>
+    <div class="form-group">
+        <label for="searchType">Month : </label>
+        @Html.DropDownList("month", (IEnumerable<SelectListItem>)ViewBag.Month, new { @class = "form-control", onchange = "this.form.submit();" })
+    </div>
+    <div class="form-group">
+        <label for="searchType">Status : </label>
+        @Html.DropDownList("status", (IEnumerable<SelectListItem>)ViewBag.Status, new { @class = "form-control", onchange = "this.form.submit();" })
+    </div>
            
    
 

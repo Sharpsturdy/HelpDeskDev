@@ -208,6 +208,7 @@
     <Compile Include="Models\spTicket.cs" />
     <Compile Include="Models\EmailMessageModels\TestEmail.cs" />
     <Compile Include="Models\TicketsKPI.cs" />
+    <Compile Include="Models\TicketsKpiStatus.cs" />
     <Compile Include="Subscriptions.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utilities\AllSorts.cs" />
