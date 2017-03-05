@@ -166,7 +166,7 @@ namespace Help_Desk_2.Controllers
         // POST: KB/New
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult New([Bind(Include = "type,headerText,description,links,archiveID")] KnowledgeFAQ kb)
+        public ActionResult New([Bind(Include = "type,headerText,description,links,archiveID,notes")] KnowledgeFAQ kb)
         {
            if (ModelState.IsValid)
             {
@@ -265,7 +265,7 @@ namespace Help_Desk_2.Controllers
 
         // POST: KB/Edit/5
         [HttpPost]
-        public ActionResult Edit([Bind(Include = "ID,originatorID,expiryDate,dateComposed,dateSubmitted,type,headerText,description,links,deleteField,published,archiveID")] KnowledgeFAQ kb)
+        public ActionResult Edit([Bind(Include = "ID,originatorID,expiryDate,dateComposed,dateSubmitted,type,headerText,description,links,deleteField,published,archiveID,notes")] KnowledgeFAQ kb)
         {
             if (ModelState.IsValid)
             {
@@ -347,9 +347,14 @@ namespace Help_Desk_2.Controllers
         {
             try
             {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
+                KnowledgeFAQ article = db.KnowledgeFAQs.Find(id);
+                if (article != null)
+                {
+                    article.deleted = true;
+                    db.SaveChanges();
+                    return RedirectToAction("Admin");
+                }
+                return RedirectToAction("Edit", new { id = id });
             }
             catch
             {
