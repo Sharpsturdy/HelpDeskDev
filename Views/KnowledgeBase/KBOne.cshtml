@@ -3,8 +3,15 @@
 @model KnowledgeFAQ
 
 @{
-    AllSorts.setNavProperties(ViewBag, true); //This is a single item page
+      AllSorts.setNavProperties(ViewBag, true); //This is a single item page
 
+    /*
+      ViewBag.mode = 0 New KB Article  
+      ViewBag.mode = 1 Edit KB Article 
+      ViewBag.mode = 2 Details KB Article
+    */
+    
+    
     //Force read-only for archived articles
     if (ViewBag.mode == 1 && Model.archived) { ViewBag.mode = 2; };
     if (ViewBag.mode == 0)
@@ -93,7 +100,7 @@
                         @Html.DisplayNameFor(model => model.headerText)
                     </div>
                     <div class="panel-body1">
-                        @if (Model.published)
+                        @if (ViewBag.mode == 1 && Model.published)
                         {
                             @Html.Raw(Model.headerText)
                             @Html.HiddenFor(model => model.headerText)
@@ -111,7 +118,7 @@
                     @Html.DisplayNameFor(model => model.description)
                 </div>
                 <div class="panel-body1">
-                    @if (ViewBag.mode == 2 || Model.published)
+                    @if (ViewBag.mode == 2 || (ViewBag.mode == 1 && Model.published))
                     {
                         @Html.Raw(Model.description)
                         @Html.HiddenFor(model => model.description)
@@ -129,7 +136,7 @@
                     @Html.DisplayNameFor(model => model.notes)
                 </div>
                 <div class="panel-body1">
-                    @if (ViewBag.mode == 2 || Model.published)
+                    @if (ViewBag.mode == 2 || (ViewBag.mode == 1 && Model.published))
                     {
                         @Html.Raw(Model.notes)
                     }
@@ -311,19 +318,20 @@
                             if (Model == null || Model.dateSubmitted == null)
                             {
                                 <input type="submit" name="btnSubmit" value="Submit" class="btn btn-primary" title="Submit article for approval" />
-                            }
-                            if (AllSorts.UserCan("ManageKBs"))
+                          }
+                          if (AllSorts.UserCan("ManageKBs"))
+                          {
+                            if (Model != null && Model.published)
                             {
-                                if (Model != null && Model.published)
-                                {
                                     <input type="submit" name="btnUnApprove" value="UnApprove" class="btn btn-primary" />
-                                } else if (Model != null && Model.dateSubmitted != null)
-                                {
+                            }
+                            else if (Model != null && Model.dateSubmitted != null)
+                            {
                                     <input type="submit" name="btnApprove" value="Approve" class="btn btn-primary" />
                                     <button type="button" name="btnDelete" id="del-button" class="btn btn-primary">Delete</button>
-                                }
-
                             }
+
+                          }
                             <a href="@ViewBag.prevURL" title="Click to return to News home" class="btn btn-primary">@(ViewBag.mode==1? "Close": "Cancel")</a>
                         }
                     }
@@ -345,7 +353,7 @@
             if(confirm("Are you sure you want to delete this KB article?"))
             {
                 $("body").append('<form action="@Url.Action("Delete")" method="POST" id="delete-form"></form>');
-                $("#delete-form").append("<input name='id' value='@Model.ID'>");
+                $("#delete-form").append("<input name='id' value='@(Model?.ID)'>");
                 $("#delete-form").submit();
             }
         }

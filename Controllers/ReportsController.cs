@@ -157,7 +157,7 @@ namespace Help_Desk_2.Controllers
                                               || (!t.dateCompleted.HasValue && t.dateSubmitted<monthStart);
                     break;
                 case TicketsKpiStatus.Open:
-                    selectByStatusFunc = (t) => (((t.dateSubmitted?.Month == month) && (t.dateSubmitted?.Year == year)&& (t.dateCompleted?.Month!=month && t.dateCompleted?.Year != year))
+                    selectByStatusFunc = (t) => (((t.dateSubmitted?.Month == month) && (t.dateSubmitted?.Year == year) && (t.dateCompleted?.Month!=month && t.dateCompleted?.Year != year))
                                               || (!t.dateCompleted.HasValue && t.dateSubmitted < monthStart));
                     break;
                 case TicketsKpiStatus.Closed:
