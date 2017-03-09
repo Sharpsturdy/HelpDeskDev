@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Linq.Expressions;
 
 namespace Help_Desk_2.Controllers
 {
@@ -103,36 +104,43 @@ namespace Help_Desk_2.Controllers
            
 
             if (month == null || month == 0) { month = DateTime.Now.Month; }
-            if (year ==  null || year  == 0) { year  = DateTime.Now.Month; }
+            if (year ==  null || year  == 0) { year  = DateTime.Now.Year; }
             if (status == null ) { status = TicketsKpiStatus.All; }
-            
-            IEnumerable<TicketsKPI> ticketKPIs = db.TicketKPIs;
-            if (user != null && user != "")
-            {
-                ticketKPIs = db.TicketKPIs.Where(m => m.responsible == user);
-            }
-
-            ticketKPIs = SelectByStatus(ticketKPIs, status.Value, year.Value, month.Value);
 
             DateTime reportDate = GetReportDate(year.Value, month.Value);
             ViewBag.ReportDate = reportDate;
-            if (ticketKPIs.Count() > 0)
+
+            if (IsCorrectPeriodRequested(year.Value, month.Value))
             {
-                ViewBag.MTDTotal = ticketKPIs.Count();
-                List<kpidates> kpiDates = new List<kpidates>();
-
-                foreach (TicketsKPI kpi in ticketKPIs)
+                IQueryable<TicketsKPI> selectedByResponsible = string.IsNullOrEmpty(user) ? db.TicketKPIs : db.TicketKPIs.Where(m => m.responsible == user);
+                IEnumerable<TicketsKPI> ticketKPIs = SelectByStatus(selectedByResponsible, status.Value, year.Value, month.Value);
+                               
+                if (ticketKPIs.Count() > 0)
                 {
-                    kpiDates.Add(new kpidates { _stoa = kpi.stoa, _stoc = kpi.TotalDaysToDate(reportDate), _atoc = kpi.FromLastAssignedDays(reportDate) });
+                    ViewBag.MTDTotal = ticketKPIs.Count();
+                    List<kpidates> kpiDates = new List<kpidates>();
+
+                    foreach (TicketsKPI kpi in ticketKPIs)
+                    {
+                        kpiDates.Add(new kpidates { _stoa = kpi.stoa, _stoc = kpi.TotalDaysToDate(reportDate), _atoc = kpi.FromLastAssignedDays(reportDate) });
+                    }
+
+
+                    ViewBag.MTDAVGstoa = Math.Round(kpiDates.Average(s => s._stoa), 0);
+                    //List<int> Liststoa = ticketKPIs.s
+                    ViewBag.MTDAVGstoc = Math.Round(kpiDates.Average(s => s._stoc), 0);
+                    ViewBag.MTDAVGatoc = Math.Round(kpiDates.Average(s => s._atoc), 0);
                 }
-
-
-                ViewBag.MTDAVGstoa = Math.Round(kpiDates.Average(s => s._stoa), 0);
-                //List<int> Liststoa = ticketKPIs.s
-                ViewBag.MTDAVGstoc = Math.Round(kpiDates.Average(s => s._stoc), 0);
-                ViewBag.MTDAVGatoc = Math.Round(kpiDates.Average(s => s._atoc), 0);
+                return View("UserMonthToDateKPI", ticketKPIs);
             }
-            return View("UserMonthToDateKPI", ticketKPIs);
+            return View("UserMonthToDateKPI", new List<TicketsKPI>());
+        }
+
+        private bool IsCorrectPeriodRequested(int year, int month)
+        {
+            DateTime currentMonthStart = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            DateTime reportPeriodStart = new DateTime(year, month, 1);
+            return reportPeriodStart < currentMonthStart.AddMonths(1);            
         }
 
         private DateTime GetReportDate(int year, int month)
@@ -152,13 +160,29 @@ namespace Help_Desk_2.Controllers
             switch (status)
             {
                 case TicketsKpiStatus.All:
-                    selectByStatusFunc = (t) => ((t.dateSubmitted?.Month == month) && (t.dateSubmitted?.Year == year))
-                                              || ((t.dateCompleted?.Month == month) && (t.dateCompleted?.Year == year))
-                                              || (!t.dateCompleted.HasValue && t.dateSubmitted<monthStart);
+                    if (year == DateTime.Now.Year && month == DateTime.Now.Month)
+                    {
+                        selectByStatusFunc = (t) => ((t.dateSubmitted?.Month == month) && (t.dateSubmitted?.Year == year))
+                                                 || ((t.dateCompleted?.Month == month) && (t.dateCompleted?.Year == year))
+                                                 || (!t.dateCompleted.HasValue && t.dateSubmitted < monthStart);
+                    }
+                    else
+                    {
+                        selectByStatusFunc = (t) => ((t.dateSubmitted?.Month == month) && (t.dateSubmitted?.Year == year))
+                                                 || ((t.dateCompleted?.Month == month) && (t.dateCompleted?.Year == year));
+                    }
                     break;
                 case TicketsKpiStatus.Open:
-                    selectByStatusFunc = (t) => (((t.dateSubmitted?.Month == month) && (t.dateSubmitted?.Year == year) && (t.dateCompleted?.Month!=month && t.dateCompleted?.Year != year))
-                                              || (!t.dateCompleted.HasValue && t.dateSubmitted < monthStart));
+                    if (year == DateTime.Now.Year && month == DateTime.Now.Month)
+                    {
+                        selectByStatusFunc = (t) => (((t.dateSubmitted?.Month == month) && (t.dateSubmitted?.Year == year) && (t.dateCompleted?.Month != month && t.dateCompleted?.Year != year))
+                                                  || (!t.dateCompleted.HasValue && t.dateSubmitted < monthStart));
+                    }
+                    else
+                    {
+                        selectByStatusFunc = (t) => ((t.dateSubmitted?.Month == month) && (t.dateSubmitted?.Year == year) && (t.dateCompleted?.Month != month && t.dateCompleted?.Year != year));
+                                                  
+                    }
                     break;
                 case TicketsKpiStatus.Closed:
                     selectByStatusFunc = (t) => (t.dateCompleted?.Month == month) && (t.dateCompleted?.Year == year);
