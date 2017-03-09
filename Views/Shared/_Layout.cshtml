@@ -78,7 +78,7 @@
                 <li><a href="@AllSorts.getHelpFile()" target="_blank">Help</a></li>
                 @if (User.CustomIsInRole(UserRoles.DomainAdminRole) || User.CustomIsInRole(UserRoles.DomainSuperUserRole))
                 {
-                    <li>@Html.ActionLink("Tickets KPI's", "UserMonthToDateKPI", "Reports")</li>
+                    <li>@Html.ActionLink("Tickets KPI's", "Index", "Reports")</li>
                 }
             </ul>
             

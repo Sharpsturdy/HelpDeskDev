@@ -38,8 +38,9 @@
 </header>
 
  
-<form class="form-inline" action="UserMonthToDateKPI">
-   
+  @using (Html.BeginForm("Index","Reports", FormMethod.Get, new { @class= "form-inline" }))
+  {
+
     <div class="form-group">
         <label for="Keywords" style="padding:5px;padding-right:5px">Responsible : </label>
         @Html.DropDownList("user", ViewBag.User as SelectList, "All", new { @class = "form-control", onchange = "this.form.submit();" })
@@ -56,10 +57,7 @@
         <label for="searchType">Status : </label>
         @Html.DropDownList("status", (IEnumerable<SelectListItem>)ViewBag.Status, new { @class = "form-control", onchange = "this.form.submit();" })
     </div>
-           
-   
-
-</form>
+  }
 
 <h3>Summary</h3>
 

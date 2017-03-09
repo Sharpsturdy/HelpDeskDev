@@ -80,17 +80,17 @@ namespace Help_Desk_2.Models
 
         [NotMapped]
         [Display(Name = "DateCompleted"), DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:d}")]
-        public DateTime DateCompletedForTable
+        public string DateCompletedForTable
         {
             get
             {
                 if (dateCompleted.HasValue)
                 {
-                    return dateCompleted.Value;
+                    return dateCompleted.Value.ToShortDateString();
                 }
                 else
                 {
-                    return DateTime.Now;
+                    return $"{DateTime.Now.ToShortDateString()}*";
 
                 }
             }

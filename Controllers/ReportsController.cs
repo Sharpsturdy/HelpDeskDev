@@ -93,7 +93,7 @@ namespace Help_Desk_2.Controllers
         //}
 
 
-        public ActionResult UserMonthToDateKPI(string user, int? month, int? year, TicketsKpiStatus? status)
+        public ActionResult Index(string user, int? month, int? year, TicketsKpiStatus? status) //Previus acion method called UserMonthToDateKPI
         {
 
             List<UserProfile> list = db.UserProfiles.ToList();
