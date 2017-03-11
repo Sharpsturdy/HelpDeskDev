@@ -168,19 +168,21 @@ namespace Help_Desk_2.Controllers
                     }
                     else
                     {
-                        selectByStatusFunc = (t) => ((t.dateSubmitted?.Month == month) && (t.dateSubmitted?.Year == year))
-                                                 || ((t.dateCompleted?.Month == month) && (t.dateCompleted?.Year == year));
+                        selectByStatusFunc = (t) => (  ((t.dateSubmitted?.Month == month) && (t.dateSubmitted?.Year == year))
+                                                    || ((t.dateCompleted?.Month == month) && (t.dateCompleted?.Year == year)))
+                                                    && t.dateCompleted.HasValue;
                     }
                     break;
                 case TicketsKpiStatus.Open:
                     if (year == DateTime.Now.Year && month == DateTime.Now.Month)
                     {
-                        selectByStatusFunc = (t) => (((t.dateSubmitted?.Month == month) && (t.dateSubmitted?.Year == year) && (t.dateCompleted?.Month != month && t.dateCompleted?.Year != year))
+                        selectByStatusFunc = (t) => (((t.dateSubmitted?.Month == month) && (t.dateSubmitted?.Year == year) && (t.dateCompleted?.Month != month || t.dateCompleted?.Year != year))
                                                   || (!t.dateCompleted.HasValue && t.dateSubmitted < monthStart));
                     }
                     else
                     {
-                        selectByStatusFunc = (t) => ((t.dateSubmitted?.Month == month) && (t.dateSubmitted?.Year == year) && (t.dateCompleted?.Month != month && t.dateCompleted?.Year != year));
+                        selectByStatusFunc = (t) => ((t.dateSubmitted?.Month == month) && (t.dateSubmitted?.Year == year) && (t.dateCompleted?.Month != month || t.dateCompleted?.Year != year))
+                                                     && t.dateCompleted.HasValue;
                                                   
                     }
                     break;
