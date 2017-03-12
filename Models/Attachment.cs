@@ -46,7 +46,11 @@ namespace Help_Desk_2.Models
             {
 
                 FileInfo fi = new FileInfo(HttpContext.Current.Server.MapPath(filePath)); //filePath.Replace("~/",basePath));
-                return fi.Length;
+                if (fi.Exists)
+                {
+                    return fi.Length;
+                }
+                return 0;
             }
         }
 

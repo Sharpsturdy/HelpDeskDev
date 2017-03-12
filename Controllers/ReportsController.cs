@@ -186,7 +186,7 @@ namespace Help_Desk_2.Controllers
                                                   
                     }
                     break;
-                case TicketsKpiStatus.Closed:
+                case TicketsKpiStatus.Completed:
                     selectByStatusFunc = (t) => (t.dateCompleted?.Month == month) && (t.dateCompleted?.Year == year);
                     break;
                 default:
