@@ -352,7 +352,10 @@ namespace Help_Desk_2.Controllers
             {
                 return HttpNotFound();
             }
-
+            if (ticket.dateCompleted.HasValue)
+            {
+                throw new Exception("Ticket is completed and can not be edited");
+            }
             //Check access
             bool allowAccess = false;
             if (ticket.dateSubmitted == null)
@@ -368,7 +371,7 @@ namespace Help_Desk_2.Controllers
                     allowAccess = true; // go ahead
                 }
             }
-
+            
             if(!allowAccess)
                 return RedirectToAction("Unauthorized", "Home");
 
@@ -405,20 +408,21 @@ namespace Help_Desk_2.Controllers
 
                     return RedirectToAction("Index", "Home");
                 }
-
-                //Ticket ticket = db.Tickets.Find(ticketM.ID);
-                db.Entry(ticket).State = EntityState.Modified;
-
-                /***** Add File ************/
-                AllSorts.saveAttachments(ticket.ID, db, ticket.deleteField);
-
-                AllSorts.saveWordLists(Request.Form.GetValues("inkeywords"), Request.Form.GetValues("inexpertareas"), db, ticket);
-
-                if (ticket.sanityCheck != null && ticket.dateL1Release == null)
+                if (!submittedValues.Contains("btnReopen"))
                 {
-                    ticket.dateL1Release = DateTime.Now;
-                }
+                    //Ticket ticket = db.Tickets.Find(ticketM.ID);
+                    db.Entry(ticket).State = EntityState.Modified;
 
+                    /***** Add File ************/
+                    AllSorts.saveAttachments(ticket.ID, db, ticket.deleteField);
+
+                    AllSorts.saveWordLists(Request.Form.GetValues("inkeywords"), Request.Form.GetValues("inexpertareas"), db, ticket);
+
+                    if (ticket.sanityCheck != null && ticket.dateL1Release == null)
+                    {
+                        ticket.dateL1Release = DateTime.Now;
+                    }
+                }
                 //Button specific code
                 if (submittedValues.Contains("btnDelete"))
                 {
@@ -490,6 +494,23 @@ namespace Help_Desk_2.Controllers
                     auditMsg = "Ticket completed and notification sent to " + resp;
 
                     AllSorts.displayMessage = "Ticket completed successfully!";
+                }
+                else if (submittedValues.Contains("btnReopen"))
+                {
+                    var reopenedTicket = db.Tickets.Find(ticket.ID);
+                    if (reopenedTicket == null)
+                    {
+                        return HttpNotFound();
+                    }
+                    reopenedTicket.dateL2Release = DateTime.Now;
+                    reopenedTicket.dateCompleted = null;
+
+                    //Send email to assigned to let them know of this new ticket assignment
+                    Hangfire.BackgroundJob.Enqueue<Emailer>(x => x.sendTicketNotification("Assigned", reopenedTicket.ID));
+                    var resp = db.UserProfiles.Find(reopenedTicket.responsibleID).displayName;
+                    auditMsg = "Ticket reopend and notification sent to " + resp; // ticket.Responsible.displayName;
+
+                    AllSorts.displayMessage = "Ticket reopened successfully!";
                 }
 
                 if (auditMsg == "")

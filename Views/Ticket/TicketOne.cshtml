@@ -481,7 +481,16 @@ new { enctype = "multipart/form-data", id = "frmTicket" }))
 
                     if (allowAccess)
                     {
-                        @Html.ActionLink("Edit", "Edit/" + Model.ID, null, htmlAttributes: new { @title = "Click to modify document", @class = "btn btn-primary" })
+                        if (Model.dateCompleted.HasValue)
+                        {
+                            @Html.HiddenFor(m => m.ID)
+                            @Html.HiddenFor(m => m.responsibleID)
+                            <input type="submit" name="btnReopen" value="Reopen" class="btn btn-primary" />
+                        }
+                        else
+                        {
+                            @Html.ActionLink("Edit", "Edit/" + Model.ID, null, htmlAttributes: new { @title = "Click to modify document", @class = "btn btn-primary" })
+                        }
                     }
                     <a href="@ViewBag.prevURL" title="Click to return to News home" class="btn btn-primary">Close</a>
                 }
