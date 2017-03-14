@@ -29,9 +29,9 @@ namespace Help_Desk_2.Controllers
 
             var lastGoodDate = DateTime.Now.AddDays(-30);
             return View(db.UserProfiles.Where(u => !u.deleted && u.lastSignOn < lastGoodDate)
-                    .OrderByDescending(k => k.lastSignOn)
-                    .OrderBy(k => k.surName)
-                    .OrderBy(k => k.firstName)
+                    .OrderBy(k => k.lastSignOn)
+                    .ThenBy(k => k.firstName)
+                    .ThenBy(k => k.surName)
                     .ToPagedList(currentPageIndex, AllSorts.pageSize));
         }
 
