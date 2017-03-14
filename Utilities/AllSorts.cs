@@ -297,7 +297,11 @@ namespace Help_Desk_2.Utilities
 
             GSListHelper(delUsers, db, type, false);
 
-            db.SaveChanges();
+            var errors = db.GetValidationErrors();
+            if (!errors.Any())
+            {
+                db.SaveChanges();
+            }
 
         }
 

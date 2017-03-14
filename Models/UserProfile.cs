@@ -30,7 +30,7 @@ namespace Help_Desk_2.Models
         [Required]
         [Display(Name = "Email Address")]
         [DataType(DataType.EmailAddress, ErrorMessage = "Enter a valid email address")]
-        public string emailAddress { get; set; }
+        public string emailAddress { get; set; } = "Enter email address";
 
         /*[Display(Name = "Contact No.")]
         [StringLength(20, ErrorMessage = "Field cannot exceed 20 characters")]
