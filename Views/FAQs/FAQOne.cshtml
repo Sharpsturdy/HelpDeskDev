@@ -243,8 +243,10 @@
                 <div class="btn-group btn-group-custom" style="padding-bottom:15px; padding-top:15px">
                     @if (ViewBag.mode == 2)
                     {
-                        if ((Model.status == Statuses.Draft && Model.originatorID.ToString() == AllSorts.getUserID()) ||
-                            (Model.dateSubmitted != null && AllSorts.UserCan("ManageFAQs")))
+                        if (   (Model.status == Statuses.Draft && Model.originatorID.ToString() == AllSorts.getUserID())
+                            || (Model.dateSubmitted != null && AllSorts.UserCan("ManageFAQs") && !Model.published)
+                            || (Model.published && User.CustomIsInRole(UserRoles.DomainAdminRole))
+                           )
                         {
                             @Html.ActionLink("Edit", "Edit/" + Model.ID, null, htmlAttributes: new { @title = "Click to modify document", @class = "btn btn-primary" })
                         }
