@@ -137,7 +137,7 @@ namespace Help_Desk_2.Models
             switch (type)
             {
                 case 1:
-                    return "FAQ";
+                    return "FAQs";
                 case 2:
                     return "KnowledgeBase";
                 default:

@@ -228,7 +228,8 @@ namespace Help_Desk_2.BackgroundJobs
             KnowledgeFAQ kf = db.KnowledgeFAQs.Find(id); //Get FAQ or KB
 
             if (kf == null) return;
-            string articleType = kf.GetArticleTypeString();
+            string controller = kf.GetArticleTypeString();
+            string articleType = kf.type == 1 ? "FAQ" : "Knowledgebase";
             var email = new FaqKbEmail(articleType);
             email.From = From;
             email.Type = mailType;
@@ -237,7 +238,8 @@ namespace Help_Desk_2.BackgroundJobs
             email.User = kf.Originator.displayName;
             email.Cc = null;
             string baseUrl    = ConfigurationManager.AppSettings["BaseURL"];
-            email.ArticleUrl  = $"{baseUrl}/{articleType}/Details/{kf.ID}";
+            email.ArticleUrl  = $"{baseUrl}/{controller}/Details/{kf.ID}";
+            email.ArticleType = articleType;
 
             if (mailType == "Submitted")
             {
@@ -254,13 +256,13 @@ namespace Help_Desk_2.BackgroundJobs
                 }
                 email.To = string.Join(",", approvers.Select(x => x.emailAddress).ToArray()).Trim();
 
-                email.Subject = "New " + (kf.type == 1 ? "FAQ":"Knowledgebase") + " article submitted";
+                email.Subject = "New " + articleType + " article submitted";
                 
             }
             else if (mailType == "Approved")
             {
                 email.To = kf.Originator.emailAddress;
-                email.Subject = (kf.type == 1 ? "FAQ" : "Knowledgebase") + " article approved!";
+                email.Subject = articleType + " article approved!";
             }
 
             _emailServcie.Send(email);

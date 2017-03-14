@@ -14,6 +14,7 @@ namespace Help_Desk_2.Models.EmailMessageModels
         public string Title { get; set; }
         public string To { get; set; }
         public string Type { get; set; }
-        public string User { get; set; }        
+        public string User { get; set; }    
+        public string ArticleType { get; set; }    
     }
 }

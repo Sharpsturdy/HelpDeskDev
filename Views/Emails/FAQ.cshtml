@@ -14,7 +14,7 @@ Content-Type: text/html; charset=utf-8
     @if (Model.Type == "Submitted")
     {
         <p>Hi FAQ Approvers,</p>
-            <p>A new FAQ article <strong>@Model.Title</strong> has been submitted for your consideration.</p>
+            <p>A new @Model.ArticleType article <strong>@Model.Title</strong> has been submitted for your consideration.</p>
             <p>
                 You can access this article at
                 <a href="@Model.ArticleUrl">Link</a>
@@ -23,7 +23,7 @@ Content-Type: text/html; charset=utf-8
     else if (Model.Type == "Approved")
     {
         <p>Hi @Model.User,</p>
-            <p>Your FAQ article <strong>@Model.Title</strong> has been approved!</p>
+            <p>Your @Model.ArticleType article <strong>@Model.Title</strong> has been approved!</p>
             <p>
                 You can access this article at
                 <a href="@Model.ArticleUrl">Link</a>
