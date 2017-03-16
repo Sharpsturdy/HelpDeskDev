@@ -57,11 +57,11 @@ namespace Help_Desk_2.Utilities
                     {
                         /**Save to ~Content/images using real file name
                             */                            
-                        randomName = file.FileName;
+                        randomName = GetFileNameFromBrowser(file.FileName);
                         int x = 1;
                         while (System.IO.File.Exists(Path.Combine(savePath, randomName)))
                         {
-                            randomName = file.FileName + "_" + x++;
+                            randomName = GetFileNameFromBrowser(file.FileName) + "_" + x++;
                         }                            
                     }
                     else
@@ -79,7 +79,7 @@ namespace Help_Desk_2.Utilities
 
                     //Add file data to database
                     Attachment attachment = new Attachment();
-                    attachment.fileName = Path.GetFileName(attachType == 2 ? randomName: file.FileName);
+                    attachment.fileName = Path.GetFileName(attachType == 2 ? randomName: GetFileNameFromBrowser(file.FileName));
                     attachment.filePath = saveBasePath + "/" + DateTime.Now.Year + "/" + randomName;
 
                     if (attachType == 1) {
@@ -94,6 +94,12 @@ namespace Help_Desk_2.Utilities
                     db.Attachments.Add(attachment);
                 }
             }
+        }
+
+        private static string GetFileNameFromBrowser(string fileName)
+        {
+            string[] splittedFileName = fileName.Split('\\');
+            return   splittedFileName.Length == 1 ? splittedFileName[0] : splittedFileName[splittedFileName.Length - 1];
         }
 
         public static string displayMessage {
