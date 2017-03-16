@@ -368,11 +368,14 @@ namespace Help_Desk_2.Controllers
         {
             if (ModelState.IsValid)
             {
-
-                db.Entry(faq).State = EntityState.Modified;
                 var submittedValues = Request.Form.AllKeys;
                 string outMsg = "FAQ article updated successfully";
 
+                if (!submittedValues.Contains("btnUnApprove"))
+                {
+                    db.Entry(faq).State = EntityState.Modified;
+                    
+                }
                 if (submittedValues.Contains("btnApprove"))
                 {
                     faq.published = true;
@@ -383,6 +386,7 @@ namespace Help_Desk_2.Controllers
                    
                 } else if(submittedValues.Contains("btnUnApprove"))
                 {
+                    faq = db.KnowledgeFAQs.Find(faq.ID);
                     faq.published = false;
                     outMsg = "FAQ unapproved successfully!";
 

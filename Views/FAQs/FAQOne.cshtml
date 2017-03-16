@@ -4,7 +4,7 @@
 @model Help_Desk_2.Models.KnowledgeFAQ
 
 @{
-    AllSorts.setNavProperties(ViewBag, true); //This is a single item page 
+    AllSorts.setNavProperties(ViewBag, true); //This is a single item page
 
     if (ViewBag.mode == 0)
     {
@@ -24,7 +24,7 @@
     if (ViewBag.mode < 2)
     {
 
-        ViewBag.addAttachCode = "1"; //Activate attach code 
+        ViewBag.addAttachCode = "1"; //Activate attach code
         ViewBag.addTinyMCECode = "1"; //Activate tinymce code
 
     }
@@ -46,15 +46,15 @@
 <hr class="title" />
 
 
-@using (Html.BeginForm(ViewBag.mode ==0? "New": "Edit", "FAQs", FormMethod.Post,
-                 new { enctype = "multipart/form-data" }))
+@using (Html.BeginForm(ViewBag.mode == 0 ? "New" : "Edit", "FAQs", FormMethod.Post,
+                             new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
-       
+
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.Hidden("type",1) <!-- FAQs always have type == 1 -->
+        @Html.Hidden("type", 1) <!-- FAQs always have type == 1 -->
         @Html.HiddenFor(model => model.suggest)
         @Html.HiddenFor(model => model.published)
         @if (ViewBag.mode == 1)
@@ -65,7 +65,7 @@
             @Html.HiddenFor(model => model.expiryDate)
             @Html.HiddenFor(model => model.dateSubmitted)
         }
-        
+
         <div class="container1">
             @if (ViewBag.mode < 2)
             { // Edit only
@@ -90,7 +90,8 @@
                     {
                         @Html.Raw(Model.description)
                     }
-                    else {
+                    else
+                    {
                         @Html.TextAreaFor(model => model.description, new { @class = "form-control richeditor" })
                         @Html.ValidationMessageFor(model => model.description, "", new { @class = "text-danger" })
                     }
@@ -243,17 +244,24 @@
                 <div class="btn-group btn-group-custom" style="padding-bottom:15px; padding-top:15px">
                     @if (ViewBag.mode == 2)
                     {
-                        if (   (Model.status == Statuses.Draft && Model.originatorID.ToString() == AllSorts.getUserID())
+                        if ((Model.status == Statuses.Draft && Model.originatorID.ToString() == AllSorts.getUserID())
                             || (Model.dateSubmitted != null && AllSorts.UserCan("ManageFAQs") && !Model.published)
-                            || (Model.published && User.CustomIsInRole(UserRoles.DomainAdminRole))
+
                            )
                         {
                             @Html.ActionLink("Edit", "Edit/" + Model.ID, null, htmlAttributes: new { @title = "Click to modify document", @class = "btn btn-primary" })
                         }
+                        else if (Model.published && User.CustomIsInRole(UserRoles.DomainAdminRole))
+                        {
+                            @Html.HiddenFor(m=>m.ID)
+                            @Html.HiddenFor(m=>m.headerText)
+                            @Html.HiddenFor(m => m.description)
+                            <input type="submit" name="btnUnApprove" value="UnApprove" class="btn btn-primary" />
+                        }
                         <a href="@ViewBag.prevURL" title="Click to return to News home" class="btn btn-primary">Close</a>
-
                     }
-                    else {
+                    else
+                    {
 
                         <input type="submit" name="btnSave" value="Save" class="btn btn-primary" />
                         <input type="submit" name="btnSClose" value="Save & Close" class="btn btn-primary" />
@@ -279,7 +287,7 @@
         </div>
 
     </div>
-}
+                            }
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
