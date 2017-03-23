@@ -49,5 +49,15 @@ namespace System.Web.Mvc.Html
 
             return htmlHelper.ActionLink(linkText, actionName, controllerName);
         }
+
+        public static string GetImagePath(this HtmlHelper htmlHelper, string imageLink)
+        {
+            string appPath = HttpContext.Current.Request.ApplicationPath;
+            if (appPath != "/")
+            {
+                imageLink = $"{appPath}/{imageLink}";
+            }
+            return imageLink;
+        }
     }
 }
