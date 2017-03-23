@@ -265,7 +265,7 @@ namespace Help_Desk_2.Controllers
 
         // POST: KB/Edit/5
         [HttpPost]
-        public ActionResult Edit([Bind(Include = "ID,originatorID,expiryDate,dateComposed,dateSubmitted,type,headerText,description,links,deleteField,published,archiveID,notes")] KnowledgeFAQ kb)
+        public ActionResult Edit([Bind(Include = "ID,originatorID,expiryDate,dateComposed,dateSubmitted,dateUnpublished,type,headerText,description,links,deleteField,published,archiveID,notes")] KnowledgeFAQ kb)
         {
             if (ModelState.IsValid)
             {
@@ -275,18 +275,22 @@ namespace Help_Desk_2.Controllers
 
                 if (submittedValues.Contains("btnApprove"))
                 {
+                    Statuses? kbStatus = kb.status;
                     kb.published = true;
+                    kb.dateUnpublished = null;
 
                     //If being approved from expired then calculate expiry date from now instead of composed date
                     //@modifed 17/06/2016 KBs never expire 
                     // reinstated 23/11/2016
-                    kb.expiryDate = (kb.status == Statuses.Expired ? DateTime.Now : kb.dateComposed).AddDays(AllSorts.getExpiryDays(2));
+                    kb.expiryDate = (kbStatus == Statuses.Expired || kbStatus == Statuses.Unpblished ? DateTime.Now : kb.dateComposed).AddDays(AllSorts.getExpiryDays(2));
 
                     outMsg = "KB Article approved successfully";
                 }
                 else if (submittedValues.Contains("btnUnApprove"))
                 {
                     kb.published = false;
+                    kb.dateUnpublished = DateTime.Now;
+                    kb.expiryDate = null;
                     outMsg = "KB Article unapproved successfully";
                 }
                 else if (submittedValues.Contains("btnSubmit"))

@@ -28,6 +28,9 @@ namespace Help_Desk_2.Models
         [DataType(DataType.DateTime)]
         public DateTime? dateSubmitted { get; set; }
 
+        [DataType(DataType.DateTime)]
+        public DateTime? dateUnpublished { get; set; }
+
         [Required]
         [Index]
         [Display(Name = "Brief description")]
@@ -99,7 +102,14 @@ namespace Help_Desk_2.Models
                 if (archived) return Statuses.Archived;
                 if (published) return Statuses.Published;
 
-                if (dateSubmitted != null) return Statuses.Submitted;
+                if (dateUnpublished != null)
+                {
+                    return Statuses.Unpblished;
+                }
+                else if (dateSubmitted != null)
+                {
+                    return Statuses.Submitted;
+                }
 
                 return Statuses.Draft;
 
