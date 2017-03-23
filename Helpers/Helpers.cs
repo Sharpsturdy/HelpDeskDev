@@ -55,7 +55,7 @@ namespace System.Web.Mvc.Html
             string appPath = HttpContext.Current.Request.ApplicationPath;
             if (appPath != "/")
             {
-                imageLink = $"{appPath}/{imageLink}";
+                imageLink = $"{appPath}{imageLink}";
             }
             return imageLink;
         }

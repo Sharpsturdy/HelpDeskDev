@@ -16,7 +16,7 @@
         <div class="panel panel-default">
             @foreach (var t in item.Files)
             {
-                <img src="@t.filePath.Substring(1)" width="80px" class="pull-left body-image" style="margin-right:15px" />
+                <img src="@Html.GetImagePath(t.filePath.Substring(1))" width="80px" class="pull-left body-image" style="margin-right:15px" />
 
             }
             <a class="article-title" onclick="$(location).attr('href', '@Url.Action("Article", "News", new { @id = item.ID })')">
