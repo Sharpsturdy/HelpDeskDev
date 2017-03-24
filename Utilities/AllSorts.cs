@@ -61,7 +61,8 @@ namespace Help_Desk_2.Utilities
                         int x = 1;
                         while (System.IO.File.Exists(Path.Combine(savePath, randomName)))
                         {
-                            randomName = GetFileNameFromBrowser(file.FileName) + "_" + x++;
+
+                            randomName = GetUniqueFileName(randomName, x++);
                         }                            
                     }
                     else
@@ -94,6 +95,14 @@ namespace Help_Desk_2.Utilities
                     db.Attachments.Add(attachment);
                 }
             }
+        }
+
+        private static string GetUniqueFileName(string fileName, int increment)
+        {
+            string ext = Path.GetExtension(fileName);
+            string name = Path.GetFileNameWithoutExtension(fileName);
+            name = $"{name}{increment}";
+            return $"{name}{ext}";
         }
 
         private static string GetFileNameFromBrowser(string fileName)
