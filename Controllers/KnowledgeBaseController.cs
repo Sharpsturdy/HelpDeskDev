@@ -282,7 +282,7 @@ namespace Help_Desk_2.Controllers
                     //If being approved from expired then calculate expiry date from now instead of composed date
                     //@modifed 17/06/2016 KBs never expire 
                     // reinstated 23/11/2016
-                    kb.expiryDate = (kbStatus == Statuses.Expired || kbStatus == Statuses.Unpblished ? DateTime.Now : kb.dateComposed).AddDays(AllSorts.getExpiryDays(2));
+                    kb.expiryDate = (kbStatus == Statuses.Expired || kbStatus == Statuses.Unpublished ? DateTime.Now : kb.dateComposed).AddDays(AllSorts.getExpiryDays(2));
 
                     outMsg = "KB Article approved successfully";
                 }

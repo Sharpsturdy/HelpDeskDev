@@ -104,7 +104,7 @@ namespace Help_Desk_2.Models
 
                 if (dateUnpublished != null)
                 {
-                    return Statuses.Unpblished;
+                    return Statuses.Unpublished;
                 }
                 else if (dateSubmitted != null)
                 {

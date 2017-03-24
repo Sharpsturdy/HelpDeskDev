@@ -16,7 +16,7 @@ namespace Help_Desk_2.Models
 {
     public enum Statuses
     {
-        Suggestion, Draft, Submitted, Checked,Accepted,Rejected,Junked, Assigned, Returned, Unpblished, Published, OnHold, Completed, Archived, Expired, Deleted
+        Suggestion, Draft, Submitted, Checked,Accepted,Rejected,Junked, Assigned, Returned, Unpublished, Published, OnHold, Completed, Archived, Expired, Deleted
     }
 
     public enum SanityChecks

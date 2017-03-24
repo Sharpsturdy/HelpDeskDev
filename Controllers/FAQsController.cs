@@ -384,7 +384,7 @@ namespace Help_Desk_2.Controllers
 
                     //If being approved from expired then calculate expiry date from now instead of composed date
                     outMsg = "FAQ approved successfully!";
-                    faq.expiryDate = (faqStatus == Statuses.Expired || faqStatus == Statuses.Unpblished ? DateTime.Now : faq.dateComposed).AddDays(AllSorts.getExpiryDays(1));
+                    faq.expiryDate = (faqStatus == Statuses.Expired || faqStatus == Statuses.Unpublished ? DateTime.Now : faq.dateComposed).AddDays(AllSorts.getExpiryDays(1));
                    
                 } else if(submittedValues.Contains("btnUnApprove"))
                 {
