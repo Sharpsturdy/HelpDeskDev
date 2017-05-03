@@ -41,15 +41,15 @@ namespace Help_Desk_2.Controllers
 
             ViewBag.ExpertAreas = null;
 
-            var faqs = from m in db.KnowledgeFAQs
-                       where (m.type == 1 && !m.suggest && m.dateSubmitted != null )
-                       select m;
             int currentPageIndex = page.HasValue ? page.Value - 1 : 0;
 
             string userName = AllSorts.getUserID();
-            return View("Index", db.KnowledgeFAQs.Where(k => k.type == 1 && k.dateSubmitted == null && (k.originatorID.ToString() == userName))
-                    .OrderByDescending(k => k.dateComposed)
-                    .ToPagedList(currentPageIndex, AllSorts.pageSize));
+            return View("Index", db.KnowledgeFAQs.Where(k => k.type == 1 
+                                                          && !k.deleted
+                                                          && k.dateSubmitted == null 
+                                                          && (k.originatorID.ToString() == userName))
+                                                 .OrderByDescending(k => k.dateComposed)
+                                                 .ToPagedList(currentPageIndex, AllSorts.pageSize));
         }
 
 
@@ -65,7 +65,7 @@ namespace Help_Desk_2.Controllers
             ViewBag.ExpertAreas = new SelectList(list2, "text", "text");
 
             var faqs = from m in db.KnowledgeFAQs
-                       where (m.type == 1 && !m.suggest && m.dateSubmitted != null )
+                       where (!m.deleted && m.type == 1 && !m.suggest && m.dateSubmitted != null )
                        select m;
 
           
@@ -113,7 +113,7 @@ namespace Help_Desk_2.Controllers
         public ActionResult Search(string searchStr, int? page)
         {
             var faqs = from m in db.KnowledgeFAQs
-                       where(m.type == 1 && !m.suggest && m.published)
+                       where(!m.deleted && m.type == 1 && !m.suggest && m.published)
                        select m;
             var news = from n in db.News
                        where(n.published)
@@ -459,6 +459,32 @@ namespace Help_Desk_2.Controllers
             return View(faq.suggest ? "Suggest" : "FAQOne", faq);
         }
 
-        
+        [HttpPost]
+        public ActionResult Delete(int id)
+        {
+            if(!User.CustomIsInRole(UserRoles.DomainAdminRole))
+            {
+                return new HttpUnauthorizedResult();
+            }
+            try
+            {
+                KnowledgeFAQ article = db.KnowledgeFAQs.Find(id);
+                if (article != null)
+                {
+                    if (article.published)
+                    {
+                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Can't delete this FAQ article");
+                    }
+                    article.deleted = true;
+                    db.SaveChanges();
+                    return RedirectToAction("Admin");
+                }
+                return RedirectToAction("Edit", new { id = id });
+            }
+            catch
+            {
+                return RedirectToAction("Edit", new { id = id });
+            }
+        }
     }
 }
